@@ -40,8 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncTableQuery.cs" />
+    <Compile Include="BaseDatabaseContext.cs" />
     <Compile Include="ColType.cs" />
     <Compile Include="ConfigOption.cs" />
+    <Compile Include="DatabaseUpdateAttribute.cs" />
+    <Compile Include="DataVersion.cs" />
+    <Compile Include="IDatabaseChangeset.cs" />
     <Compile Include="Platform\IPlatform.cs" />
     <Compile Include="Platform\IPlatformStorage.cs" />
     <Compile Include="Platform\ISQLiteProvider.cs" />
