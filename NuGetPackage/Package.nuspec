@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SQLitePortable</id>
+    <version>1.1.2</version>
+    <authors>v.leschenko</authors>
+    <owners>v.leschenko</owners>
+    <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
+    <projectUrl>https://sqliteportable.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SQLite Portable for Windows RT</description>
+    <releaseNotes>SQLite Portable for Windows 8.1 and Windows Phone 8.</releaseNotes>
+    <copyright>Copyright 2014 Vitaliy Leschenko</copyright>
+    <tags>SQLite WinRT WinPhone</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>
