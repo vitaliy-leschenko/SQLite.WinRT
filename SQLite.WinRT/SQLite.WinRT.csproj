@@ -39,6 +39,7 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncTableQuery.cs" />
     <Compile Include="ColType.cs" />
     <Compile Include="ConfigOption.cs" />
     <Compile Include="Platform\IPlatform.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />
     <Compile Include="SQLiteResult.cs" />
+    <Compile Include="TableQuery.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
