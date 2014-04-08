@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SQLitePortable</id>
-    <version>1.1.2</version>
+    <version>2.0.0</version>
     <authors>v.leschenko</authors>
     <owners>v.leschenko</owners>
     <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
