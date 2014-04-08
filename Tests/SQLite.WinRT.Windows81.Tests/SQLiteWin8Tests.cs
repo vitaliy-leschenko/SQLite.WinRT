@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Linq;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -26,7 +24,7 @@ namespace SQLite.WinRT.Tests
     }
 
     [TestClass]
-    public class SQLiteTests
+    public class SQLiteWin8Tests
     {
         private readonly Random rnd = new Random();
 
@@ -104,7 +102,7 @@ namespace SQLite.WinRT.Tests
             var items = await connection.Table<TestTable>().OrderBy(t => t.IntValue).ToListAsync();
             Assert.IsTrue(items.Count == count);
 
-            for (int i = 0; i < items.Count-2; i++)
+            for (int i = 0; i < items.Count - 2; i++)
             {
                 Assert.IsTrue(items[i].IntValue < items[i + 1].IntValue);
             }
