@@ -39,7 +39,7 @@ namespace SQLite.WinRT
 			connectionString = new SQLiteConnectionString (databasePath, storeDateTimeAsTicks);
 		}
 
-		SQLiteConnectionWithLock GetConnection ()
+		internal SQLiteConnectionWithLock GetConnection ()
 		{
 			return SQLiteConnectionPool.Shared.GetConnection (connectionString);
 		}

@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SQLite.WinRT.WindowsPhone8.Tests</RootNamespace>
-    <AssemblyName>SQLite.WinRT.WindowsPhone8.Tests</AssemblyName>
+    <RootNamespace>SQLite.WinRT.Tests</RootNamespace>
+    <AssemblyName>SQLite.WinRT.Tests</AssemblyName>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -20,9 +20,9 @@
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>SQLite.WinRT.WindowsPhone8.Tests_$(Configuration)_$(Platform).xap</XapFilename>
+    <XapFilename>SQLite.WinRT.Tests.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>SQLite.WinRT.WindowsPhone8.Tests.App</SilverlightAppEntry>
+    <SilverlightAppEntry>SQLite.WinRT.Tests.App</SilverlightAppEntry>
     <ValidateXaml>false</ValidateXaml>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
@@ -74,7 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="LocalizedStrings.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="SQLiteTests.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -127,7 +127,22 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="SQLite.WP80, Version=3.8.1">
+      <Name>SQLite for Windows Phone</Name>
+    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SQLite.WinRT.WindowsPhone8\SQLite.WinRT.WindowsPhone8.csproj">
+      <Project>{946316c9-fabc-4f2a-bac3-4489ba5a8ba6}</Project>
+      <Name>SQLite.WinRT.WindowsPhone8</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SQLite.WinRT\SQLite.WinRT.csproj">
+      <Project>{94bf16e1-6978-425f-8629-dfbe5016bd9e}</Project>
+      <Name>SQLite.WinRT</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
@@ -139,4 +154,7 @@
   </Target>
   -->
   <ProjectExtensions />
+  <PropertyGroup>
+    <SDKReferenceDirectoryRoot>$(SolutionDir)\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
+  </PropertyGroup>
 </Project>

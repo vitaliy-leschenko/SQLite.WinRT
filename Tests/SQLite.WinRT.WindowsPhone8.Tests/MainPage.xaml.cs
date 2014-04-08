@@ -7,14 +7,14 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using SQLite.WinRT.WindowsPhone8.Tests.Resources;
+using SQLite.WinRT.Tests.Resources;
 using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.Core;
 using vstest_executionengine_platformbridge;
 using Microsoft.VisualStudio.TestPlatform.TestExecutor;
 using System.Reflection;
 
-namespace SQLite.WinRT.WindowsPhone8.Tests
+namespace SQLite.WinRT.Tests
 {
     public partial class MainPage : PhoneApplicationPage
     {

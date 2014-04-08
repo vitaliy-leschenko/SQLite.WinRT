@@ -29,3 +29,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("SQLite.WinRT.Ext")]
+[assembly: InternalsVisibleTo("SQLite.WinRT.Tests")]
