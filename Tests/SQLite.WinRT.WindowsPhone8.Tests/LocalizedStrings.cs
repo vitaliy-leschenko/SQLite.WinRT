@@ -1,6 +1,6 @@
-﻿using PhoneApp1.Resources;
+﻿using SQLite.WinRT.WindowsPhone8.Tests.Resources;
 
-namespace PhoneApp1
+namespace SQLite.WinRT.WindowsPhone8.Tests
 {
     /// <summary>
     /// Provides access to string resources.

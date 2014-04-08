@@ -6,9 +6,9 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using PhoneApp1.Resources;
+using SQLite.WinRT.WindowsPhone8.Tests.Resources;
 
-namespace PhoneApp1
+namespace SQLite.WinRT.WindowsPhone8.Tests
 {
     public partial class App : Application
     {

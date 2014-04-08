@@ -1,51 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D8A91590-6A0E-45A7-9F66-316997F521B7}</ProjectGuid>
+    <ProjectGuid>{C5B83B3E-C2A7-4503-B3BA-D34FECA1219C}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PhoneApp1</RootNamespace>
-    <AssemblyName>PhoneApp1</AssemblyName>
+    <RootNamespace>SQLite.WinRT.WindowsPhone8.Tests</RootNamespace>
+    <AssemblyName>SQLite.WinRT.WindowsPhone8.Tests</AssemblyName>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>true</SilverlightApplication>
+    <WPTestProject>true</WPTestProject>
     <SupportedCultures>
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>PhoneApp1_$(Configuration)_$(Platform).xap</XapFilename>
+    <XapFilename>SQLite.WinRT.WindowsPhone8.Tests_$(Configuration)_$(Platform).xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>PhoneApp1.App</SilverlightAppEntry>
-    <ValidateXaml>true</ValidateXaml>
+    <SilverlightAppEntry>SQLite.WinRT.WindowsPhone8.Tests.App</SilverlightAppEntry>
+    <ValidateXaml>false</ValidateXaml>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>Bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>Bin\Release</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,6 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="LocalizedStrings.cs" />
+    <Compile Include="UnitTest1.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -121,6 +102,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="MSTestFramework, Version=11.0" />
+    <SDKReference Include="TestPlatform, Version=11.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -134,12 +119,6 @@
     <Content Include="Assets\Tiles\FlipCycleTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Tiles\IconicTileMediumLarge.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Tiles\IconicTileSmall.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">
@@ -148,19 +127,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLite.WinRT.Silverlight8\SQLite.WinRT.Silverlight8.csproj">
-      <Project>{946316c9-fabc-4f2a-bac3-4489ba5a8ba6}</Project>
-      <Name>SQLite.WinRT.Silverlight8</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SQLite.WinRT\SQLite.WinRT.csproj">
-      <Project>{94bf16e1-6978-425f-8629-dfbe5016bd9e}</Project>
-      <Name>SQLite.WinRT</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="SQLite.WP80, Version=3.8.1">
-      <Name>SQLite for Windows Phone</Name>
-    </SDKReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
@@ -172,7 +139,4 @@
   </Target>
   -->
   <ProjectExtensions />
-  <PropertyGroup>
-    <SDKReferenceDirectoryRoot>$(SolutionDir)\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
-  </PropertyGroup>
 </Project>

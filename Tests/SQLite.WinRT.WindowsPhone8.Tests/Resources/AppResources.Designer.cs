@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PhoneApp1.Resources
+namespace SQLite.WinRT.WindowsPhone8.Tests.Resources
 {
     using System;
 
@@ -45,7 +45,7 @@ namespace PhoneApp1.Resources
             {
                 if (object.ReferenceEquals(resourceMan, null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PhoneApp1.Resources.AppResources", typeof(AppResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SQLite.WinRT.WindowsPhone8.Tests.Resources.AppResources", typeof(AppResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
