@@ -33,7 +33,7 @@ xcopy /y Sqlite\bin\ARM\Release\Sqlite.dll                               NuGetPa
 
 xcopy /y SQLite.WinRT.WindowsPhone8\bin\x86\Release\SQLite.WinRT.dll     NuGetPackage\build\wp8\x86
 xcopy /y SQLite.WinRT.WindowsPhone8\bin\x86\Release\SQLite.WinRT.Ext.dll NuGetPackage\build\wp8\x86
-xcopy /y Sqlite\bin\Win32\Release\Sqlite.winmd                           NuGetPackage\build\wp8\ARM
-xcopy /y Sqlite\bin\Win32\Release\Sqlite.dll                             NuGetPackage\build\wp8\ARM
+xcopy /y Sqlite\bin\Win32\Release\Sqlite.winmd                           NuGetPackage\build\wp8\x86
+xcopy /y Sqlite\bin\Win32\Release\Sqlite.dll                             NuGetPackage\build\wp8\x86
 
 .nuget\NuGet.exe pack NuGetPackage\Package.nuspec
