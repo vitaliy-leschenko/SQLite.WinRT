@@ -6,9 +6,9 @@
     <PackageConfiguration Condition="'$(Configuration)' == 'Release'">Retail</PackageConfiguration>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(SolutionDir)\libs\Windows Phone\v8.0\ExtensionSDKs\SQLite.WP80\3.8.1\DesignTime\CommonConfiguration\Neutral;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\libs\Windows Phone\v8.0\ExtensionSDKs\SQLite.WP80\3.8.1\DesignTime\$(PackageConfiguration)\$(PlatformTarget);$(LibraryPath)</LibraryPath>
-    <PropertySheetDisplayName>SQLite.WP80, 3.8.1</PropertySheetDisplayName>
+    <IncludePath>$(FrameworkSDKRoot)\..\..\Windows Phone\v8.0\ExtensionSDKs\SQLite.WP80\3.8.4.3\DesignTime\CommonConfiguration\Neutral;$(IncludePath)</IncludePath>
+    <LibraryPath>$(FrameworkSDKRoot)\..\..\Windows Phone\v8.0\ExtensionSDKs\SQLite.WP80\3.8.4.3\DesignTime\$(PackageConfiguration)\$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <PropertySheetDisplayName>SQLite.WP80, 3.8.4.3</PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
