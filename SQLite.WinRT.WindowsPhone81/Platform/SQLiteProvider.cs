@@ -1,5 +1,5 @@
 ﻿using System;
-using Sqlite;
+using Sqlite.WP81;
 
 namespace SQLite.WinRT
 {

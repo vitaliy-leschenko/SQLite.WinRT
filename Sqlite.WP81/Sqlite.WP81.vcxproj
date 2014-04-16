@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{399d80c0-a902-42aa-a182-484f7bbd495a}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <ProjectName>SQLite.WinRT.WindowsPhone81.Proxy</ProjectName>
-    <RootNamespace>Sqlite</RootNamespace>
+    <ProjectName>Sqlite.WP81</ProjectName>
+    <RootNamespace>Sqlite.WP81</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>

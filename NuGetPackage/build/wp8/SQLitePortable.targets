@@ -7,8 +7,11 @@
 	
 	<Target Name="InjectReference" BeforeTargets="ResolveAssemblyReferences">
     	<ItemGroup Condition=" ( ('$(Platform)' == 'x86') or ('$(Platform)' == 'ARM') )">
-            <Reference Include="Sqlite">
-                <HintPath>$(MSBuildThisFileDirectory)$(Platform)\Sqlite.winmd</HintPath>
+            <Reference Include="Sqlite.WP80">
+                <HintPath>$(MSBuildThisFileDirectory)$(Platform)\Sqlite.WP80.winmd</HintPath>
+            </Reference>
+            <Reference Include="SQLite.WinRT.Ext.dll">
+                <HintPath>$(MSBuildThisFileDirectory)$(Platform)\SQLite.WinRT.Ext.dll</HintPath>
             </Reference>
         </ItemGroup>
     </Target>

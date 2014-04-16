@@ -17,9 +17,9 @@ using Sqlite3 = Community.CsharpSqlite.Sqlite3;
 using Sqlite3DatabaseHandle = Community.CsharpSqlite.Sqlite3.sqlite3;
 using Sqlite3Statement = Community.CsharpSqlite.Sqlite3.Vdbe;
 #elif USE_WP8_NATIVE_SQLITE
-using Sqlite3 = Sqlite.Sqlite3;
-using Sqlite3DatabaseHandle = Sqlite.Database;
-using Sqlite3Statement = Sqlite.Statement;
+using Sqlite3 = Sqlite.WP81.Sqlite3;
+using Sqlite3DatabaseHandle = Sqlite.WP81.Database;
+using Sqlite3Statement = Sqlite.WP81.Statement;
 #else
 using Sqlite3DatabaseHandle = System.IntPtr;
 using Sqlite3Statement = System.IntPtr;
