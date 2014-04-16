@@ -1,8 +1,8 @@
 set msbuild=C:\Program Files (x86)\MSBuild\12.0\bin
 
-rem "%msbuild%\msbuild.exe" /p:Configuration=Release /p:Platform=x86 /t:Rebuild
-rem "%msbuild%\msbuild.exe" /p:Configuration=Release /p:Platform=x64 /t:Rebuild
-rem "%msbuild%\msbuild.exe" /p:Configuration=Release /p:Platform=ARM /t:Rebuild
+"%msbuild%\msbuild.exe" /p:Configuration=Release /p:Platform=x86 /t:Rebuild
+"%msbuild%\msbuild.exe" /p:Configuration=Release /p:Platform=x64 /t:Rebuild
+"%msbuild%\msbuild.exe" /p:Configuration=Release /p:Platform=ARM /t:Rebuild
 
 xcopy /y SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.dll     NuGetPackage\lib\netcore45
 xcopy /y SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll NuGetPackage\lib\netcore45
