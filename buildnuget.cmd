@@ -9,6 +9,7 @@ xcopy /y SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll NuGetPackag
 xcopy /y SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pri NuGetPackage\lib\netcore45
 
 xcopy /y SQLite.WinRT\bin\Release\SQLite.WinRT.dll NuGetPackage\lib\portable-wp8+win8
+xcopy /y SQLite.WinRT\bin\Release\SQLite.WinRT.dll NuGetPackage\lib\portable-wp8+wpa81+win8
 
 xcopy /y SQLite.WinRT.WindowsPhone8\bin\ARM\Release\SQLite.WinRT.dll     NuGetPackage\lib\wp8
 xcopy /y SQLite.WinRT.WindowsPhone8\bin\ARM\Release\SQLite.WinRT.Ext.dll NuGetPackage\lib\wp8
@@ -49,6 +50,5 @@ xcopy /y SQLite.WinRT.WindowsPhone81\bin\x86\Release\SQLite.WinRT.dll     NuGetP
 xcopy /y SQLite.WinRT.WindowsPhone81\bin\x86\Release\SQLite.WinRT.Ext.dll NuGetPackage\build\wpa81\x86
 xcopy /y SQLite.WinRT.WindowsPhone81.Proxy\bin\Win32\Release\Sqlite.winmd NuGetPackage\build\wpa81\x86
 xcopy /y SQLite.WinRT.WindowsPhone81.Proxy\bin\Win32\Release\SQLite.WinRT.WindowsPhone81.Proxy.dll   NuGetPackage\build\wpa81\x86
-
 
 .nuget\NuGet.exe pack NuGetPackage\Package.nuspec
