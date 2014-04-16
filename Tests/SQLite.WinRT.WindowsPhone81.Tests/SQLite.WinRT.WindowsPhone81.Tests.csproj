@@ -91,11 +91,11 @@
     <Content Include="Assets\WideLogo.scale-240.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLite.WinRT.WindowsPhone81\SQLite.WinRT.WindowsPhone81.csproj">
+    <ProjectReference Include="..\..\SQLite.WinRT.WindowsPhone81\SQLite.WinRT.WindowsPhone81.csproj">
       <Project>{f44c33e5-e159-4c4a-8f14-de423b73b037}</Project>
       <Name>SQLite.WinRT.WindowsPhone81</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SQLite.WinRT\SQLite.WinRT.csproj">
+    <ProjectReference Include="..\..\SQLite.WinRT\SQLite.WinRT.csproj">
       <Project>{94bf16e1-6978-425f-8629-dfbe5016bd9e}</Project>
       <Name>SQLite.WinRT</Name>
     </ProjectReference>
