@@ -106,7 +106,7 @@ namespace SQLite.WinRT.Tests
 
             for (int i = 0; i < items.Count-2; i++)
             {
-                Assert.IsTrue(items[i].IntValue < items[i + 1].IntValue);
+                Assert.IsTrue(items[i].IntValue <= items[i + 1].IntValue);
             }
         }
 

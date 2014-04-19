@@ -10,7 +10,7 @@
             <Reference Include="Sqlite.WP80">
                 <HintPath>$(MSBuildThisFileDirectory)$(Platform)\Sqlite.WP80.winmd</HintPath>
             </Reference>
-            <Reference Include="SQLite.WinRT.Ext.dll">
+            <Reference Include="SQLite.WinRT.Ext">
                 <HintPath>$(MSBuildThisFileDirectory)$(Platform)\SQLite.WinRT.Ext.dll</HintPath>
             </Reference>
         </ItemGroup>
