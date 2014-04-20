@@ -45,9 +45,6 @@ namespace SQLite.WinRT
         {
             var contextType = GetType();
 
-            var versionNumber = GetSchemeVersion();
-            UpdateDatabaseVersion(conn, versionNumber);
-
             var properties = contextType.GetRuntimeProperties().ToList();
             var propertyType = typeof (AsyncTableQuery<>).Name;
 
@@ -59,20 +56,20 @@ namespace SQLite.WinRT
             }
         }
 
-        private static void UpdateDatabaseVersion(SQLiteConnection connection, int versionNumber)
+        private static void UpdateDatabaseVersion(SQLiteConnection conn, int versionNumber)
         {
-            connection.CreateTable<DataVersion>();
+            conn.CreateTable<DataVersion>();
 
-            var version = connection.Table<DataVersion>().FirstOrDefault();
+            var version = conn.Table<DataVersion>().FirstOrDefault();
             if (version == null)
             {
                 version = new DataVersion {Value = versionNumber};
-                connection.Insert(version);
+                conn.Insert(version);
             }
             else
             {
                 version.Value = versionNumber;
-                connection.Update(version);
+                conn.Update(version);
             }
         }
 
