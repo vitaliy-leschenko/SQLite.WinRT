@@ -7,9 +7,6 @@
         <Reference Include="Sqlite.WP80">
             <HintPath>$(MSBuildThisFileDirectory)..\..\lib\wp8-hidden\$(Platform)\Sqlite.WP80.winmd</HintPath>
         </Reference>
-        <Reference Include="SQLite.WinRT">
-            <HintPath>$(MSBuildThisFileDirectory)..\..\lib\wp8-hidden\$(Platform)\SQLite.WinRT.dll</HintPath>
-        </Reference>
         <Reference Include="SQLite.WinRT.Ext">
             <HintPath>$(MSBuildThisFileDirectory)..\..\lib\wp8-hidden\$(Platform)\SQLite.WinRT.Ext.dll</HintPath>
         </Reference>

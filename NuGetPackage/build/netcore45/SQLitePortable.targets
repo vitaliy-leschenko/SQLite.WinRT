@@ -4,9 +4,6 @@
         <Error  Text="$(MSBuildThisFileName) does not work correctly on '$(Platform)' platform. You need to specify platform (x86 / x64 or ARM)." />
     </Target>
     <ItemGroup>
-        <Reference Include="SQLite.WinRT">
-            <HintPath>$(MSBuildThisFileDirectory)..\..\lib\netcore45-hidden\$(Platform)\SQLite.WinRT.dll</HintPath>
-        </Reference>
         <Reference Include="SQLite.WinRT.Ext">
             <HintPath>$(MSBuildThisFileDirectory)..\..\lib\netcore45-hidden\$(Platform)\SQLite.WinRT.Ext.dll</HintPath>
         </Reference>
