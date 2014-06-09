@@ -347,41 +347,6 @@ namespace SQLite.WinRT.Linq
 
             public EntityProvider Provider { get; private set; }
 
-            public int RowsAffected { get; private set; }
-
-            private bool ActionOpenedConnection
-            {
-                get { return Provider.ActionOpenedConnection; }
-            }
-
-            public object Convert(object value, Type type)
-            {
-                if (value == null)
-                {
-                    return TypeHelper.GetDefault(type);
-                }
-                type = TypeHelper.GetNonNullableType(type);
-                Type vtype = value.GetType();
-                if (type != vtype)
-                {
-                    if (type.GetTypeInfo().IsEnum)
-                    {
-                        if (vtype == typeof (string))
-                        {
-                            return Enum.Parse(type, (string) value, true);
-                        }
-                        Type utype = Enum.GetUnderlyingType(type);
-                        if (utype != vtype)
-                        {
-                            value = System.Convert.ChangeType(value, utype, CultureInfo.InvariantCulture);
-                        }
-                        return Enum.ToObject(type, value);
-                    }
-                    return System.Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
-                }
-                return value;
-            }
-
             public IEnumerable<T> Execute<T>(QueryCommand command, Func<FieldReader, T> fnProjector,
                 MappingEntity entity, object[] paramValues)
             {

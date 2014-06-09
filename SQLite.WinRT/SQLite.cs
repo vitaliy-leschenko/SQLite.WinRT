@@ -1770,6 +1770,10 @@ namespace SQLite.WinRT
 
         public IEnumerable<T> ExecuteQueryProjector<T>(Func<FieldReader, T> projector)
         {
+            if (_conn.Trace)
+            {
+                Debug.WriteLine("Executing Query: " + this);
+            }
             var stmt = Prepare();
             try
             {

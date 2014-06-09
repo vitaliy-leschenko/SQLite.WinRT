@@ -86,6 +86,7 @@ namespace SQLite.WinRT.Tests
         {
             var folder = ApplicationData.Current.LocalFolder;
             connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName), true);
+            connection.GetConnection().Trace = true;
         }
 
         [TestCleanup]
@@ -222,14 +223,13 @@ namespace SQLite.WinRT.Tests
 
             var db = new DbContext(connection);
 
-            var query = 
+            var query =
                 from c in db.Categories
                 join i in db.Items on c.CategoryID equals i.CategoryID
                 where c.CategoryID == categoryID
-                orderby i.ItemID descending 
-                select i;
+                select new {t = i.ItemID, q = i.Title.Length };
 
-            var items = await query.ToListAsync();
+            var items = await query.Skip(2).Take(5).ToListAsync();
             Assert.IsNotNull(items);
 
             var count = await db.Items.CountAsync(t => t.ItemID > 6);
