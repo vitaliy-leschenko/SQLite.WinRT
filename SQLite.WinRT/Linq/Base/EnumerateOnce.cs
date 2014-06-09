@@ -8,28 +8,28 @@ using System.Threading;
 
 namespace SQLite.WinRT.Linq.Base
 {
-	public class EnumerateOnce<T> : IEnumerable<T>, IEnumerable
-	{
-		private IEnumerable<T> enumerable;
+    public class EnumerateOnce<T> : IEnumerable<T>, IEnumerable
+    {
+        private IEnumerable<T> enumerable;
 
-		public EnumerateOnce(IEnumerable<T> enumerable)
-		{
-			this.enumerable = enumerable;
-		}
+        public EnumerateOnce(IEnumerable<T> enumerable)
+        {
+            this.enumerable = enumerable;
+        }
 
-		public IEnumerator<T> GetEnumerator()
-		{
-			var en = Interlocked.Exchange(ref enumerable, null);
-			if (en != null)
-			{
-				return en.GetEnumerator();
-			}
-			throw new Exception("Enumerated more than once.");
-		}
+        public IEnumerator<T> GetEnumerator()
+        {
+            IEnumerable<T> en = Interlocked.Exchange(ref enumerable, null);
+            if (en != null)
+            {
+                return en.GetEnumerator();
+            }
+            throw new Exception("Enumerated more than once.");
+        }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
-	}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 }

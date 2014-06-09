@@ -7,43 +7,40 @@ using System.Linq;
 
 namespace SQLite.WinRT.Linq.Base
 {
-	/// <summary>
-	/// Simple implementation of the IGrouping<TKey, TElement> interface
-	/// </summary>
-	/// <typeparam name="TKey"></typeparam>
-	/// <typeparam name="TElement"></typeparam>
-	public class Grouping<TKey, TElement> : IGrouping<TKey, TElement>
-	{
-		private TKey key;
+    /// <summary>
+    ///     Simple implementation of the IGrouping<TKey, TElement> interface
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TElement"></typeparam>
+    public class Grouping<TKey, TElement> : IGrouping<TKey, TElement>
+    {
+        private readonly TKey key;
 
-		private IEnumerable<TElement> group;
+        private IEnumerable<TElement> group;
 
-		public Grouping(TKey key, IEnumerable<TElement> group)
-		{
-			this.key = key;
-			this.group = group;
-		}
+        public Grouping(TKey key, IEnumerable<TElement> group)
+        {
+            this.key = key;
+            this.group = group;
+        }
 
-		public TKey Key
-		{
-			get
-			{
-				return this.key;
-			}
-		}
+        public TKey Key
+        {
+            get { return key; }
+        }
 
-		public IEnumerator<TElement> GetEnumerator()
-		{
-			if (!(group is List<TElement>))
-			{
-				group = group.ToList();
-			}
-			return this.group.GetEnumerator();
-		}
+        public IEnumerator<TElement> GetEnumerator()
+        {
+            if (!(group is List<TElement>))
+            {
+                group = group.ToList();
+            }
+            return @group.GetEnumerator();
+        }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.group.GetEnumerator();
-		}
-	}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return @group.GetEnumerator();
+        }
+    }
 }

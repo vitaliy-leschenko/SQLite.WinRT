@@ -7,28 +7,28 @@ using System.Linq;
 
 namespace SQLite.WinRT.Linq.Base
 {
-	public static class ReadOnlyExtensions
-	{
-		public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> collection)
-		{
-			ReadOnlyCollection<T> roc = collection as ReadOnlyCollection<T>;
-			if (roc == null)
-			{
-				if (collection == null)
-				{
-					roc = EmptyReadOnlyCollection<T>.Empty;
-				}
-				else
-				{
+    public static class ReadOnlyExtensions
+    {
+        public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> collection)
+        {
+            var roc = collection as ReadOnlyCollection<T>;
+            if (roc == null)
+            {
+                if (collection == null)
+                {
+                    roc = EmptyReadOnlyCollection<T>.Empty;
+                }
+                else
+                {
                     roc = new ReadOnlyCollection<T>(collection.ToList());
-				}
-			}
-			return roc;
-		}
+                }
+            }
+            return roc;
+        }
 
-		private class EmptyReadOnlyCollection<T>
-		{
+        private class EmptyReadOnlyCollection<T>
+        {
             internal static readonly ReadOnlyCollection<T> Empty = new ReadOnlyCollection<T>(new T[0]);
-		}
-	}
+        }
+    }
 }

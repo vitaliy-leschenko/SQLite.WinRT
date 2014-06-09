@@ -9,64 +9,64 @@ using SQLite.WinRT.Linq.Common.Mapping;
 
 namespace SQLite.WinRT.Linq.Common.Translation
 {
-	/// <summary>
-	/// Adds relationship to query results depending on policy
-	/// </summary>
-	public class RelationshipIncluder : DbExpressionVisitor
-	{
-		private QueryMapper mapper;
+    /// <summary>
+    ///     Adds relationship to query results depending on policy
+    /// </summary>
+    public class RelationshipIncluder : DbExpressionVisitor
+    {
+        private readonly QueryMapper mapper;
 
-		private EntityPolicy policy;
+        private readonly EntityPolicy policy;
 
-		private ScopedDictionary<MemberInfo, bool> includeScope = new ScopedDictionary<MemberInfo, bool>(null);
+        private ScopedDictionary<MemberInfo, bool> includeScope = new ScopedDictionary<MemberInfo, bool>(null);
 
-		private RelationshipIncluder(QueryMapper mapper)
-		{
-			this.mapper = mapper;
-			this.policy = mapper.Translator.Police.Policy;
-		}
+        private RelationshipIncluder(QueryMapper mapper)
+        {
+            this.mapper = mapper;
+            policy = mapper.Translator.Police.Policy;
+        }
 
-		public static Expression Include(QueryMapper mapper, Expression expression)
-		{
-			return new RelationshipIncluder(mapper).Visit(expression);
-		}
+        public static Expression Include(QueryMapper mapper, Expression expression)
+        {
+            return new RelationshipIncluder(mapper).Visit(expression);
+        }
 
-		protected override Expression VisitProjection(ProjectionExpression proj)
-		{
-			Expression projector = this.Visit(proj.Projector);
-			return this.UpdateProjection(proj, proj.Select, projector, proj.Aggregator);
-		}
+        protected override Expression VisitProjection(ProjectionExpression proj)
+        {
+            Expression projector = Visit(proj.Projector);
+            return UpdateProjection(proj, proj.Select, projector, proj.Aggregator);
+        }
 
-		protected override Expression VisitEntity(EntityExpression entity)
-		{
-			var save = this.includeScope;
-			this.includeScope = new ScopedDictionary<MemberInfo, bool>(this.includeScope);
-			try
-			{
-				if (this.mapper.HasIncludedMembers(entity))
-				{
-					entity = this.mapper.IncludeMembers(
-						entity,
-						m =>
-							{
-								if (this.includeScope.ContainsKey(m))
-								{
-									return false;
-								}
-								if (this.policy.IsIncluded(m))
-								{
-									this.includeScope.Add(m, true);
-									return true;
-								}
-								return false;
-							});
-				}
-				return base.VisitEntity(entity);
-			}
-			finally
-			{
-				this.includeScope = save;
-			}
-		}
-	}
+        protected override Expression VisitEntity(EntityExpression entity)
+        {
+            ScopedDictionary<MemberInfo, bool> save = includeScope;
+            includeScope = new ScopedDictionary<MemberInfo, bool>(includeScope);
+            try
+            {
+                if (mapper.HasIncludedMembers(entity))
+                {
+                    entity = mapper.IncludeMembers(
+                        entity,
+                        m =>
+                        {
+                            if (includeScope.ContainsKey(m))
+                            {
+                                return false;
+                            }
+                            if (policy.IsIncluded(m))
+                            {
+                                includeScope.Add(m, true);
+                                return true;
+                            }
+                            return false;
+                        });
+                }
+                return base.VisitEntity(entity);
+            }
+            finally
+            {
+                includeScope = save;
+            }
+        }
+    }
 }

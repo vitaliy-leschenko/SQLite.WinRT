@@ -1,7 +1,8 @@
 ﻿namespace SQLite.WinRT.Linq
 {
     /// <summary>
-    /// Specifies SQL Server-specific data type of a field, property, for use in a <see cref="T:System.Data.SqlClient.SqlParameter"/>.
+    ///     Specifies SQL Server-specific data type of a field, property, for use in a
+    ///     <see cref="T:System.Data.SqlClient.SqlParameter" />.
     /// </summary>
     /// <filterpriority>2</filterpriority>
     public enum SqlDbType

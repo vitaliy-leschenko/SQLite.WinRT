@@ -7,59 +7,58 @@ using System.Collections.Generic;
 
 namespace SQLite.WinRT.Linq.Base
 {
-	public class CompoundKey : IEquatable<CompoundKey>, IEnumerable<object>, IEnumerable
-	{
-		private object[] values;
+    public class CompoundKey : IEquatable<CompoundKey>, IEnumerable<object>, IEnumerable
+    {
+        private readonly int hc;
+        private readonly object[] values;
 
-		private int hc;
+        public CompoundKey(params object[] values)
+        {
+            this.values = values;
+            for (int i = 0, n = values.Length; i < n; i++)
+            {
+                object value = values[i];
+                if (value != null)
+                {
+                    hc ^= (value.GetHashCode() + i);
+                }
+            }
+        }
 
-		public CompoundKey(params object[] values)
-		{
-			this.values = values;
-			for (int i = 0, n = values.Length; i < n; i++)
-			{
-				object value = values[i];
-				if (value != null)
-				{
-					hc ^= (value.GetHashCode() + i);
-				}
-			}
-		}
+        public IEnumerator<object> GetEnumerator()
+        {
+            return ((IEnumerable<object>) values).GetEnumerator();
+        }
 
-		public override int GetHashCode()
-		{
-			return hc;
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+        public bool Equals(CompoundKey other)
+        {
+            if (other == null || other.values.Length != values.Length)
+            {
+                return false;
+            }
+            for (int i = 0, n = other.values.Length; i < n; i++)
+            {
+                if (!Equals(values[i], other.values[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-		public bool Equals(CompoundKey other)
-		{
-			if (other == null || other.values.Length != values.Length)
-			{
-				return false;
-			}
-			for (int i = 0, n = other.values.Length; i < n; i++)
-			{
-				if (!object.Equals(this.values[i], other.values[i]))
-				{
-					return false;
-				}
-			}
-			return true;
-		}
+        public override int GetHashCode()
+        {
+            return hc;
+        }
 
-		public IEnumerator<object> GetEnumerator()
-		{
-			return ((IEnumerable<object>)values).GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
-	}
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+    }
 }

@@ -7,36 +7,36 @@ using SQLite.WinRT.Linq.Common.Expressions;
 
 namespace SQLite.WinRT.Linq.Common.Translation
 {
-	/// <summary>
-	/// Gathers all columns referenced by the given expression
-	/// </summary>
-	public class ReferencedColumnGatherer : DbExpressionVisitor
-	{
-		private HashSet<ColumnExpression> columns = new HashSet<ColumnExpression>();
+    /// <summary>
+    ///     Gathers all columns referenced by the given expression
+    /// </summary>
+    public class ReferencedColumnGatherer : DbExpressionVisitor
+    {
+        private readonly HashSet<ColumnExpression> columns = new HashSet<ColumnExpression>();
 
-		private bool first = true;
+        private bool first = true;
 
-		public static HashSet<ColumnExpression> Gather(Expression expression)
-		{
-			var visitor = new ReferencedColumnGatherer();
-			visitor.Visit(expression);
-			return visitor.columns;
-		}
+        public static HashSet<ColumnExpression> Gather(Expression expression)
+        {
+            var visitor = new ReferencedColumnGatherer();
+            visitor.Visit(expression);
+            return visitor.columns;
+        }
 
-		protected override Expression VisitColumn(ColumnExpression column)
-		{
-			this.columns.Add(column);
-			return column;
-		}
+        protected override Expression VisitColumn(ColumnExpression column)
+        {
+            columns.Add(column);
+            return column;
+        }
 
-		protected override Expression VisitSelect(SelectExpression select)
-		{
-			if (first)
-			{
-				first = false;
-				return base.VisitSelect(select);
-			}
-			return select;
-		}
-	}
+        protected override Expression VisitSelect(SelectExpression select)
+        {
+            if (first)
+            {
+                first = false;
+                return base.VisitSelect(select);
+            }
+            return select;
+        }
+    }
 }

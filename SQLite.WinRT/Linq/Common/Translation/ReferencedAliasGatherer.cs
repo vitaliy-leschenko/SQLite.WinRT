@@ -7,29 +7,29 @@ using SQLite.WinRT.Linq.Common.Expressions;
 
 namespace SQLite.WinRT.Linq.Common.Translation
 {
-	/// <summary>
-	///  returns the set of all aliases produced by a query source
-	/// </summary>
-	public class ReferencedAliasGatherer : DbExpressionVisitor
-	{
-		private HashSet<TableAlias> aliases;
+    /// <summary>
+    ///     returns the set of all aliases produced by a query source
+    /// </summary>
+    public class ReferencedAliasGatherer : DbExpressionVisitor
+    {
+        private readonly HashSet<TableAlias> aliases;
 
-		private ReferencedAliasGatherer()
-		{
-			this.aliases = new HashSet<TableAlias>();
-		}
+        private ReferencedAliasGatherer()
+        {
+            aliases = new HashSet<TableAlias>();
+        }
 
-		public static HashSet<TableAlias> Gather(Expression source)
-		{
-			var gatherer = new ReferencedAliasGatherer();
-			gatherer.Visit(source);
-			return gatherer.aliases;
-		}
+        public static HashSet<TableAlias> Gather(Expression source)
+        {
+            var gatherer = new ReferencedAliasGatherer();
+            gatherer.Visit(source);
+            return gatherer.aliases;
+        }
 
-		protected override Expression VisitColumn(ColumnExpression column)
-		{
-			this.aliases.Add(column.Alias);
-			return column;
-		}
-	}
+        protected override Expression VisitColumn(ColumnExpression column)
+        {
+            aliases.Add(column.Alias);
+            return column;
+        }
+    }
 }

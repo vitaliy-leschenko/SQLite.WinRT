@@ -18,397 +18,375 @@ using SQLite.WinRT.Linq.Mapping;
 
 namespace SQLite.WinRT.Linq
 {
+    /// <summary>
+    ///     A LINQ IQueryable query provider that executes database queries over a SqliteConnection
+    /// </summary>
+    public class EntityProvider : IAsyncQueryProvider, IEntityProvider, IQueryProvider
+    {
+        private readonly SQLiteConnection connection;
+        private readonly Dictionary<MappingEntity, IEntityTable> tables;
+        private EntityPolicy policy;
 
-	/// <summary>
-	/// A LINQ IQueryable query provider that executes database queries over a SqliteConnection
-	/// </summary>
-	public class EntityProvider : IAsyncQueryProvider, IEntityProvider, IQueryProvider
-	{
-	    private readonly SQLiteConnection connection;
-	    private EntityPolicy policy;
+        public EntityProvider(SQLiteConnection connection)
+        {
+            this.connection = connection;
+            Mapping = new ImplicitMapping();
+            Policy = new EntityPolicy();
+            tables = new Dictionary<MappingEntity, IEntityTable>();
+            ActionOpenedConnection = false;
+        }
 
-		IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
-		{
-			return new Query<S>(this, expression);
-		}
+        public QueryMapping Mapping { get; private set; }
 
-		IQueryable IQueryProvider.CreateQuery(Expression expression)
-		{
-			Type elementType = TypeHelper.GetElementType(expression.Type);
-			try
-			{
-				return
-					(IQueryable)
-					Activator.CreateInstance(typeof(Query<>).MakeGenericType(elementType), new object[] { this, expression });
-			}
-			catch (TargetInvocationException tie)
-			{
-				throw tie.InnerException;
-			}
-		}
+        public EntityPolicy Policy
+        {
+            get { return policy; }
+            set { policy = value ?? EntityPolicy.Default; }
+        }
 
-		S IQueryProvider.Execute<S>(Expression expression)
-		{
-			return (S)this.Execute(expression);
-		}
+        public TextWriter Log { get; set; }
+        private bool ActionOpenedConnection { get; set; }
 
-		object IQueryProvider.Execute(Expression expression)
-		{
-			return Execute(expression);
-		}
+        public SQLiteConnection Connection
+        {
+            get { return connection; }
+        }
 
-		public virtual Task<object> ExecuteAsync(Expression expression)
-		{
-			return Task.Run(() => Execute(expression));
-		}
+        IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
+        {
+            return new Query<S>(this, expression);
+        }
 
-		public virtual Task<TS> ExecuteAsync<TS>(Expression expression)
-		{
-			return Task.Run(() => (TS)Execute(expression));
-		}
+        IQueryable IQueryProvider.CreateQuery(Expression expression)
+        {
+            Type elementType = TypeHelper.GetElementType(expression.Type);
+            try
+            {
+                return
+                    (IQueryable)
+                        Activator.CreateInstance(typeof (Query<>).MakeGenericType(elementType),
+                            new object[] {this, expression});
+            }
+            catch (TargetInvocationException tie)
+            {
+                throw tie.InnerException;
+            }
+        }
 
-		private readonly Dictionary<MappingEntity, IEntityTable> tables;
+        S IQueryProvider.Execute<S>(Expression expression)
+        {
+            return (S) Execute(expression);
+        }
 
-		public EntityProvider(SQLiteConnection connection)
-		{
-		    this.connection = connection;
-		    Mapping = new ImplicitMapping();
-			Policy = new EntityPolicy();
-			tables = new Dictionary<MappingEntity, IEntityTable>();
-			ActionOpenedConnection = false;
-		}
+        object IQueryProvider.Execute(Expression expression)
+        {
+            return Execute(expression);
+        }
 
-		public QueryMapping Mapping { get; private set; }
+        public virtual Task<object> ExecuteAsync(Expression expression)
+        {
+            return Task.Run(() => Execute(expression));
+        }
 
-		public EntityPolicy Policy
-		{
-			get
-			{
-				return this.policy;
-			}
-			set
-			{
-				this.policy = value ?? EntityPolicy.Default;
-			}
-		}
+        public virtual Task<TS> ExecuteAsync<TS>(Expression expression)
+        {
+            return Task.Run(() => (TS) Execute(expression));
+        }
 
-		public TextWriter Log { get; set; }
+        public IEntityTable<T> GetTable<T>(string tableId)
+        {
+            return (IEntityTable<T>) GetTable(typeof (T), tableId);
+        }
 
-		public IEntityTable GetTable(MappingEntity entity)
-		{
-			IEntityTable table;
-			if (!this.tables.TryGetValue(entity, out table))
-			{
-				table = this.CreateTable(entity);
-				this.tables.Add(entity, table);
-			}
-			return table;
-		}
+        public IEntityTable GetTable(Type type, string tableId)
+        {
+            return GetTable(Mapping.GetEntity(type, tableId));
+        }
 
-		private IEntityTable CreateTable(MappingEntity entity)
-		{
-			return
-				(IEntityTable)
-				Activator.CreateInstance(typeof(EntityTable<>).MakeGenericType(entity.ElementType), new object[] { this, entity });
-		}
+        public bool CanBeEvaluatedLocally(Expression expression)
+        {
+            return Mapping.CanBeEvaluatedLocally(expression);
+        }
 
-		public IEntityTable<T> GetTable<T>()
-		{
-			return GetTable<T>(null);
-		}
+        public bool CanBeParameter(Expression expression)
+        {
+            Type type = TypeHelper.GetNonNullableType(expression.Type);
+            switch (TypeHelper.GetTypeCode(type))
+            {
+                case TypeCode.Object:
+                    if (expression.Type == typeof (Byte[]) || expression.Type == typeof (Char[]))
+                    {
+                        return true;
+                    }
+                    return false;
+                default:
+                    return true;
+            }
+        }
 
-		public IEntityTable<T> GetTable<T>(string tableId)
-		{
-			return (IEntityTable<T>)this.GetTable(typeof(T), tableId);
-		}
+        public IEntityTable GetTable(MappingEntity entity)
+        {
+            IEntityTable table;
+            if (!tables.TryGetValue(entity, out table))
+            {
+                table = CreateTable(entity);
+                tables.Add(entity, table);
+            }
+            return table;
+        }
 
-		public IEntityTable GetTable(Type type)
-		{
-			return GetTable(type, null);
-		}
+        private IEntityTable CreateTable(MappingEntity entity)
+        {
+            return
+                (IEntityTable)
+                    Activator.CreateInstance(typeof (EntityTable<>).MakeGenericType(entity.ElementType),
+                        new object[] {this, entity});
+        }
 
-		public IEntityTable GetTable(Type type, string tableId)
-		{
-			return this.GetTable(this.Mapping.GetEntity(type, tableId));
-		}
+        public IEntityTable<T> GetTable<T>()
+        {
+            return GetTable<T>(null);
+        }
 
-		public bool CanBeEvaluatedLocally(Expression expression)
-		{
-			return this.Mapping.CanBeEvaluatedLocally(expression);
-		}
+        public IEntityTable GetTable(Type type)
+        {
+            return GetTable(type, null);
+        }
 
-		public bool CanBeParameter(Expression expression)
-		{
-			Type type = TypeHelper.GetNonNullableType(expression.Type);
-			switch (TypeHelper.GetTypeCode(type))
-			{
-				case TypeCode.Object:
-					if (expression.Type == typeof(Byte[]) || expression.Type == typeof(Char[]))
-					{
-						return true;
-					}
-					return false;
-				default:
-					return true;
-			}
-		}
+        public Executor CreateExecutor()
+        {
+            return new Executor(this);
+        }
 
-		public Executor CreateExecutor()
-		{
-			return new Executor(this);
-		}
+        public virtual string GetQueryText(Expression expression)
+        {
+            Expression plan = GetExecutionPlan(expression);
+            string[] commands = CommandGatherer.Gather(plan).Select(c => c.CommandText).ToArray();
+            return string.Join("\n\n", commands);
+        }
 
-		public class EntityTable<T> : Query<T>, IEntityTable<T>, IHaveMappingEntity
-		{
-			private readonly MappingEntity entity;
+        public string GetQueryPlan(Expression expression)
+        {
+            Expression plan = GetExecutionPlan(expression);
+            return DbExpressionWriter.WriteToString(plan);
+        }
 
-			private readonly EntityProvider provider;
+        private QueryTranslator CreateTranslator()
+        {
+            return new QueryTranslator(Mapping, policy);
+        }
 
-			public EntityTable(EntityProvider provider, MappingEntity entity)
-				: base(provider, typeof(IEntityTable<T>))
-			{
-				this.provider = provider;
-				this.entity = entity;
-			}
+        /// <summary>
+        ///     Execute the query expression (does translation, etc.)
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public virtual object Execute(Expression expression)
+        {
+            var lambda = expression as LambdaExpression;
 
-			public MappingEntity Entity
-			{
-				get
-				{
-					return this.entity;
-				}
-			}
+            Expression plan = GetExecutionPlan(expression);
 
-			public new IEntityProvider Provider
-			{
-				get
-				{
-					return this.provider;
-				}
-			}
-
-			public string TableId
-			{
-				get
-				{
-					return this.entity.TableId;
-				}
-			}
-
-			public Type EntityType
-			{
-				get
-				{
-					return this.entity.EntityType;
-				}
-			}
-
-			public T GetById(object id)
-			{
-				var dbProvider = this.Provider;
-				if (dbProvider != null)
-				{
-					IEnumerable<object> keys = id as IEnumerable<object>;
-					if (keys == null)
-					{
-						keys = new object[] { id };
-					}
-					Expression query = ((EntityProvider)dbProvider).Mapping.GetPrimaryKeyQuery(
-						this.entity, this.Expression, keys.Select(v => Expression.Constant(v)).ToArray());
-					return this.Provider.Execute<T>(query);
-				}
-				return default(T);
-			}
-
-			object IEntityTable.GetById(object id)
-			{
-				return this.GetById(id);
-			}
-		}
-
-		public virtual string GetQueryText(Expression expression)
-		{
-			Expression plan = this.GetExecutionPlan(expression);
-			var commands = CommandGatherer.Gather(plan).Select(c => c.CommandText).ToArray();
-			return string.Join("\n\n", commands);
-		}
-
-		private class CommandGatherer : DbExpressionVisitor
-		{
-			private readonly List<QueryCommand> commands = new List<QueryCommand>();
-
-			public static ReadOnlyCollection<QueryCommand> Gather(Expression expression)
-			{
-				var gatherer = new CommandGatherer();
-				gatherer.Visit(expression);
-                return new ReadOnlyCollection<QueryCommand>(gatherer.commands);
-			}
-
-			protected override Expression VisitConstant(ConstantExpression c)
-			{
-				QueryCommand qc = c.Value as QueryCommand;
-				if (qc != null)
-				{
-					this.commands.Add(qc);
-				}
-				return c;
-			}
-		}
-
-		public string GetQueryPlan(Expression expression)
-		{
-			Expression plan = this.GetExecutionPlan(expression);
-			return DbExpressionWriter.WriteToString(plan);
-		}
-
-		private QueryTranslator CreateTranslator()
-		{
-			return new QueryTranslator(this.Mapping, this.policy);
-		}
-
-		/// <summary>
-		/// Execute the query expression (does translation, etc.)
-		/// </summary>
-		/// <param name="expression"></param>
-		/// <returns></returns>
-		public virtual object Execute(Expression expression)
-		{
-			LambdaExpression lambda = expression as LambdaExpression;
-
-			Expression plan = this.GetExecutionPlan(expression);
-
-			if (lambda != null)
-			{
-				// compile & return the execution plan so it can be used multiple times
-				LambdaExpression fn = Expression.Lambda(lambda.Type, plan, lambda.Parameters);
+            if (lambda != null)
+            {
+                // compile & return the execution plan so it can be used multiple times
+                LambdaExpression fn = Expression.Lambda(lambda.Type, plan, lambda.Parameters);
 #if NOREFEMIT
                     return ExpressionEvaluator.CreateDelegate(fn);
 #else
-				return fn.Compile();
+                return fn.Compile();
 #endif
-			}
-			else
-			{
-				// compile the execution plan and invoke it
-				Expression<Func<object>> efn = Expression.Lambda<Func<object>>(Expression.Convert(plan, typeof(object)));
+            }
+            else
+            {
+                // compile the execution plan and invoke it
+                Expression<Func<object>> efn = Expression.Lambda<Func<object>>(Expression.Convert(plan, typeof (object)));
 #if NOREFEMIT
                     return ExpressionEvaluator.Eval(efn, new object[] { });
 #else
-				Func<object> fn = efn.Compile();
-				return fn();
+                Func<object> fn = efn.Compile();
+                return fn();
 #endif
-			}
-		}
+            }
+        }
 
-		/// <summary>
-		/// Convert the query expression into an execution plan
-		/// </summary>
-		/// <param name="expression"></param>
-		/// <returns></returns>
-		public Expression GetExecutionPlan(Expression expression)
-		{
-			// strip off lambda for now
-			LambdaExpression lambda = expression as LambdaExpression;
-			if (lambda != null)
-			{
-				expression = lambda.Body;
-			}
+        /// <summary>
+        ///     Convert the query expression into an execution plan
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Expression GetExecutionPlan(Expression expression)
+        {
+            // strip off lambda for now
+            var lambda = expression as LambdaExpression;
+            if (lambda != null)
+            {
+                expression = lambda.Body;
+            }
 
-			QueryTranslator translator = this.CreateTranslator();
+            QueryTranslator translator = CreateTranslator();
 
-			// translate query into client & server parts
-			Expression translation = translator.Translate(expression);
+            // translate query into client & server parts
+            Expression translation = translator.Translate(expression);
 
-			var parameters = lambda != null ? lambda.Parameters : null;
-			Expression provider = this.Find(expression, parameters, typeof(EntityProvider));
-			if (provider == null)
-			{
-				Expression rootQueryable = this.Find(expression, parameters, typeof(IQueryable));
-				provider = Expression.Property(rootQueryable, typeof(IQueryable).GetTypeInfo().GetDeclaredProperty("Provider"));
-			}
+            ReadOnlyCollection<ParameterExpression> parameters = lambda != null ? lambda.Parameters : null;
+            Expression provider = Find(expression, parameters, typeof (EntityProvider));
+            if (provider == null)
+            {
+                Expression rootQueryable = Find(expression, parameters, typeof (IQueryable));
+                provider = Expression.Property(rootQueryable,
+                    typeof (IQueryable).GetTypeInfo().GetDeclaredProperty("Provider"));
+            }
 
-			return translator.Police.BuildExecutionPlan(translation, provider);
-		}
+            return translator.Police.BuildExecutionPlan(translation, provider);
+        }
 
-		private Expression Find(Expression expression, IList<ParameterExpression> parameters, Type type)
-		{
-			if (parameters != null)
-			{
-				Expression found = parameters.FirstOrDefault(p => type.GetTypeInfo().IsAssignableFrom(p.Type.GetTypeInfo()));
-				if (found != null)
-				{
-					return found;
-				}
-			}
-			return TypedSubtreeFinder.Find(expression, type);
-		}
+        private Expression Find(Expression expression, IList<ParameterExpression> parameters, Type type)
+        {
+            if (parameters != null)
+            {
+                Expression found =
+                    parameters.FirstOrDefault(p => type.GetTypeInfo().IsAssignableFrom(p.Type.GetTypeInfo()));
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+            return TypedSubtreeFinder.Find(expression, type);
+        }
 
-		public static QueryMapping GetMapping(string mappingId)
-		{
-			return new ImplicitMapping();
-		}
+        public static QueryMapping GetMapping(string mappingId)
+        {
+            return new ImplicitMapping();
+        }
 
-		private bool ActionOpenedConnection { get; set; }
+        private class CommandGatherer : DbExpressionVisitor
+        {
+            private readonly List<QueryCommand> commands = new List<QueryCommand>();
 
-	    public SQLiteConnection Connection
-	    {
-	        get { return connection; }
-	    }
+            public static ReadOnlyCollection<QueryCommand> Gather(Expression expression)
+            {
+                var gatherer = new CommandGatherer();
+                gatherer.Visit(expression);
+                return new ReadOnlyCollection<QueryCommand>(gatherer.commands);
+            }
 
-	    public sealed class Executor
-		{
-			public Executor(EntityProvider provider)
-			{
-				this.Provider = provider;
-			}
+            protected override Expression VisitConstant(ConstantExpression c)
+            {
+                var qc = c.Value as QueryCommand;
+                if (qc != null)
+                {
+                    commands.Add(qc);
+                }
+                return c;
+            }
+        }
 
-			public EntityProvider Provider { get; private set; }
+        public class EntityTable<T> : Query<T>, IEntityTable<T>, IHaveMappingEntity
+        {
+            private readonly MappingEntity entity;
 
-			public int RowsAffected { get; private set; }
+            private readonly EntityProvider provider;
 
-			private bool ActionOpenedConnection
-			{
-				get
-				{
-					return this.Provider.ActionOpenedConnection;
-				}
-			}
+            public EntityTable(EntityProvider provider, MappingEntity entity)
+                : base(provider, typeof (IEntityTable<T>))
+            {
+                this.provider = provider;
+                this.entity = entity;
+            }
 
-			public object Convert(object value, Type type)
-			{
-				if (value == null)
-				{
-					return TypeHelper.GetDefault(type);
-				}
-				type = TypeHelper.GetNonNullableType(type);
-				Type vtype = value.GetType();
-				if (type != vtype)
-				{
-					if (type.GetTypeInfo().IsEnum)
-					{
-						if (vtype == typeof(string))
-						{
-							return Enum.Parse(type, (string)value, true);
-						}
-						else
-						{
-							Type utype = Enum.GetUnderlyingType(type);
-							if (utype != vtype)
-							{
-								value = System.Convert.ChangeType(value, utype, CultureInfo.InvariantCulture);
-							}
-							return Enum.ToObject(type, value);
-						}
-					}
-					return System.Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
-				}
-				return value;
-			}
+            public Type EntityType
+            {
+                get { return entity.EntityType; }
+            }
 
-            public IEnumerable<T> Execute<T>(QueryCommand command, Func<FieldReader, T> fnProjector, MappingEntity entity, object[] paramValues)
+            public new IEntityProvider Provider
+            {
+                get { return provider; }
+            }
+
+            public string TableId
+            {
+                get { return entity.TableId; }
+            }
+
+            public T GetById(object id)
+            {
+                IEntityProvider dbProvider = Provider;
+                if (dbProvider != null)
+                {
+                    var keys = id as IEnumerable<object>;
+                    if (keys == null)
+                    {
+                        keys = new[] {id};
+                    }
+                    Expression query = ((EntityProvider) dbProvider).Mapping.GetPrimaryKeyQuery(
+                        entity, Expression, keys.Select(v => Expression.Constant(v)).ToArray());
+                    return Provider.Execute<T>(query);
+                }
+                return default(T);
+            }
+
+            object IEntityTable.GetById(object id)
+            {
+                return GetById(id);
+            }
+
+            public MappingEntity Entity
+            {
+                get { return entity; }
+            }
+        }
+
+        public sealed class Executor
+        {
+            public Executor(EntityProvider provider)
+            {
+                Provider = provider;
+            }
+
+            public EntityProvider Provider { get; private set; }
+
+            public int RowsAffected { get; private set; }
+
+            private bool ActionOpenedConnection
+            {
+                get { return Provider.ActionOpenedConnection; }
+            }
+
+            public object Convert(object value, Type type)
+            {
+                if (value == null)
+                {
+                    return TypeHelper.GetDefault(type);
+                }
+                type = TypeHelper.GetNonNullableType(type);
+                Type vtype = value.GetType();
+                if (type != vtype)
+                {
+                    if (type.GetTypeInfo().IsEnum)
+                    {
+                        if (vtype == typeof (string))
+                        {
+                            return Enum.Parse(type, (string) value, true);
+                        }
+                        Type utype = Enum.GetUnderlyingType(type);
+                        if (utype != vtype)
+                        {
+                            value = System.Convert.ChangeType(value, utype, CultureInfo.InvariantCulture);
+                        }
+                        return Enum.ToObject(type, value);
+                    }
+                    return System.Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
+                }
+                return value;
+            }
+
+            public IEnumerable<T> Execute<T>(QueryCommand command, Func<FieldReader, T> fnProjector,
+                MappingEntity entity, object[] paramValues)
             {
                 return Provider.Connection.LinqQuery(command.CommandText, paramValues, fnProjector);
             }
-		}
-	}
+        }
+    }
 }

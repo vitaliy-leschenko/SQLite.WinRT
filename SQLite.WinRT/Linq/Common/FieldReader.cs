@@ -11,20 +11,27 @@ namespace SQLite.WinRT.Linq.Common
 {
     public class FieldReader
     {
+        private static Dictionary<Type, MethodInfo> readerMethods;
         private readonly ISQLiteProvider provider;
         private readonly object stmt;
 
+        public FieldReader(object stmt)
+        {
+            this.stmt = stmt;
+            provider = Platform.Current.SQLiteProvider;
+        }
+
         public Byte ReadByte(int ordinal)
         {
-            return (byte)provider.ColumnInt(stmt, ordinal);
+            return (byte) provider.ColumnInt(stmt, ordinal);
         }
 
         public Byte? ReadNullableByte(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
-            return (byte)provider.ColumnInt(stmt, ordinal);
+            return (byte) provider.ColumnInt(stmt, ordinal);
         }
 
         public Char ReadChar(int ordinal)
@@ -34,7 +41,7 @@ namespace SQLite.WinRT.Linq.Common
 
         public Char? ReadNullableChar(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
             return provider.ColumnString(stmt, ordinal)[0];
@@ -42,14 +49,14 @@ namespace SQLite.WinRT.Linq.Common
 
         public DateTime ReadDateTime(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             switch (type)
             {
                 case ColType.Integer:
-                    var ticks = provider.ColumnInt64(stmt, ordinal);
+                    long ticks = provider.ColumnInt64(stmt, ordinal);
                     return new DateTime(ticks);
                 case ColType.Text:
-                    var text = provider.ColumnString(stmt, ordinal);
+                    string text = provider.ColumnString(stmt, ordinal);
                     return DateTime.Parse(text);
                 default:
                     return DateTime.MinValue;
@@ -58,14 +65,14 @@ namespace SQLite.WinRT.Linq.Common
 
         public DateTime? ReadNullableDateTime(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             switch (type)
             {
                 case ColType.Integer:
-                    var ticks = provider.ColumnInt64(stmt, ordinal);
+                    long ticks = provider.ColumnInt64(stmt, ordinal);
                     return new DateTime(ticks);
                 case ColType.Text:
-                    var text = provider.ColumnString(stmt, ordinal);
+                    string text = provider.ColumnString(stmt, ordinal);
                     return DateTime.Parse(text);
                 default:
                     return null;
@@ -74,15 +81,15 @@ namespace SQLite.WinRT.Linq.Common
 
         public Decimal ReadDecimal(int ordinal)
         {
-            return (decimal)provider.ColumnDouble(stmt, ordinal);
+            return (decimal) provider.ColumnDouble(stmt, ordinal);
         }
 
         public Decimal? ReadNullableDecimal(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
-            return (decimal)provider.ColumnDouble(stmt, ordinal);
+            return (decimal) provider.ColumnDouble(stmt, ordinal);
         }
 
         public Double ReadDouble(int ordinal)
@@ -92,7 +99,7 @@ namespace SQLite.WinRT.Linq.Common
 
         public Double? ReadNullableDouble(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
             return provider.ColumnDouble(stmt, ordinal);
@@ -100,15 +107,15 @@ namespace SQLite.WinRT.Linq.Common
 
         public Single ReadSingle(int ordinal)
         {
-            return (float)provider.ColumnDouble(stmt, ordinal);
+            return (float) provider.ColumnDouble(stmt, ordinal);
         }
 
         public Single? ReadNullableSingle(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
-            return (float)provider.ColumnDouble(stmt, ordinal);
+            return (float) provider.ColumnDouble(stmt, ordinal);
         }
 
         public Guid ReadGuid(int ordinal)
@@ -118,7 +125,7 @@ namespace SQLite.WinRT.Linq.Common
 
         public Guid? ReadNullableGuid(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
             return Guid.Parse(provider.ColumnString(stmt, ordinal));
@@ -126,15 +133,15 @@ namespace SQLite.WinRT.Linq.Common
 
         public Int16 ReadInt16(int ordinal)
         {
-            return (short)provider.ColumnInt(stmt, ordinal);
+            return (short) provider.ColumnInt(stmt, ordinal);
         }
 
         public Int16? ReadNullableInt16(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
-            return (short)provider.ColumnInt(stmt, ordinal);
+            return (short) provider.ColumnInt(stmt, ordinal);
         }
 
         public Int32 ReadInt32(int ordinal)
@@ -144,7 +151,7 @@ namespace SQLite.WinRT.Linq.Common
 
         public Int32? ReadNullableInt32(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
 
             return provider.ColumnInt(stmt, ordinal);
@@ -157,7 +164,7 @@ namespace SQLite.WinRT.Linq.Common
 
         public Int64? ReadNullableInt64(int ordinal)
         {
-            var type = provider.ColumnType(stmt, ordinal);
+            ColType type = provider.ColumnType(stmt, ordinal);
             if (type == ColType.Null) return null;
             return provider.ColumnInt64(stmt, ordinal);
         }
@@ -176,7 +183,8 @@ namespace SQLite.WinRT.Linq.Common
         {
             if (readerMethods == null)
             {
-                var meths = typeof(FieldReader).GetMethods().Where(m => m.Name.StartsWith("Read")).ToList();
+                List<MethodInfo> meths =
+                    typeof (FieldReader).GetMethods().Where(m => m.Name.StartsWith("Read")).ToList();
                 readerMethods = meths.ToDictionary(m => m.ReturnType);
             }
 
@@ -186,14 +194,6 @@ namespace SQLite.WinRT.Linq.Common
                 throw new NotSupportedException();
             }
             return mi;
-        }
-
-        private static Dictionary<Type, MethodInfo> readerMethods;
-
-        public FieldReader(object stmt)
-        {
-            this.stmt = stmt;
-            provider = Platform.Current.SQLiteProvider;
         }
     }
 }

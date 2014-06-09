@@ -10,38 +10,39 @@ using SQLite.WinRT.Linq.Common.Expressions;
 
 namespace SQLite.WinRT.Linq.Common.Translation
 {
-	public class NamedValueGatherer : DbExpressionVisitor
-	{
-		private HashSet<NamedValueExpression> namedValues = new HashSet<NamedValueExpression>(new NamedValueComparer());
+    public class NamedValueGatherer : DbExpressionVisitor
+    {
+        private readonly HashSet<NamedValueExpression> namedValues =
+            new HashSet<NamedValueExpression>(new NamedValueComparer());
 
-		private NamedValueGatherer()
-		{
-		}
+        private NamedValueGatherer()
+        {
+        }
 
-		public static ReadOnlyCollection<NamedValueExpression> Gather(Expression expr)
-		{
-			NamedValueGatherer gatherer = new NamedValueGatherer();
-			gatherer.Visit(expr);
-			return gatherer.namedValues.ToList().AsReadOnly();
-		}
+        public static ReadOnlyCollection<NamedValueExpression> Gather(Expression expr)
+        {
+            var gatherer = new NamedValueGatherer();
+            gatherer.Visit(expr);
+            return gatherer.namedValues.ToList().AsReadOnly();
+        }
 
-		protected override Expression VisitNamedValue(NamedValueExpression value)
-		{
-			this.namedValues.Add(value);
-			return value;
-		}
+        protected override Expression VisitNamedValue(NamedValueExpression value)
+        {
+            namedValues.Add(value);
+            return value;
+        }
 
-		private class NamedValueComparer : IEqualityComparer<NamedValueExpression>
-		{
-			public bool Equals(NamedValueExpression x, NamedValueExpression y)
-			{
-				return x.Name == y.Name;
-			}
+        private class NamedValueComparer : IEqualityComparer<NamedValueExpression>
+        {
+            public bool Equals(NamedValueExpression x, NamedValueExpression y)
+            {
+                return x.Name == y.Name;
+            }
 
-			public int GetHashCode(NamedValueExpression obj)
-			{
-				return obj.Name.GetHashCode();
-			}
-		}
-	}
+            public int GetHashCode(NamedValueExpression obj)
+            {
+                return obj.Name.GetHashCode();
+            }
+        }
+    }
 }

@@ -119,7 +119,6 @@
     <Compile Include="Linq\DbTypeSystem.cs" />
     <Compile Include="Linq\EntityPolicy.cs" />
     <Compile Include="Linq\EntityProvider.cs" />
-    <Compile Include="Linq\Mapping\AttributeMapping.cs" />
     <Compile Include="Linq\Mapping\ImplicitMapping.cs" />
     <Compile Include="Linq\SqlDbType.cs" />
     <Compile Include="Linq\TypeCode.cs" />

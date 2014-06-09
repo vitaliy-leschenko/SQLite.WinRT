@@ -6,10 +6,10 @@ using System.Reflection;
 
 namespace SQLite.WinRT.Linq.Base
 {
-	public static class ReflectionExtensions
-	{
-		public static object GetValue(this MemberInfo member, object instance)
-		{
+    public static class ReflectionExtensions
+    {
+        public static object GetValue(this MemberInfo member, object instance)
+        {
             var property = member as PropertyInfo;
             if (property != null)
             {
@@ -23,24 +23,24 @@ namespace SQLite.WinRT.Linq.Base
             }
 
             throw new InvalidOperationException();
-		}
+        }
 
-		public static void SetValue(this MemberInfo member, object instance, object value)
-		{
-		    var property = member as PropertyInfo;
-		    if (property != null)
-		    {
+        public static void SetValue(this MemberInfo member, object instance, object value)
+        {
+            var property = member as PropertyInfo;
+            if (property != null)
+            {
                 property.SetValue(instance, value, null);
                 return;
-		    }
+            }
 
-		    var field = member as FieldInfo;
-		    if (field != null)
-		    {
-		        field.SetValue(instance, value);
-		    }
+            var field = member as FieldInfo;
+            if (field != null)
+            {
+                field.SetValue(instance, value);
+            }
 
             throw new InvalidOperationException();
         }
-	}
+    }
 }
