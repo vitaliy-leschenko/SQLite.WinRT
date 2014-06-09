@@ -46,6 +46,9 @@
     <Compile Include="DatabaseUpdateAttribute.cs" />
     <Compile Include="DataVersion.cs" />
     <Compile Include="IDatabaseChangeset.cs" />
+    <Compile Include="LinqQueryContext.cs" />
+    <Compile Include="LinqTableQuery.cs" />
+    <Compile Include="LinqTableQueryProvider.cs" />
     <Compile Include="Platform\IPlatform.cs" />
     <Compile Include="Platform\IPlatformStorage.cs" />
     <Compile Include="Platform\ISQLiteProvider.cs" />
