@@ -1923,7 +1923,7 @@ namespace SQLite.WinRT
                     Platform.Current.SQLiteProvider.BindInt(stmt, index, (int)value);
 				} else if (value is String) {
                     Platform.Current.SQLiteProvider.BindText(stmt, index, (string)value, -1, NegativePointer);
-				} else if (value is Byte || value is UInt16 || value is SByte || value is Int16) {
+                } else if (value is Byte || value is UInt16 || value is SByte || value is Int16) {
                     Platform.Current.SQLiteProvider.BindInt(stmt, index, Convert.ToInt32(value));
 				} else if (value is Boolean) {
                     Platform.Current.SQLiteProvider.BindInt(stmt, index, (bool)value ? 1 : 0);
