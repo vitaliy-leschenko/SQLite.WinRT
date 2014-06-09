@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -21,6 +22,21 @@ namespace SQLite.WinRT.Tests
         public int ID { get; set; }
         public int IntValue { get; set; }
         public double DoubleValue { get; set; }
+    }
+
+    public class Category
+    {
+        [PrimaryKey, AutoIncrement]
+        public int CategoryID { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Item
+    {
+        [PrimaryKey, AutoIncrement]
+        public int ItemID { get; set; }
+        public int CategoryID { get; set; }
+        public string Title { get; set; }
     }
 
     [TestClass]
@@ -142,6 +158,36 @@ namespace SQLite.WinRT.Tests
             await connection.DeleteAsync(item);
             result = await table.Where(t => t.IntValue == 200).FirstOrDefaultAsync();
             Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task LinqTest()
+        {
+            await connection.CreateTableAsync<Category>();
+            await connection.CreateTableAsync<Item>();
+
+            var cat = new Category();
+            cat.Name = "test category";
+            await connection.InsertAsync(cat);
+
+            for (int i = 0; i < 10; i++)
+            {
+                var item = new Item();
+                item.CategoryID = cat.CategoryID;
+                item.Title = "item" + i;
+                await connection.InsertAsync(item);
+            }
+
+            var categoryID = cat.CategoryID;
+
+            var query = 
+                from c in connection.LinqTable<Category>()
+                join i in connection.LinqTable<Item>() on c.CategoryID equals i.CategoryID
+                where c.CategoryID == categoryID
+                select i;
+
+            var items = query.ToList();
+            Assert.IsNotNull(items);
         }
     }
 }

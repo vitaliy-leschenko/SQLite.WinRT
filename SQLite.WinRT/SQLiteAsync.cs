@@ -261,6 +261,12 @@ namespace SQLite.WinRT
             });
         }
 
+        public LinqTableQuery<T> LinqTable<T>() where T : new()
+        {
+            var conn = GetConnection();
+            return new LinqTableQuery<T>(conn);
+        }
+
 		public AsyncTableQuery<T> Table<T> ()
 			where T : new ()
 		{
@@ -464,7 +470,7 @@ namespace SQLite.WinRT
 		}
 	}
 
-	class SQLiteConnectionWithLock : SQLiteConnection
+    class SQLiteConnectionWithLock : SQLiteConnection
 	{
 		readonly object _lockPoint = new object ();
 
