@@ -50,6 +50,8 @@ namespace SQLite.WinRT.Tests
         public int? Data { get; set; }
 
         public DateTime? Time { get; set; }
+
+        public bool Boolean { get; set; }
     }
 
     public class DbContext
@@ -205,6 +207,7 @@ namespace SQLite.WinRT.Tests
             cat.Text = Encoding.UTF8.GetBytes("message");
             await connection.InsertAsync(cat);
 
+            var test = false;
             for (int i = 0; i < 10; i++)
             {
                 var item = new Item();
@@ -215,6 +218,8 @@ namespace SQLite.WinRT.Tests
                     item.Data = i;
                     item.Time = DateTime.UtcNow;
                 }
+                item.Boolean = test;
+                test = !test;
 
                 await connection.InsertAsync(item);
             }
@@ -227,7 +232,7 @@ namespace SQLite.WinRT.Tests
                 from c in db.Categories
                 join i in db.Items on c.CategoryID equals i.CategoryID
                 where c.CategoryID == categoryID
-                select new {t = i.ItemID, q = i.Title.Length };
+                select i;
 
             var items = await query.Skip(2).Take(5).ToListAsync();
             Assert.IsNotNull(items);

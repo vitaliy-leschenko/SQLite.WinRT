@@ -34,6 +34,19 @@ namespace SQLite.WinRT.Linq.Common
             return (byte) provider.ColumnInt(stmt, ordinal);
         }
 
+        public bool ReadBoolean(int ordinal)
+        {
+            return provider.ColumnInt(stmt, ordinal) != 0;
+        }
+
+        public bool? ReadNullableBoolean(int ordinal)
+        {
+            var type = provider.ColumnType(stmt, ordinal);
+            if (type == ColType.Null) return null;
+
+            return provider.ColumnInt(stmt, ordinal) != 0;
+        }
+
         public Char ReadChar(int ordinal)
         {
             return provider.ColumnString(stmt, ordinal)[0];
