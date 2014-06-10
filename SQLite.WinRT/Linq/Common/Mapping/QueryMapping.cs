@@ -161,8 +161,6 @@ namespace SQLite.WinRT.Linq.Common.Mapping
 
         public abstract IEnumerable<EntityInfo> GetDependingEntities(MappingEntity entity, object instance);
 
-        public abstract object CloneEntity(MappingEntity entity, object instance);
-
         public abstract bool IsModified(MappingEntity entity, object instance, object original);
 
         public abstract QueryMapper CreateMapper(QueryTranslator translator);

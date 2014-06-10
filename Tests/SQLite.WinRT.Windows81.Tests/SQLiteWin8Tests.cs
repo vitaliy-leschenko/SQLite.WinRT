@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Windows.Globalization.DateTimeFormatting;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using SQLite.WinRT.Linq;
 using SQLite.WinRT.Linq.Base;
-using SQLite.WinRT.LinqAsync;
 
 namespace SQLite.WinRT.Tests
 {
@@ -63,12 +63,12 @@ namespace SQLite.WinRT.Tests
 
         public IEntityTable<Category> Categories
         {
-            get { return connection.Entity<Category>(); }
+            get { return connection.Table<Category>(); }
         }
 
         public IEntityTable<Item> Items
         {
-            get { return connection.Entity<Item>(); }
+            get { return connection.Table<Item>(); }
         }
     }
 

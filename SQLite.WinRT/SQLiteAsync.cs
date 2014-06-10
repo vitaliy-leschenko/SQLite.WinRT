@@ -23,11 +23,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using SQLite.WinRT.Linq;
 using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT
@@ -270,24 +268,13 @@ namespace SQLite.WinRT
             });
         }
 
-        public IEntityTable<T> Entity<T>()
+        public IEntityTable<T> Table<T>()
         {
             provider = provider ?? GetEntityProvider();
 
             var tableName = GetConnection().GetMapping<T>().TableName;
             return provider.GetTable<T>(tableName);
         }
-
-		public AsyncTableQuery<T> Table<T> ()
-			where T : new ()
-		{
-			//
-			// This isn't async as the underlying connection doesn't go out to the database
-			// until the query is performed. The Async methods are on the query iteself.
-			//
-			var conn = GetConnection ();
-			return new AsyncTableQuery<T> (conn.Table<T> ());
-		}
 
 		public Task<T> ExecuteScalarAsync<T> (string sql, params object[] args)
 		{
@@ -311,91 +298,6 @@ namespace SQLite.WinRT
 			});
 		}
 	}
-
-	//
-	// TODO: Bind to AsyncConnection.GetConnection instead so that delayed
-	// execution can still work after a Pool.Reset.
-	//
-	public partial class AsyncTableQuery<T>
-		where T : new ()
-	{
-	    readonly TableQuery<T> innerQuery;
-
-		public AsyncTableQuery (TableQuery<T> innerQuery)
-		{
-			this.innerQuery = innerQuery;
-		}
-
-		public AsyncTableQuery<T> Where (Expression<Func<T, bool>> predExpr)
-		{
-			return new AsyncTableQuery<T> (innerQuery.Where (predExpr));
-		}
-
-		public AsyncTableQuery<T> Skip (int n)
-		{
-			return new AsyncTableQuery<T> (innerQuery.Skip (n));
-		}
-
-		public AsyncTableQuery<T> Take (int n)
-		{
-			return new AsyncTableQuery<T> (innerQuery.Take (n));
-		}
-
-		public AsyncTableQuery<T> OrderBy<U> (Expression<Func<T, U>> orderExpr)
-		{
-			return new AsyncTableQuery<T> (innerQuery.OrderBy<U> (orderExpr));
-		}
-
-		public AsyncTableQuery<T> OrderByDescending<U> (Expression<Func<T, U>> orderExpr)
-		{
-			return new AsyncTableQuery<T> (innerQuery.OrderByDescending<U> (orderExpr));
-		}
-
-		public Task<List<T>> ToListAsync ()
-		{
-			return Task.Factory.StartNew (() => {
-				using (((SQLiteConnectionWithLock)innerQuery.Connection).Lock ()) {
-					return innerQuery.ToList ();
-				}
-			});
-		}
-
-		public Task<int> CountAsync ()
-		{
-			return Task.Factory.StartNew (() => {
-				using (((SQLiteConnectionWithLock)innerQuery.Connection).Lock ()) {
-					return innerQuery.Count ();
-				}
-			});
-		}
-
-		public Task<T> ElementAtAsync (int index)
-		{
-			return Task.Factory.StartNew (() => {
-				using (((SQLiteConnectionWithLock)innerQuery.Connection).Lock ()) {
-					return innerQuery.ElementAt (index);
-				}
-			});
-		}
-
-		public Task<T> FirstAsync ()
-		{
-			return Task<T>.Factory.StartNew(() => {
-				using (((SQLiteConnectionWithLock)innerQuery.Connection).Lock ()) {
-					return innerQuery.First ();
-				}
-			});
-		}
-
-		public Task<T> FirstOrDefaultAsync ()
-		{
-			return Task<T>.Factory.StartNew(() => {
-				using (((SQLiteConnectionWithLock)innerQuery.Connection).Lock ()) {
-					return innerQuery.FirstOrDefault ();
-				}
-			});
-		}
-    }
 
 	public class CreateTablesResult
 	{

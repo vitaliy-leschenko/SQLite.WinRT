@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using SQLite.WinRT.Linq;
 
-namespace SQLite.WinRT.LinqAsync
+namespace SQLite.WinRT.Linq
 {
     public static class AsyncQueryableHelper
     {

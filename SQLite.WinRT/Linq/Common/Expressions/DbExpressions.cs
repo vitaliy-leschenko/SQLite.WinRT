@@ -490,7 +490,7 @@ namespace SQLite.WinRT.Linq.Common.Expressions
             get { return right; }
         }
 
-        public Expression Condition
+        public new Expression Condition
         {
             get { return condition; }
         }

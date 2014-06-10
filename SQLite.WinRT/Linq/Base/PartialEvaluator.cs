@@ -178,12 +178,8 @@ namespace SQLite.WinRT.Linq.Base
                     e = Expression.Convert(e, typeof (object));
                 }
 
-                Expression<Func<object>> lambda = Expression.Lambda<Func<object>>(e);
-#if NOREFEMIT
-                Func<object> fn = ExpressionEvaluator.CreateDelegate(lambda);
-#else
-                Func<object> fn = lambda.Compile();
-#endif
+                var lambda = Expression.Lambda<Func<object>>(e);
+                var fn = lambda.Compile();
                 return Expression.Constant(fn(), type);
             }
         }

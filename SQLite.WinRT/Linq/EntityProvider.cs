@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -190,23 +189,15 @@ namespace SQLite.WinRT.Linq
             if (lambda != null)
             {
                 // compile & return the execution plan so it can be used multiple times
-                LambdaExpression fn = Expression.Lambda(lambda.Type, plan, lambda.Parameters);
-#if NOREFEMIT
-                    return ExpressionEvaluator.CreateDelegate(fn);
-#else
+                var fn = Expression.Lambda(lambda.Type, plan, lambda.Parameters);
                 return fn.Compile();
-#endif
             }
             else
             {
                 // compile the execution plan and invoke it
-                Expression<Func<object>> efn = Expression.Lambda<Func<object>>(Expression.Convert(plan, typeof (object)));
-#if NOREFEMIT
-                    return ExpressionEvaluator.Eval(efn, new object[] { });
-#else
-                Func<object> fn = efn.Compile();
+                var efn = Expression.Lambda<Func<object>>(Expression.Convert(plan, typeof (object)));
+                var fn = efn.Compile();
                 return fn();
-#endif
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT
 {
@@ -46,7 +47,7 @@ namespace SQLite.WinRT
             var contextType = GetType();
 
             var properties = contextType.GetRuntimeProperties().ToList();
-            var propertyType = typeof (AsyncTableQuery<>).Name;
+            var propertyType = typeof (IEntityTable<>).Name;
 
             foreach (var types in properties.Where(t=> t.PropertyType.Name == propertyType)
                 .Select(t => t.PropertyType.GenericTypeArguments)

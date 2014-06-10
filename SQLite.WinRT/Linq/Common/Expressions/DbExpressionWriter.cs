@@ -21,12 +21,12 @@ namespace SQLite.WinRT.Linq.Common.Expressions
         {
         }
 
-        public static void Write(TextWriter writer, Expression expression)
+        public new static void Write(TextWriter writer, Expression expression)
         {
             new DbExpressionWriter(writer).Visit(expression);
         }
 
-        public static string WriteToString(Expression expression)
+        public new static string WriteToString(Expression expression)
         {
             var sw = new StringWriter();
             Write(sw, expression);

@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Data.Linq;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using SQLite.WinRT.Linq;
 
 namespace SQLite.WinRT.Tests
 {

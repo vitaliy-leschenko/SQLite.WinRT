@@ -199,20 +199,6 @@ namespace SQLite.WinRT.Linq.Common.Mapping
             return members.OrderBy(m => m.Name);
         }
 
-        public override object CloneEntity(MappingEntity entity, object instance)
-        {
-            throw new NotImplementedException();
-            //var clone = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(entity.EntityType);
-            //foreach (var mi in this.GetMappedMembers(entity))
-            //{
-            //    if (this.IsColumn(entity, mi))
-            //    {
-            //        mi.SetValue(clone, mi.GetValue(instance));
-            //    }
-            //}
-            //return clone;
-        }
-
         public override bool IsModified(MappingEntity entity, object instance, object original)
         {
             foreach (MemberInfo mi in GetMappedMembers(entity))

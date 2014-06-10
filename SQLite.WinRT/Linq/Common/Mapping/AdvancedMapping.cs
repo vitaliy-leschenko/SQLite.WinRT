@@ -42,28 +42,6 @@ namespace SQLite.WinRT.Linq.Common.Mapping
             return base.IsRelationship(entity, member) || IsNestedEntity(entity, member);
         }
 
-        public override object CloneEntity(MappingEntity entity, object instance)
-        {
-            object clone = base.CloneEntity(entity, instance);
-
-            // need to clone nested entities too
-            foreach (MemberInfo mi in GetMappedMembers(entity))
-            {
-                if (IsNestedEntity(entity, mi))
-                {
-                    MappingEntity nested = GetRelatedEntity(entity, mi);
-                    object nestedValue = mi.GetValue(instance);
-                    if (nestedValue != null)
-                    {
-                        object nestedClone = CloneEntity(nested, mi.GetValue(instance));
-                        mi.SetValue(clone, nestedClone);
-                    }
-                }
-            }
-
-            return clone;
-        }
-
         public override bool IsModified(MappingEntity entity, object instance, object original)
         {
             if (base.IsModified(entity, instance, original))
@@ -195,15 +173,11 @@ namespace SQLite.WinRT.Linq.Common.Mapping
             var columns = new List<ColumnDeclaration>();
             GetColumns(entity, aliases, columns);
             var root = new SelectExpression(new TableAlias(), columns, source, null);
-            TableAlias[] existingAliases = aliases.Values.ToArray();
 
             Expression projector = GetEntityExpression(root, entity);
             var selectAlias = new TableAlias();
             ProjectedColumns pc = ColumnProjector.ProjectColumns(projector, null, selectAlias, root.Alias);
-            var proj = new ProjectionExpression(new SelectExpression(selectAlias, pc.Columns, root, null), pc.Projector);
-
-            throw new NotImplementedException();
-            //return (ProjectionExpression)this.Translator.Police.ApplyPolicy(proj, entity.ElementType);
+            return new ProjectionExpression(new SelectExpression(selectAlias, pc.Columns, root, null), pc.Projector);
         }
 
         private void GetColumns(MappingEntity entity, Dictionary<string, TableAlias> aliases,

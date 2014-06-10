@@ -39,21 +39,19 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncTableQuery.cs" />
     <Compile Include="BaseDatabaseContext.cs" />
     <Compile Include="ColType.cs" />
     <Compile Include="ConfigOption.cs" />
     <Compile Include="DatabaseUpdateAttribute.cs" />
     <Compile Include="DataVersion.cs" />
     <Compile Include="IDatabaseChangeset.cs" />
-    <Compile Include="LinqAsync\AsyncQueryableHelper.cs" />
+    <Compile Include="Linq\AsyncQueryableHelper.cs" />
     <Compile Include="Linq\Base\AsyncQueryable.cs" />
     <Compile Include="Linq\Base\CompoundKey.cs" />
     <Compile Include="Linq\Base\DeferredList.cs" />
     <Compile Include="Linq\Base\DeferredValue.cs" />
     <Compile Include="Linq\Base\EnumerateOnce.cs" />
     <Compile Include="Linq\Base\ExpressionComparer.cs" />
-    <Compile Include="Linq\Base\ExpressionEvaluator.cs" />
     <Compile Include="Linq\Base\ExpressionExtensions.cs" />
     <Compile Include="Linq\Base\ExpressionReplacer.cs" />
     <Compile Include="Linq\Base\ExpressionVisitor.cs" />
@@ -61,11 +59,9 @@
     <Compile Include="Linq\Base\Grouping.cs" />
     <Compile Include="Linq\Base\IAsyncQueryProvider.cs" />
     <Compile Include="Linq\Base\IEntityProvider.cs" />
-    <Compile Include="Linq\Base\MostRecentlyUsedCache.cs" />
     <Compile Include="Linq\Base\Parameterizer.cs" />
     <Compile Include="Linq\Base\PartialEvaluator.cs" />
     <Compile Include="Linq\Base\Query.cs" />
-    <Compile Include="Linq\Base\QueryCompiler.cs" />
     <Compile Include="Linq\Base\ReadOnlyExtensions.cs" />
     <Compile Include="Linq\Base\ReflectionExtensions.cs" />
     <Compile Include="Linq\Base\ScopedDictionary.cs" />

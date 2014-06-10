@@ -856,10 +856,6 @@ namespace SQLite.WinRT.Linq.Common.Translation
             }
             if (isRoot)
             {
-                if (QueryLanguage.AllowSubqueryInSelectWithoutFrom)
-                {
-                    return GetSingletonSequence(result, "SingleOrDefault");
-                }
                 // use count aggregate instead of exists
                 DbQueryType colType = DbTypeSystem.GetColumnType(typeof (int));
                 SelectExpression newSelect =
