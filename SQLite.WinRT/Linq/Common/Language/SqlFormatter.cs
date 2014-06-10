@@ -2,6 +2,7 @@
 // This source code is made available under the terms of the Microsoft Public License (MS-PL)
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -683,6 +684,24 @@ namespace SQLite.WinRT.Linq.Common.Language
                     return m;
                 }
             }
+            else if (m.Method.Name == "Contains" && m.Arguments.Count == 1)
+            {
+                var constant = (ConstantExpression)((NamedValueExpression)(m.Object)).Value;
+                var type = constant.Value.GetType();
+                var elementType = type.GetElementType() ?? (type.GenericTypeArguments.Length == 1 ? type.GenericTypeArguments[0] : null);
+                if (elementType != null)
+                {
+                    var collection = typeof(ICollection<>).MakeGenericType(elementType);
+                    if (collection.IsAssignableFrom(type))
+                    {
+                        Visit(m.Arguments[0]);
+                        Write(" in (");
+                        Visit(constant);
+                        Write(")");
+                        return m;
+                    }
+                }
+            }
             if (forDebug)
             {
                 if (m.Object != null)
@@ -1209,6 +1228,16 @@ namespace SQLite.WinRT.Linq.Common.Language
                         Write("'");
                         break;
                     case TypeCode.Object:
+                        var list = value as IList;
+                        if (list != null)
+                        {
+                            for (var i = 0; i < list.Count; i++)
+                            {
+                                if (i > 0) Write(", ");
+                                Write(list[i]);
+                            }
+                            break;
+                        }
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", value));
                     case TypeCode.Single:
                     case TypeCode.Double:

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
@@ -247,6 +248,10 @@ namespace SQLite.WinRT.Tests
 
             var sm = await db.Items.DoAsync(t => t.Sum(q => q.ItemID));
             Assert.AreEqual(sm, (1 + 10) * 10 / 2);
+
+            var ids = new [] {1, 2, 50};
+            items = db.Items.Where(t => ids.Contains(t.ItemID)).ToList();
+            Assert.IsTrue(items.Count == 2);
         }
     }
 }
