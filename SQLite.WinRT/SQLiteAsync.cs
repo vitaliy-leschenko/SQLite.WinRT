@@ -27,6 +27,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using SQLite.WinRT.Linq;
+using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT
 {
@@ -43,6 +45,13 @@ namespace SQLite.WinRT
 		{
 			return SQLiteConnectionPool.Shared.GetConnection (connectionString);
 		}
+
+	    private IEntityProvider provider;
+	    internal IEntityProvider GetEntityProvider()
+	    {
+            var conn = GetConnection();
+	        return conn.GetEntityProvider();
+	    }
 
 		public Task<CreateTablesResult> CreateTableAsync<T> ()
 			where T : new ()
@@ -261,10 +270,12 @@ namespace SQLite.WinRT
             });
         }
 
-        public LinqTableQuery<T> LinqTable<T>() where T : new()
+        public IEntityTable<T> Entity<T>()
         {
-            var conn = GetConnection();
-            return new LinqTableQuery<T>(conn);
+            provider = provider ?? GetEntityProvider();
+
+            var tableName = GetConnection().GetMapping<T>().TableName;
+            return provider.GetTable<T>(tableName);
         }
 
 		public AsyncTableQuery<T> Table<T> ()

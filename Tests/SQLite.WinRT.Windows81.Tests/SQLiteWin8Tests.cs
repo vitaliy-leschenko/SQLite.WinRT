@@ -1,9 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
+using System.Text;
 using System.Threading.Tasks;
+using Windows.Globalization.DateTimeFormatting;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using SQLite.WinRT.Linq.Base;
+using SQLite.WinRT.LinqAsync;
 
 namespace SQLite.WinRT.Tests
 {
@@ -24,19 +29,47 @@ namespace SQLite.WinRT.Tests
         public double DoubleValue { get; set; }
     }
 
+    [Table("Categories")]
     public class Category
     {
         [PrimaryKey, AutoIncrement]
         public int CategoryID { get; set; }
         public string Name { get; set; }
+
+        public byte[] Text { get; set; }
     }
 
+    [Table("Items")]
     public class Item
     {
         [PrimaryKey, AutoIncrement]
         public int ItemID { get; set; }
         public int CategoryID { get; set; }
         public string Title { get; set; }
+
+        public int? Data { get; set; }
+
+        public DateTime? Time { get; set; }
+    }
+
+    public class DbContext
+    {
+        private readonly SQLiteAsyncConnection connection;
+
+        public DbContext(SQLiteAsyncConnection connection)
+        {
+            this.connection = connection;
+        }
+
+        public IEntityTable<Category> Categories
+        {
+            get { return connection.Entity<Category>(); }
+        }
+
+        public IEntityTable<Item> Items
+        {
+            get { return connection.Entity<Item>(); }
+        }
     }
 
     [TestClass]
@@ -52,7 +85,8 @@ namespace SQLite.WinRT.Tests
         public void TestInitialize()
         {
             var folder = ApplicationData.Current.LocalFolder;
-            connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName));
+            connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName), true);
+            connection.GetConnection().Trace = true;
         }
 
         [TestCleanup]
@@ -168,6 +202,7 @@ namespace SQLite.WinRT.Tests
 
             var cat = new Category();
             cat.Name = "test category";
+            cat.Text = Encoding.UTF8.GetBytes("message");
             await connection.InsertAsync(cat);
 
             for (int i = 0; i < 10; i++)
@@ -175,19 +210,38 @@ namespace SQLite.WinRT.Tests
                 var item = new Item();
                 item.CategoryID = cat.CategoryID;
                 item.Title = "item" + i;
+                if (i % 2 == 0)
+                {
+                    item.Data = i;
+                    item.Time = DateTime.UtcNow;
+                }
+
                 await connection.InsertAsync(item);
             }
 
             var categoryID = cat.CategoryID;
 
-            var query = 
-                from c in connection.LinqTable<Category>()
-                join i in connection.LinqTable<Item>() on c.CategoryID equals i.CategoryID
-                where c.CategoryID == categoryID
-                select i;
+            var db = new DbContext(connection);
 
-            var items = query.ToList();
+            var query =
+                from c in db.Categories
+                join i in db.Items on c.CategoryID equals i.CategoryID
+                where c.CategoryID == categoryID
+                select new {t = i.ItemID, q = i.Title.Length };
+
+            var items = await query.Skip(2).Take(5).ToListAsync();
             Assert.IsNotNull(items);
+
+            var count = await db.Items.CountAsync(t => t.ItemID > 6);
+            Assert.IsTrue(count == 4);
+
+            var ct = await db.Categories.FirstOrDefaultAsync(t => t.CategoryID == cat.CategoryID);
+            Assert.IsNotNull(ct);
+            Assert.AreEqual(ct.CategoryID, cat.CategoryID);
+            Assert.AreEqual(ct.Name, cat.Name);
+
+            var sm = await db.Items.DoAsync(t => t.Sum(q => q.ItemID));
+            Assert.AreEqual(sm, (1 + 10) * 10 / 2);
         }
     }
 }

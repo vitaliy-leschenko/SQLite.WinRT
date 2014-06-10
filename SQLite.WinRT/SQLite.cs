@@ -30,7 +30,9 @@ using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
-
+using SQLite.WinRT.Linq;
+using SQLite.WinRT.Linq.Base;
+using SQLite.WinRT.Linq.Common;
 #if USE_CSHARP_SQLITE
 using Sqlite3 = Community.CsharpSqlite.Sqlite3;
 using Sqlite3DatabaseHandle = Community.CsharpSqlite.Sqlite3.sqlite3;
@@ -594,6 +596,20 @@ namespace SQLite.WinRT
 		{
 			return new TableQuery<T> (this);
 		}
+
+        private IEntityProvider provider;
+        internal IEntityProvider GetEntityProvider()
+        {
+            return new EntityProvider(this);
+        }
+
+        public IEntityTable<T> Entity<T>()
+        {
+            provider = provider ?? GetEntityProvider();
+
+            var tableName = GetMapping<T>().TableName;
+            return provider.GetTable<T>(tableName);
+        }
 
 		/// <summary>
 		/// Attempts to retrieve an object with the given primary key from the table
@@ -1274,6 +1290,12 @@ namespace SQLite.WinRT
 				}
 			}
 		}
+
+	    internal IEnumerable<T> LinqQuery<T>(string commandText, object[] paramValues, Func<FieldReader, T> projector)
+	    {
+            var cmd = CreateCommand(commandText, paramValues);
+            return cmd.ExecuteQueryProjector<T>(projector);
+        }
 	}
 
 	/// <summary>
@@ -1746,6 +1768,28 @@ namespace SQLite.WinRT
 			return ExecuteDeferredQuery<T>(_conn.GetMapping(typeof(T))).ToList();
 		}
 
+        public IEnumerable<T> ExecuteQueryProjector<T>(Func<FieldReader, T> projector)
+        {
+            if (_conn.Trace)
+            {
+                Debug.WriteLine("Executing Query: " + this);
+            }
+            var stmt = Prepare();
+            try
+            {
+                while (Platform.Current.SQLiteProvider.Step(stmt) == SQLiteResult.Row)
+                {
+                    var reader = new FieldReader(stmt);
+                    var item = projector(reader);
+                    yield return item;
+                }
+            }
+            finally
+            {
+                Platform.Current.SQLiteProvider.Finalize(stmt);
+            }
+        }
+
 		public List<T> ExecuteQuery<T> (TableMapping map)
 		{
 			return ExecuteDeferredQuery<T>(map).ToList();
@@ -1883,7 +1927,7 @@ namespace SQLite.WinRT
                     Platform.Current.SQLiteProvider.BindInt(stmt, index, (int)value);
 				} else if (value is String) {
                     Platform.Current.SQLiteProvider.BindText(stmt, index, (string)value, -1, NegativePointer);
-				} else if (value is Byte || value is UInt16 || value is SByte || value is Int16) {
+                } else if (value is Byte || value is UInt16 || value is SByte || value is Int16) {
                     Platform.Current.SQLiteProvider.BindInt(stmt, index, Convert.ToInt32(value));
 				} else if (value is Boolean) {
                     Platform.Current.SQLiteProvider.BindInt(stmt, index, (bool)value ? 1 : 0);
