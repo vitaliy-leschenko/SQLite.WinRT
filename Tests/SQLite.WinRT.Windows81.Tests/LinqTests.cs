@@ -109,7 +109,7 @@ namespace SQLite.WinRT.Tests
         }
 
         [TestMethod]
-        public async Task TestJoinLeftOuter()
+        public async Task TestJoinInto()
         {
             var db = new DbContext(connection);
             var query =
@@ -121,6 +121,32 @@ namespace SQLite.WinRT.Tests
             Assert.IsNotNull(items);
         }
 
+        [TestMethod]
+        public async Task TestJoinIntoCount()
+        {
+            var db = new DbContext(connection);
+            var query =
+                from c in db.Categories
+                join i in db.Items on c.CategoryID equals i.CategoryID into ords
+                select new { cust = c, ords = ords.Count() };
+
+            var items = await query.ToListAsync();
+            Assert.IsNotNull(items);
+        }
+
+        [TestMethod]
+        public async Task TestJoinIntoDefaultIfEmpty()
+        {
+            var db = new DbContext(connection);
+            var query =
+                from c in db.Categories
+                join i in db.Items on c.CategoryID equals i.CategoryID into ords
+                from i in ords.DefaultIfEmpty()
+                select new { c, i };
+
+            var items = await query.ToListAsync();
+            Assert.IsNotNull(items);
+        }
 
         [TestMethod]
         public async Task TestJoinWithWhere()
