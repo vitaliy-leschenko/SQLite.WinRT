@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SQLite.WinRT.Tests</RootNamespace>
-    <AssemblyName>SQLite.WinRT.Tests</AssemblyName>
+    <AssemblyName>SQLite.WinRT.Tests.WP8</AssemblyName>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -70,14 +70,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\SQLite.WinRT.Windows81.Tests\CommonTests.cs">
+      <Link>CommonTests.cs</Link>
+    </Compile>
+    <Compile Include="..\SQLite.WinRT.Windows81.Tests\Data\Category.cs">
+      <Link>Data\Category.cs</Link>
+    </Compile>
+    <Compile Include="..\SQLite.WinRT.Windows81.Tests\Data\DbContext.cs">
+      <Link>Data\DbContext.cs</Link>
+    </Compile>
+    <Compile Include="..\SQLite.WinRT.Windows81.Tests\Data\Item.cs">
+      <Link>Data\Item.cs</Link>
+    </Compile>
+    <Compile Include="..\SQLite.WinRT.Windows81.Tests\LinqTests.cs">
+      <Link>LinqTests.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CommonTests.cs" />
-    <Compile Include="Data\Category.cs" />
-    <Compile Include="Data\DbContext.cs" />
-    <Compile Include="Data\Item.cs" />
-    <Compile Include="LinqTests.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

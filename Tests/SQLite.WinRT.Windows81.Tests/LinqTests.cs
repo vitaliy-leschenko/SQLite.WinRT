@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.WebUI;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using SQLite.WinRT.Linq;
 using SQLite.WinRT.Tests.Data;

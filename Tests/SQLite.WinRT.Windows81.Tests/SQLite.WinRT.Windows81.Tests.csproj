@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SQLite.WinRT.Tests</RootNamespace>
-    <AssemblyName>SQLite.WinRT.Tests</AssemblyName>
+    <AssemblyName>SQLite.WinRT.Tests.Win8</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>

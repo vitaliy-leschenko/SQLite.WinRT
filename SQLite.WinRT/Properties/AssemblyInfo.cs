@@ -29,4 +29,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("SQLite.WinRT.Ext")]
-[assembly: InternalsVisibleTo("SQLite.WinRT.Tests")]
+[assembly: InternalsVisibleTo("SQLite.WinRT.Tests.Win8")]
+[assembly: InternalsVisibleTo("SQLite.WinRT.Tests.WP8")]
+[assembly: InternalsVisibleTo("SQLite.WinRT.Tests.WP81")]
