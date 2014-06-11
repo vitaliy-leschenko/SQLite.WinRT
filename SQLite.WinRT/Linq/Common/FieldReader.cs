@@ -26,6 +26,12 @@ namespace SQLite.WinRT.Linq.Common
             return (byte) provider.ColumnInt(stmt, ordinal);
         }
 
+        public bool IsDBNull(int ordinal)
+        {
+            ColType type = provider.ColumnType(stmt, ordinal);
+            return type == ColType.Null;
+        }
+
         public Byte? ReadNullableByte(int ordinal)
         {
             ColType type = provider.ColumnType(stmt, ordinal);

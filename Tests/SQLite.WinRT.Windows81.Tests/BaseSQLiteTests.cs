@@ -18,9 +18,10 @@ namespace SQLite.WinRT.Tests
         {
             var folder = ApplicationData.Current.LocalFolder;
             connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName), true);
-            connection.GetConnection().Trace = true;
 
             Task.WaitAll(DataInitialize());
+
+            connection.GetConnection().Trace = true;
         }
 
         [TestCleanup]

@@ -87,5 +87,29 @@ namespace SQLite.WinRT.Tests
                 }
             }
         }
+
+        [TestMethod]
+        public async Task TestSubQueryCount()
+        {
+            var db = new DbContext(connection);
+            var query = 
+                from c in db.Categories
+                where c.CategoryID % 2 == 0
+                select new { Count = db.Items.Count(t => t.CategoryID == c.CategoryID), Category = c };
+            var result = await query.ToListAsync();
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public async Task TestSubQuerySelect()
+        {
+            var db = new DbContext(connection);
+            var query =
+                from c in db.Categories
+                where c.CategoryID % 2 == 0
+                select new { Items = db.Items.Where(t => t.CategoryID == c.CategoryID).ToList(), Category = c };
+            var result = await query.ToListAsync();
+            Assert.IsNotNull(result);
+        }
     }
 }
