@@ -1772,7 +1772,7 @@ namespace SQLite.WinRT
         {
             if (_conn.Trace)
             {
-                Debug.WriteLine("Executing Query: " + this);
+                Debug.WriteLine("Executing Query:\n" + this);
             }
             var stmt = Prepare();
             try

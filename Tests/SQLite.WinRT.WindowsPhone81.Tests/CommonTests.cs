@@ -26,7 +26,7 @@ namespace SQLite.WinRT.Tests
     }
 
     [TestClass]
-    public class SQLiteWinPhone8Tests
+    public class CommonTests
     {
         private readonly Random rnd = new Random();
 
@@ -38,7 +38,8 @@ namespace SQLite.WinRT.Tests
         public void TestInitialize()
         {
             var folder = ApplicationData.Current.LocalFolder;
-            connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName));
+            connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName), true);
+            connection.GetConnection().Trace = true;
         }
 
         [TestCleanup]
@@ -54,28 +55,28 @@ namespace SQLite.WinRT.Tests
         }
 
         [TestMethod]
-        public async Task CreateDatabaseTest()
+        public async Task TestCreateDatabase()
         {
             await connection.CreateTableAsync<TestTable>();
         }
 
 
         [TestMethod]
-        public async Task UpdateDatabaseTest()
+        public async Task TestUpdateDatabase()
         {
             await connection.CreateTableAsync<TestTable>();
             await connection.CreateTableAsync<TestTable2>();
         }
 
         [TestMethod]
-        public async Task DropTableTest()
+        public async Task TestDropTable()
         {
             await connection.CreateTableAsync<TestTable2>();
             await connection.DropTableAsync<TestTable2>();
         }
 
         [TestMethod]
-        public async Task InsertTest()
+        public async Task TestInsert()
         {
             await connection.CreateTableAsync<TestTable>();
 
@@ -86,32 +87,8 @@ namespace SQLite.WinRT.Tests
             Assert.IsTrue(item.ID != 0);
         }
 
-
         [TestMethod]
-        public async Task SelectTest()
-        {
-            await connection.CreateTableAsync<TestTable>();
-
-            var count = rnd.Next(10) + 5;
-
-            for (int i = 0; i < count; i++)
-            {
-                var item = new TestTable();
-                item.IntValue = rnd.Next();
-                await connection.InsertAsync(item);
-            }
-
-            var items = await connection.Table<TestTable>().OrderBy(t => t.IntValue).ToListAsync();
-            Assert.IsTrue(items.Count == count);
-
-            for (int i = 0; i < items.Count-2; i++)
-            {
-                Assert.IsTrue(items[i].IntValue <= items[i + 1].IntValue);
-            }
-        }
-
-        [TestMethod]
-        public async Task UpdateTest()
+        public async Task TestUpdate()
         {
             await connection.CreateTableAsync<TestTable>();
 
@@ -128,7 +105,7 @@ namespace SQLite.WinRT.Tests
         }
 
         [TestMethod]
-        public async Task DeleteTest()
+        public async Task TestDelete()
         {
             await connection.CreateTableAsync<TestTable>();
 

@@ -341,8 +341,13 @@ namespace SQLite.WinRT.Linq
             public IEnumerable<T> Execute<T>(QueryCommand command, Func<FieldReader, T> fnProjector,
                 MappingEntity entity, object[] paramValues)
             {
-                return Provider.Connection.LinqQuery(command.CommandText, paramValues, fnProjector);
+                return Provider.LinqQuery(command.CommandText, paramValues, fnProjector);
             }
+        }
+
+        private IEnumerable<T> LinqQuery<T>(string commandText, object[] paramValues, Func<FieldReader, T> projector)
+        {
+            return Connection.LinqQuery(commandText, paramValues, projector);
         }
     }
 }

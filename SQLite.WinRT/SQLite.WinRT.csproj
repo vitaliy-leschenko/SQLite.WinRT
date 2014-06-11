@@ -45,8 +45,7 @@
     <Compile Include="DatabaseUpdateAttribute.cs" />
     <Compile Include="DataVersion.cs" />
     <Compile Include="IDatabaseChangeset.cs" />
-    <Compile Include="Linq\AsyncQueryableHelper.cs" />
-    <Compile Include="Linq\Base\AsyncQueryable.cs" />
+    <Compile Include="Linq\AsyncQueryable.cs" />
     <Compile Include="Linq\Base\CompoundKey.cs" />
     <Compile Include="Linq\Base\DeferredList.cs" />
     <Compile Include="Linq\Base\DeferredValue.cs" />

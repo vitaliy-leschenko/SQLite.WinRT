@@ -119,12 +119,11 @@
     <SDKReference Include="TestPlatform, Version=11.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseSQLiteTests.cs" />
     <Compile Include="Data\Category.cs" />
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\Item.cs" />
     <Compile Include="LinqTests.cs" />
-    <Compile Include="SQLiteWin8Tests.cs" />
+    <Compile Include="CommonTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

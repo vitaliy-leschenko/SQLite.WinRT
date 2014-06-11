@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Globalization.DateTimeFormatting;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using SQLite.WinRT.Linq;
-using SQLite.WinRT.Tests.Data;
 
 namespace SQLite.WinRT.Tests
 {
@@ -31,7 +26,7 @@ namespace SQLite.WinRT.Tests
     }
 
     [TestClass]
-    public class SQLiteWin8Tests
+    public class CommonTests
     {
         private readonly Random rnd = new Random();
 
@@ -60,28 +55,28 @@ namespace SQLite.WinRT.Tests
         }
 
         [TestMethod]
-        public async Task CreateDatabaseTest()
+        public async Task TestCreateDatabase()
         {
             await connection.CreateTableAsync<TestTable>();
         }
 
 
         [TestMethod]
-        public async Task UpdateDatabaseTest()
+        public async Task TestUpdateDatabase()
         {
             await connection.CreateTableAsync<TestTable>();
             await connection.CreateTableAsync<TestTable2>();
         }
 
         [TestMethod]
-        public async Task DropTableTest()
+        public async Task TestDropTable()
         {
             await connection.CreateTableAsync<TestTable2>();
             await connection.DropTableAsync<TestTable2>();
         }
 
         [TestMethod]
-        public async Task InsertTest()
+        public async Task TestInsert()
         {
             await connection.CreateTableAsync<TestTable>();
 
@@ -92,32 +87,8 @@ namespace SQLite.WinRT.Tests
             Assert.IsTrue(item.ID != 0);
         }
 
-
         [TestMethod]
-        public async Task SelectTest()
-        {
-            await connection.CreateTableAsync<TestTable>();
-
-            var count = rnd.Next(10) + 5;
-
-            for (int i = 0; i < count; i++)
-            {
-                var item = new TestTable();
-                item.IntValue = rnd.Next();
-                await connection.InsertAsync(item);
-            }
-
-            var items = await connection.Table<TestTable>().OrderBy(t => t.IntValue).ToListAsync();
-            Assert.IsTrue(items.Count == count);
-
-            for (int i = 0; i < items.Count - 2; i++)
-            {
-                Assert.IsTrue(items[i].IntValue <= items[i + 1].IntValue);
-            }
-        }
-
-        [TestMethod]
-        public async Task UpdateTest()
+        public async Task TestUpdate()
         {
             await connection.CreateTableAsync<TestTable>();
 
@@ -134,7 +105,7 @@ namespace SQLite.WinRT.Tests
         }
 
         [TestMethod]
-        public async Task DeleteTest()
+        public async Task TestDelete()
         {
             await connection.CreateTableAsync<TestTable>();
 
@@ -150,63 +121,6 @@ namespace SQLite.WinRT.Tests
             await connection.DeleteAsync(item);
             result = await table.Where(t => t.IntValue == 200).FirstOrDefaultAsync();
             Assert.IsNull(result);
-        }
-
-        [TestMethod]
-        public async Task LinqTest()
-        {
-            await connection.CreateTableAsync<Category>();
-            await connection.CreateTableAsync<Item>();
-
-            var cat = new Category();
-            cat.Name = "test category";
-            cat.Text = Encoding.UTF8.GetBytes("message");
-            await connection.InsertAsync(cat);
-
-            var test = false;
-            for (int i = 0; i < 10; i++)
-            {
-                var item = new Item();
-                item.CategoryID = cat.CategoryID;
-                item.Title = "item" + i;
-                if (i % 2 == 0)
-                {
-                    item.Data = i;
-                    item.Time = DateTime.UtcNow;
-                }
-                item.Boolean = test;
-                test = !test;
-
-                await connection.InsertAsync(item);
-            }
-
-            var categoryID = cat.CategoryID;
-
-            var db = new DbContext(connection);
-
-            var query =
-                from c in db.Categories
-                join i in db.Items on c.CategoryID equals i.CategoryID
-                where c.CategoryID == categoryID
-                select i;
-
-            var items = await query.Skip(2).Take(5).ToListAsync();
-            Assert.IsNotNull(items);
-
-            var count = await db.Items.CountAsync(t => t.ItemID > 6);
-            Assert.IsTrue(count == 4);
-
-            var ct = await db.Categories.FirstOrDefaultAsync(t => t.CategoryID == cat.CategoryID);
-            Assert.IsNotNull(ct);
-            Assert.AreEqual(ct.CategoryID, cat.CategoryID);
-            Assert.AreEqual(ct.Name, cat.Name);
-
-            var sm = await db.Items.DoAsync(t => t.Sum(q => q.ItemID));
-            Assert.AreEqual(sm, (1 + 10) * 10 / 2);
-
-            var ids = new [] {1, 2, 50};
-            items = db.Items.Where(t => ids.Contains(t.ItemID)).ToList();
-            Assert.IsTrue(items.Count == 2);
         }
     }
 }
