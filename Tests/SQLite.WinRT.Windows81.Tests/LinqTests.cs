@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.WebUI;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using SQLite.WinRT.Linq;
 using SQLite.WinRT.Tests.Data;
@@ -138,6 +139,21 @@ namespace SQLite.WinRT.Tests
         }
 
         [TestMethod]
+        public async Task TestJoinWithMissingJoinCondition()
+        {
+            var db = new DbContext(connection);
+            var query =
+                from c in db.Categories
+                from i in db.Items
+                where c.CategoryID == i.CategoryID && c.Name == "category 1"
+                select i;
+            var items = await query.ToListAsync();
+            Assert.IsNotNull(items);
+            Assert.IsTrue(items.All(t => t.CategoryID == 1));
+            Assert.IsTrue(items.Count == 2);
+        }
+
+        [TestMethod]
         public async Task TestSelectWithLimits()
         {
             var db = new DbContext(connection);
@@ -218,6 +234,40 @@ namespace SQLite.WinRT.Tests
             var db = new DbContext(connection);
             var sum = await db.Categories.ExecuteAsync(t => t.Sum(q => q.CategoryID));
             Assert.AreEqual(sum, (1 + 10) * 10 / 2);
+        }
+
+        [TestMethod]
+        public async Task TestGroupByCount()
+        {
+            var db = new DbContext(connection);
+            var query = 
+                from i in db.Items
+                group i by i.CategoryID into g
+                select new {CategoryID = g.Key, Count = g.Count()};
+
+            var items = await query.ToListAsync();
+            Assert.IsNotNull(items);
+        }
+
+        [TestMethod]
+        public async Task TestGroupBySelectMany()
+        {
+            var db = new DbContext(connection);
+            var items = await db.Items.GroupBy(t => t.CategoryID).SelectMany(t => t).ToListAsync();
+            Assert.IsNotNull(items);
+        }
+
+        [TestMethod]
+        public async Task TestDistinct()
+        {
+            var db = new DbContext(connection);
+            var query =
+                from i in db.Items
+                select i.Boolean;
+            var values = await query.Distinct().ToListAsync();
+            Assert.IsNotNull(values);
+            Assert.IsTrue(values.Count == 2);
+            Assert.AreNotEqual(values[0], values[1]);
         }
     }
 }

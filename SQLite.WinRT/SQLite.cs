@@ -1772,14 +1772,14 @@ namespace SQLite.WinRT
         {
             if (_conn.Trace)
             {
-                Debug.WriteLine("Executing Query:\n" + this);
+                Debug.WriteLine(CommandText);
             }
             var stmt = Prepare();
             try
             {
+                var reader = new FieldReader(stmt);
                 while (Platform.Current.SQLiteProvider.Step(stmt) == SQLiteResult.Row)
                 {
-                    var reader = new FieldReader(stmt);
                     var item = projector(reader);
                     yield return item;
                 }
