@@ -9,7 +9,7 @@ using Windows.Globalization.DateTimeFormatting;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using SQLite.WinRT.Linq;
-using SQLite.WinRT.Linq.Base;
+using SQLite.WinRT.Tests.Data;
 
 namespace SQLite.WinRT.Tests
 {
@@ -28,51 +28,6 @@ namespace SQLite.WinRT.Tests
         public int ID { get; set; }
         public int IntValue { get; set; }
         public double DoubleValue { get; set; }
-    }
-
-    [Table("Categories")]
-    public class Category
-    {
-        [PrimaryKey, AutoIncrement]
-        public int CategoryID { get; set; }
-        public string Name { get; set; }
-
-        public byte[] Text { get; set; }
-    }
-
-    [Table("Items")]
-    public class Item
-    {
-        [PrimaryKey, AutoIncrement]
-        public int ItemID { get; set; }
-        public int CategoryID { get; set; }
-        public string Title { get; set; }
-
-        public int? Data { get; set; }
-
-        public DateTime? Time { get; set; }
-
-        public bool Boolean { get; set; }
-    }
-
-    public class DbContext
-    {
-        private readonly SQLiteAsyncConnection connection;
-
-        public DbContext(SQLiteAsyncConnection connection)
-        {
-            this.connection = connection;
-        }
-
-        public IEntityTable<Category> Categories
-        {
-            get { return connection.Table<Category>(); }
-        }
-
-        public IEntityTable<Item> Items
-        {
-            get { return connection.Table<Item>(); }
-        }
     }
 
     [TestClass]
