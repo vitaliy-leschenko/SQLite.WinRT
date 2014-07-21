@@ -113,7 +113,7 @@
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows</Name>
     </SDKReference>
     <SDKReference Include="MSTestFramework, Version=11.0" />
-    <SDKReference Include="SQLite.WinRT81, Version=3.8.4.3">
+    <SDKReference Include="SQLite.WinRT81, Version=3.8.5">
       <Name>SQLite for Windows Runtime %28Windows 8.1%29</Name>
     </SDKReference>
     <SDKReference Include="TestPlatform, Version=11.0" />

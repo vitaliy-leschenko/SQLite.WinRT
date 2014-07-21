@@ -96,6 +96,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite3.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="SQLite.WP81, Version=3.8.5">
+      <Name>SQLite for Windows Phone 8.1</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
