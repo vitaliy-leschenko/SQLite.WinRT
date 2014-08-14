@@ -68,6 +68,10 @@ namespace SQLite.WinRT.Tests.WinPhone8
                     item.Title = "item" + j;
 
                     await connection.InsertAsync(item);
+
+                    item.Time = DateTime.Today.AddHours(i).AddMinutes(j).AddSeconds(5);
+
+                    await connection.UpdateAsync(item);
                 }
             }
         }

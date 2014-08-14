@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using SQLite.WinRT.Linq.Base;
@@ -76,7 +77,7 @@ namespace SQLite.WinRT.Linq.Common
                     return new DateTime(ticks);
                 case ColType.Text:
                     string text = provider.ColumnString(stmt, ordinal);
-                    return DateTime.Parse(text);
+                    return DateTime.Parse(text, CultureInfo.InvariantCulture);
                 default:
                     return DateTime.MinValue;
             }
@@ -92,7 +93,7 @@ namespace SQLite.WinRT.Linq.Common
                     return new DateTime(ticks);
                 case ColType.Text:
                     string text = provider.ColumnString(stmt, ordinal);
-                    return DateTime.Parse(text);
+                    return DateTime.Parse(text, CultureInfo.InvariantCulture);
                 default:
                     return null;
             }
