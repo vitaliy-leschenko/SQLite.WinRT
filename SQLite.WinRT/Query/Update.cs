@@ -1,60 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT.Query
 {
-    public class Setting
+    public class Update<T>
     {
-        public string ColumnName { get; internal set; }
-        public object Value { get; internal set; }
-        public bool IsExpression { get; internal set; }
-        public Update Query { get; internal set; }
+        private readonly SqlQuery<T> query;
 
-        public Update EqualTo(object value)
-        {
-            Value = value;
-            Query.SetStatements.Add(this);
-            return Query;
-        }
-
-        public Update EqualToExpression(string value)
-        {
-            Value = value;
-            IsExpression = true;
-            Query.SetStatements.Add(this);
-            return Query;
-        }
-    }
-
-    public class Update
-    {
-        private readonly SqlQuery query;
-
-        internal List<Setting> SetStatements
+        internal List<ISetting<T>> SetStatements
         {
             get { return query.SetStatements; }
         }
 
         internal Update(string tableId, IEntityProvider provider)
         {
-            query = new SqlQuery(provider);
+            query = new SqlQuery<T>(provider);
             query.QueryCommandType = QueryType.Update;
             query.FromTables.Add(tableId);
         }
 
-        public Setting Set(string columnName)
+        public Setting<T, TValue> Set<TValue>(Expression<Func<T, TValue>> columnName)
         {
-            return new Setting
+            var memberExpression = columnName.Body as MemberExpression;
+            if (memberExpression == null) throw new InvalidOperationException();
+
+            return new Setting<T, TValue>
             {
                 Query = this,
-                ColumnName = columnName,
+                ColumnName = memberExpression.Member.Name,
                 IsExpression = false
             };
         }
 
-        public Constraint Where(string columnName)
+        public StringConstraint<T> Where(Expression<Func<T, string>> propertySelector)
         {
-            return query.Where(columnName);
+            return query.Where(propertySelector);
+        }
+
+        public Constraint<T, TValue> Where<TValue>(Expression<Func<T, TValue>> propertySelector)
+        {
+            return query.Where(propertySelector);
         }
     }
 }

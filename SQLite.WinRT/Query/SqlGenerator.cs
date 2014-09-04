@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SQLite.WinRT.Query
 {
-    class SqlGenerator: ISqlGenerator
+    class SqlGenerator<T>: ISqlGenerator
     {
-        private readonly SqlQuery query;
+        private readonly SqlQuery<T> query;
         private readonly ISqlFragment sqlFragment = new SqlFragment();
         private readonly List<object> parameters = new List<object>();
 
@@ -15,7 +15,7 @@ namespace SQLite.WinRT.Query
             get { return parameters; }
         }
 
-        public SqlGenerator(SqlQuery query)
+        public SqlGenerator(SqlQuery<T> query)
         {
             this.query = query;
         }
@@ -48,7 +48,7 @@ namespace SQLite.WinRT.Query
                     parameters.Add(query.SetStatements[i].Value);
                 }
                 else
-                    sb.Append(query.SetStatements[i].Value);
+                    sb.Append(query.SetStatements[i].ExpressionValue);
             }
 
             //wheres
@@ -125,7 +125,7 @@ namespace SQLite.WinRT.Query
                         break;
                     default:
                         sb.Append(c.ColumnName);
-                        sb.Append(Constraint.GetComparisonOperator(c.Comparison));
+                        sb.Append(ConstraintHelper.GetComparisonOperator(c.Comparison));
                         if (c.Comparison == Comparison.Is || c.Comparison == Comparison.IsNot)
                         {
                             sb.Append("NULL");

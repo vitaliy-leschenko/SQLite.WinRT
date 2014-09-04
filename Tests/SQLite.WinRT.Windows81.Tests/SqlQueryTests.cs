@@ -80,8 +80,8 @@ namespace SQLite.WinRT.Tests.WinPhone8
             var db = new DbContext(connection);
             var count = db.Categories
                 .Update()
-                .Set("Name").EqualTo("test name")
-                .Where("CategoryID").IsBetweenAnd(3, 4)
+                .Set(t => t.Name).EqualTo("test name")
+                .Where(t => t.CategoryID).IsBetweenAnd(3, 4)
                 .Execute();
 
             var cats = db.Categories.Where(t => t.CategoryID >= 3 && t.CategoryID <= 4).ToList();
@@ -91,15 +91,27 @@ namespace SQLite.WinRT.Tests.WinPhone8
             {
                 Assert.IsTrue(cat.Name == "test name");
             }
+
+            count = db.Categories.Delete().Where(t => t.Name).Like("%test%").Execute();
+            Assert.IsTrue(count == cats.Count);
         }
 
         [TestMethod]
         public void DeleteTest()
         {
             var db = new DbContext(connection);
-            var count = db.Categories.Delete().Where("CategoryID").IsLessThanOrEqualTo(3).Execute();
+            var count = db.Categories.Delete().Where(t => t.CategoryID).IsLessThanOrEqualTo(3).Execute();
             Assert.IsTrue(count == 3);
             Assert.IsFalse(db.Categories.Any(t => t.CategoryID <= 3));
+        }
+
+        [TestMethod]
+        public void DeleteAllTest()
+        {
+            var db = new DbContext(connection);
+            db.Items.Delete().Execute();
+
+            Assert.IsFalse(db.Items.Any());
         }
     }
 }

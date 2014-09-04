@@ -319,14 +319,14 @@ namespace SQLite.WinRT.Linq
                 return default(T);
             }
 
-            public Update Update()
+            public Update<T> Update()
             {
-                return new Update(TableId, provider);
+                return new Update<T>(TableId, provider);
             }
 
-            public Delete Delete()
+            public Delete<T> Delete()
             {
-                return new Delete(TableId, provider);
+                return new Delete<T>(TableId, provider);
             }
 
             object IEntityTable.GetById(object id)

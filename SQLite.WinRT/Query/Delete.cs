@@ -1,22 +1,29 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT.Query
 {
-    public class Delete
+    public class Delete<T>
     {
-        private readonly SqlQuery query;
+        private readonly SqlQuery<T> query;
 
         internal Delete(string tableId, IEntityProvider provider)
         {
-            query = new SqlQuery(provider);
+            query = new SqlQuery<T>(provider);
             query.QueryCommandType = QueryType.Delete;
             query.FromTables.Add(tableId);
         }
 
-        public Constraint Where(string columnName)
+        public StringConstraint<T> Where(Expression<Func<T, string>> propertySelector)
         {
-            return query.Where(columnName);
+            return query.Where(propertySelector);
+        }
+
+        public Constraint<T, TValue> Where<TValue>(Expression<Func<T, TValue>> propertySelector)
+        {
+            return query.Where(propertySelector);
         }
 
         public virtual int Execute()

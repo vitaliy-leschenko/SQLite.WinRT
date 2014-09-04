@@ -2,23 +2,28 @@
 
 namespace SQLite.WinRT.Query
 {
-    public class Constraint
+    public class Constraint<T, TValue> : IConstraint
     {
         private readonly ConstraintType condition;
         private readonly string constraintColumnName;
-        private readonly SqlQuery query;
+        protected readonly SqlQuery<T> query;
 
-        public Constraint(ConstraintType condition, string constraintColumnName, SqlQuery query)
+        public Constraint(ConstraintType condition, string constraintColumnName, SqlQuery<T> query)
         {
             this.condition = condition;
             this.constraintColumnName = constraintColumnName;
             this.query = query;
         }
 
+        public TValue ParameterValue { get; internal set; }
+        public TValue StartValue { get; internal set; }
+        public TValue EndValue { get; internal set; }
+
         public Comparison Comparison { get; internal set; }
-        public object ParameterValue { get; internal set; }
-        public object StartValue { get; internal set; }
-        public object EndValue { get; internal set; }
+
+        object IConstraint.ParameterValue { get { return ParameterValue; } }
+        object IConstraint.StartValue { get { return StartValue; } }
+        object IConstraint.EndValue { get { return EndValue; } }
         public IEnumerable InValues { get; set; }
 
         public string ColumnName
@@ -31,23 +36,7 @@ namespace SQLite.WinRT.Query
             get { return condition; }
         }
 
-        public SqlQuery Like(string val)
-        {
-            Comparison = Comparison.Like;
-            ParameterValue = val;
-            query.Constraints.Add(this);
-            return query;
-        }
-
-        public SqlQuery NotLike(string val)
-        {
-            Comparison = Comparison.NotLike;
-            ParameterValue = val;
-            query.Constraints.Add(this);
-            return query;
-        }
-
-        public SqlQuery IsGreaterThan(object val)
+        public SqlQuery<T> IsGreaterThan(TValue val)
         {
             Comparison = Comparison.GreaterThan;
             ParameterValue = val;
@@ -55,7 +44,7 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery IsGreaterThanOrEqualTo(object val)
+        public SqlQuery<T> IsGreaterThanOrEqualTo(TValue val)
         {
             Comparison = Comparison.GreaterOrEquals;
             ParameterValue = val;
@@ -63,7 +52,7 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery In(IEnumerable vals)
+        public SqlQuery<T> In(IEnumerable vals)
         {
             InValues = vals;
             Comparison = Comparison.In;
@@ -71,7 +60,7 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery In(params object[] vals)
+        public SqlQuery<T> In(params TValue[] vals)
         {
             InValues = vals;
             Comparison = Comparison.In;
@@ -79,7 +68,7 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery NotIn(IEnumerable vals)
+        public SqlQuery<T> NotIn(IEnumerable vals)
         {
             InValues = vals;
             Comparison = Comparison.NotIn;
@@ -87,7 +76,7 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery NotIn(params object[] vals)
+        public SqlQuery<T> NotIn(params TValue[] vals)
         {
             InValues = vals;
             Comparison = Comparison.NotIn;
@@ -95,7 +84,7 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery IsLessThan(object val)
+        public SqlQuery<T> IsLessThan(TValue val)
         {
             Comparison = Comparison.LessThan;
             ParameterValue = val;
@@ -103,7 +92,7 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery IsLessThanOrEqualTo(object val)
+        public SqlQuery<T> IsLessThanOrEqualTo(TValue val)
         {
             Comparison = Comparison.LessOrEquals;
             ParameterValue = val;
@@ -111,105 +100,45 @@ namespace SQLite.WinRT.Query
             return query;
         }
 
-        public SqlQuery IsNotNull()
+        public SqlQuery<T> IsNotNull()
         {
             Comparison = Comparison.IsNot;
-            ParameterValue = null;
+            ParameterValue = default(TValue);
             query.Constraints.Add(this);
             return query;
         }
 
-        public SqlQuery IsNull()
+        public SqlQuery<T> IsNull()
         {
             Comparison = Comparison.Is;
-            ParameterValue = null;
+            ParameterValue = default(TValue);
             query.Constraints.Add(this);
             return query;
         }
 
-        public SqlQuery IsBetweenAnd(object val1, object val2)
+        public SqlQuery<T> IsBetweenAnd(TValue start, TValue end)
         {
             Comparison = Comparison.BetweenAnd;
-            StartValue = val1;
-            EndValue = val2;
+            StartValue = start;
+            EndValue = end;
             query.Constraints.Add(this);
             return query;
         }
 
-        public SqlQuery IsEqualTo(object val)
+        public SqlQuery<T> IsEqualTo(TValue val)
         {
             Comparison = Comparison.Equals;
-            ParameterValue = null;
+            ParameterValue = val;
             query.Constraints.Add(this);
             return query;
         }
 
-        public SqlQuery IsNotEqualTo(object val)
+        public SqlQuery<T> IsNotEqualTo(TValue val)
         {
             Comparison = Comparison.NotEquals;
-            ParameterValue = null;
+            ParameterValue = val;
             query.Constraints.Add(this);
             return query;
-        }
-
-        public static string GetComparisonOperator(Comparison comp)
-        {
-            string sOut;
-            switch (comp)
-            {
-                case Comparison.Blank:
-                    sOut = SqlComparison.Blank;
-                    break;
-                case Comparison.GreaterThan:
-                    sOut = SqlComparison.Greater;
-                    break;
-                case Comparison.GreaterOrEquals:
-                    sOut = SqlComparison.GreaterOrEqual;
-                    break;
-                case Comparison.LessThan:
-                    sOut = SqlComparison.Less;
-                    break;
-                case Comparison.LessOrEquals:
-                    sOut = SqlComparison.LessOrEqual;
-                    break;
-                case Comparison.Like:
-                    sOut = SqlComparison.Like;
-                    break;
-                case Comparison.NotEquals:
-                    sOut = SqlComparison.NotEqual;
-                    break;
-                case Comparison.NotLike:
-                    sOut = SqlComparison.NotLike;
-                    break;
-                case Comparison.Is:
-                    sOut = SqlComparison.Is;
-                    break;
-                case Comparison.IsNot:
-                    sOut = SqlComparison.IsNot;
-                    break;
-                case Comparison.OpenParentheses:
-                    sOut = "(";
-                    break;
-                case Comparison.CloseParentheses:
-                    sOut = ")";
-                    break;
-                case Comparison.In:
-                    sOut = " IN ";
-                    break;
-                case Comparison.NotIn:
-                    sOut = " NOT IN ";
-                    break;
-                case Comparison.StartsWith:
-                    sOut = SqlComparison.Like;
-                    break;
-                case Comparison.EndsWith:
-                    sOut = SqlComparison.Like;
-                    break;
-                default:
-                    sOut = SqlComparison.Equal;
-                    break;
-            }
-            return sOut;
         }
     }
 }

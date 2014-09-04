@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT.Query
 {
-    public class SqlQuery : ISqlQuery
+    public class SqlQuery<T> : ISqlQuery
     {
         private readonly IEntityProvider provider;
         private readonly List<string> fromTables = new List<string>();
-        private readonly List<Setting> setStatements = new List<Setting>();
-        private readonly List<Constraint> constraints = new List<Constraint>();
+        private readonly List<ISetting<T>> setStatements = new List<ISetting<T>>();
+        private readonly List<IConstraint> constraints = new List<IConstraint>();
         private QueryType queryCommandType = QueryType.Unknown;
 
         public SqlQuery(IEntityProvider provider)
@@ -23,12 +24,12 @@ namespace SQLite.WinRT.Query
             get { return fromTables; }
         }
 
-        internal List<Setting> SetStatements
+        internal List<ISetting<T>> SetStatements
         {
             get { return setStatements; }
         }
 
-        public List<Constraint> Constraints
+        public List<IConstraint> Constraints
         {
             get { return constraints; }
         }
@@ -54,19 +55,48 @@ namespace SQLite.WinRT.Query
             }
         }
 
-        public Constraint Where(string columnName)
+        public StringConstraint<T> Where(Expression<Func<T, string>> propertySelector)
         {
-            return new Constraint(ConstraintType.Where, columnName, this);
+            var memberExpression = propertySelector.Body as MemberExpression;
+            if (memberExpression == null) throw new InvalidOperationException();
+
+            return new StringConstraint<T>(ConstraintType.Where, memberExpression.Member.Name, this);
+        }
+        public StringConstraint<T> And(Expression<Func<T, string>> propertySelector)
+        {
+            var memberExpression = propertySelector.Body as MemberExpression;
+            if (memberExpression == null) throw new InvalidOperationException();
+
+            return new StringConstraint<T>(ConstraintType.And, memberExpression.Member.Name, this);
+        }
+        public StringConstraint<T> Or(Expression<Func<T, string>> propertySelector)
+        {
+            var memberExpression = propertySelector.Body as MemberExpression;
+            if (memberExpression == null) throw new InvalidOperationException();
+
+            return new StringConstraint<T>(ConstraintType.Or, memberExpression.Member.Name, this);
         }
 
-        public Constraint And(string columnName)
+        public Constraint<T, TValue> Where<TValue>(Expression<Func<T, TValue>> propertySelector)
         {
-            return new Constraint(ConstraintType.And, columnName, this);
-        }
+            var memberExpression = propertySelector.Body as MemberExpression;
+            if (memberExpression == null) throw new InvalidOperationException();
 
-        public Constraint Or(string columnName)
+            return new Constraint<T, TValue>(ConstraintType.Where, memberExpression.Member.Name, this);
+        }
+        public Constraint<T, TValue> And<TValue>(Expression<Func<T, TValue>> propertySelector)
         {
-            return new Constraint(ConstraintType.Or, columnName, this);
+            var memberExpression = propertySelector.Body as MemberExpression;
+            if (memberExpression == null) throw new InvalidOperationException();
+
+            return new Constraint<T, TValue>(ConstraintType.And, memberExpression.Member.Name, this);
+        }
+        public Constraint<T, TValue> Or<TValue>(Expression<Func<T, TValue>> propertySelector)
+        {
+            var memberExpression = propertySelector.Body as MemberExpression;
+            if (memberExpression == null) throw new InvalidOperationException();
+
+            return new Constraint<T, TValue>(ConstraintType.Or, memberExpression.Member.Name, this);
         }
 
         public virtual int Execute()
@@ -96,7 +126,7 @@ namespace SQLite.WinRT.Query
 
         internal ISqlGenerator GetGenerator()
         {
-            return new SqlGenerator(this);
+            return new SqlGenerator<T>(this);
         }
     }
 }

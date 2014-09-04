@@ -32,7 +32,7 @@ namespace SQLite.WinRT.Linq.Base
     public interface IEntityTable<T> : IQueryable<T>, IEntityTable
     {
         new T GetById(object id);
-        Update Update();
-        Delete Delete();
+        Update<T> Update();
+        Delete<T> Delete();
     }
 }
