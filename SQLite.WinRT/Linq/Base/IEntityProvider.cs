@@ -33,5 +33,6 @@ namespace SQLite.WinRT.Linq.Base
     {
         new T GetById(object id);
         Update Update();
+        Delete Delete();
     }
 }

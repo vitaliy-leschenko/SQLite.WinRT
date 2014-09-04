@@ -324,6 +324,11 @@ namespace SQLite.WinRT.Linq
                 return new Update(TableId, provider);
             }
 
+            public Delete Delete()
+            {
+                return new Delete(TableId, provider);
+            }
+
             object IEntityTable.GetById(object id)
             {
                 return GetById(id);

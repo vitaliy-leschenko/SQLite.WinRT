@@ -6,8 +6,8 @@
     <PackageConfiguration Condition="'$(Configuration)' == 'Release'">Retail</PackageConfiguration>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(FrameworkSDKRoot)\..\v8.1\ExtensionSDKs\SQLite.WinRT81\3.8.5\DesignTime\CommonConfiguration\Neutral;$(IncludePath)</IncludePath>
-    <LibraryPath>$(FrameworkSDKRoot)\..\v8.1\ExtensionSDKs\SQLite.WinRT81\3.8.5\DesignTime\$(PackageConfiguration)\$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\libs\Windows\v8.1\ExtensionSDKs\SQLite.WinRT81\3.8.5\DesignTime\CommonConfiguration\Neutral;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\libs\Windows\v8.1\ExtensionSDKs\SQLite.WinRT81\3.8.5\DesignTime\$(PackageConfiguration)\$(PlatformTarget);$(LibraryPath)</LibraryPath>
     <PropertySheetDisplayName>SQLite.WinRT81, 3.8.5</PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>

@@ -118,4 +118,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <SDKReferenceDirectoryRoot>$(SolutionDir)\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
+  </PropertyGroup>
 </Project>

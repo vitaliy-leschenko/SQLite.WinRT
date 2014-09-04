@@ -55,19 +55,19 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
+    <Import Project="$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
+    <Import Project="$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
+    <Import Project="$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(ExtensionSDKDirectoryRoot)\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
+    <Import Project="$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props" Condition="exists('$(SolutionDir)\libs\WindowsPhoneApp\v$(TargetPlatformVersion)\ExtensionSDKs\SQLite.WP81\3.8.5\DesignTime\CommonConfiguration\Neutral\SQLite.WP81.props')" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -171,4 +171,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <PropertyGroup>
+    <SDKReferenceDirectoryRoot>$(SolutionDir)\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
+  </PropertyGroup>
 </Project>

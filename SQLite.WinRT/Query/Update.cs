@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SQLite.WinRT.Linq;
+﻿using System.Collections.Generic;
 using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT.Query
@@ -29,23 +26,13 @@ namespace SQLite.WinRT.Query
         }
     }
 
-    public class Update : ISqlQuery
+    public class Update
     {
         private readonly SqlQuery query;
-
-        internal List<string> FromTables
-        {
-            get { return query.FromTables; }
-        }
 
         internal List<Setting> SetStatements
         {
             get { return query.SetStatements; }
-        }
-
-        internal List<Constraint> Constraints
-        {
-            get { return query.Constraints; }
         }
 
         internal Update(string tableId, IEntityProvider provider)
@@ -53,21 +40,6 @@ namespace SQLite.WinRT.Query
             query = new SqlQuery(provider);
             query.QueryCommandType = QueryType.Update;
             query.FromTables.Add(tableId);
-        }
-
-        string ISqlQuery.BuildSqlStatement()
-        {
-            return query.BuildSqlStatement();
-        }
-
-        int ISqlQuery.Execute()
-        {
-            return query.Execute();
-        }
-
-        Task<int> ISqlQuery.ExecuteAsync()
-        {
-            return query.ExecuteAsync();
         }
 
         public Setting Set(string columnName)

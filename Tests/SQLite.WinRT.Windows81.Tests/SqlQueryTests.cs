@@ -92,5 +92,14 @@ namespace SQLite.WinRT.Tests.WinPhone8
                 Assert.IsTrue(cat.Name == "test name");
             }
         }
+
+        [TestMethod]
+        public void DeleteTest()
+        {
+            var db = new DbContext(connection);
+            var count = db.Categories.Delete().Where("CategoryID").IsLessThanOrEqualTo(3).Execute();
+            Assert.IsTrue(count == 3);
+            Assert.IsFalse(db.Categories.Any(t => t.CategoryID <= 3));
+        }
     }
 }

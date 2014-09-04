@@ -125,6 +125,7 @@
     <Compile Include="Query\Comparison.cs" />
     <Compile Include="Query\Constraint.cs" />
     <Compile Include="Query\ConstraintType.cs" />
+    <Compile Include="Query\Delete.cs" />
     <Compile Include="Query\ISqlFragment.cs" />
     <Compile Include="Query\ISqlGenerator.cs" />
     <Compile Include="Query\ISqlQuery.cs" />
