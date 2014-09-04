@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using SQLite.WinRT.Query;
 
 namespace SQLite.WinRT.Linq.Base
 {
@@ -16,6 +17,7 @@ namespace SQLite.WinRT.Linq.Base
         bool CanBeEvaluatedLocally(Expression expression);
 
         bool CanBeParameter(Expression expression);
+        SQLiteConnection Connection { get; }
     }
 
     public interface IEntityTable : IQueryable
@@ -30,5 +32,6 @@ namespace SQLite.WinRT.Linq.Base
     public interface IEntityTable<T> : IQueryable<T>, IEntityTable
     {
         new T GetById(object id);
+        Update Update();
     }
 }

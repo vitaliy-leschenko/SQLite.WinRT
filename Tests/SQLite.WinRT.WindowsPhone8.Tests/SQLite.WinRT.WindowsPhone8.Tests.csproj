@@ -85,6 +85,9 @@
     <Compile Include="..\SQLite.WinRT.Windows81.Tests\LinqTests.cs">
       <Link>LinqTests.cs</Link>
     </Compile>
+    <Compile Include="..\SQLite.WinRT.Windows81.Tests\SqlQueryTests.cs">
+      <Link>SqlQueryTests.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

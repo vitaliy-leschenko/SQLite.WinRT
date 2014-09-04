@@ -14,6 +14,7 @@ using SQLite.WinRT.Linq.Common;
 using SQLite.WinRT.Linq.Common.Expressions;
 using SQLite.WinRT.Linq.Common.Mapping;
 using SQLite.WinRT.Linq.Mapping;
+using SQLite.WinRT.Query;
 
 namespace SQLite.WinRT.Linq
 {
@@ -316,6 +317,11 @@ namespace SQLite.WinRT.Linq
                     return Provider.Execute<T>(query);
                 }
                 return default(T);
+            }
+
+            public Update Update()
+            {
+                return new Update(TableId, provider);
             }
 
             object IEntityTable.GetById(object id)
