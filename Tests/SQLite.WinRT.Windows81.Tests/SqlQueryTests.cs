@@ -31,7 +31,7 @@ namespace SQLite.WinRT.Tests.WinPhone8
 
             Task.WaitAll(DataInitialize());
 
-            connection.GetConnection().Trace = true;
+            connection.Trace = true;
         }
 
         [TestCleanup]

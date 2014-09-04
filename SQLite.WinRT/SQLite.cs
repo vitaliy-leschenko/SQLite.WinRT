@@ -443,7 +443,7 @@ namespace SQLite.WinRT
 		/// </returns>
 		public int Execute (string query, params object[] args)
 		{
-			var cmd = CreateCommand (query, args);
+            var cmd = CreateCommand(query, args);
 			
 			if (TimeExecution) {
 				if (_sw == null) {
@@ -466,7 +466,12 @@ namespace SQLite.WinRT
 
 		public T ExecuteScalar<T> (string query, params object[] args)
 		{
-			var cmd = CreateCommand (query, args);
+            if (Trace)
+            {
+                Debug.WriteLine("Executing: " + query);
+            }
+            
+            var cmd = CreateCommand(query, args);
 			
 			if (TimeExecution) {
 				if (_sw == null) {
@@ -1772,7 +1777,7 @@ namespace SQLite.WinRT
         {
             if (_conn.Trace)
             {
-                Debug.WriteLine(CommandText);
+                Debug.WriteLine("Executing: " + this);
             }
             var stmt = Prepare();
             try
@@ -1815,7 +1820,7 @@ namespace SQLite.WinRT
 		public IEnumerable<T> ExecuteDeferredQuery<T> (TableMapping map)
 		{
 			if (_conn.Trace) {
-				Debug.WriteLine ("Executing Query: " + this);
+                Debug.WriteLine("Executing: " + this);
 			}
 
 			var stmt = Prepare ();

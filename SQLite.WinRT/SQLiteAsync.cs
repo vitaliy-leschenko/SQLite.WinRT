@@ -44,6 +44,12 @@ namespace SQLite.WinRT
 			return SQLiteConnectionPool.Shared.GetConnection (connectionString);
 		}
 
+	    public bool Trace
+	    {
+	        get { return GetConnection().Trace; }
+	        set { GetConnection().Trace = value; }
+	    }
+
 	    private IEntityProvider provider;
 	    internal IEntityProvider GetEntityProvider()
 	    {
