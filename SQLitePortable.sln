@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT", "SQLite.WinRT\SQLite.WinRT.csproj", "{94BF16E1-6978-425F-8629-DFBE5016BD9E}"
 EndProject
@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{515B5C20-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{954F8392-B579-47E3-9138-9907BF409E32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.WindowsPhone8.Tests", "Tests\SQLite.WinRT.WindowsPhone8.Tests\SQLite.WinRT.WindowsPhone8.Tests.csproj", "{C5B83B3E-C2A7-4503-B3BA-D34FECA1219C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.Tests.WindowsPhone8", "Tests\SQLite.WinRT.WindowsPhone8.Tests\SQLite.WinRT.Tests.WindowsPhone8.csproj", "{C5B83B3E-C2A7-4503-B3BA-D34FECA1219C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.WindowsPhone8", "SQLite.WinRT.WindowsPhone8\SQLite.WinRT.WindowsPhone8.csproj", "{946316C9-FABC-4F2A-BAC3-4489BA5A8BA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.Windows81.Tests", "Tests\SQLite.WinRT.Windows81.Tests\SQLite.WinRT.Windows81.Tests.csproj", "{C6E85790-D18A-4EB3-B6CF-6BB9EA9859EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.Tests.Windows81", "Tests\SQLite.WinRT.Windows81.Tests\SQLite.WinRT.Tests.Windows81.csproj", "{C6E85790-D18A-4EB3-B6CF-6BB9EA9859EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D79E2AE9-D53C-4CCC-8767-7A37C9F36F65}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,11 +28,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D79E2A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.WindowsPhone81", "SQLite.WinRT.WindowsPhone81\SQLite.WinRT.WindowsPhone81.csproj", "{F44C33E5-E159-4C4A-8F14-DE423B73B037}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.WindowsPhone81.Tests", "Tests\SQLite.WinRT.WindowsPhone81.Tests\SQLite.WinRT.WindowsPhone81.Tests.csproj", "{F3E53F14-4854-4059-832F-243D0DC9FD7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.Tests.WindowsPhone81", "Tests\SQLite.WinRT.WindowsPhone81.Tests\SQLite.WinRT.Tests.WindowsPhone81.csproj", "{F3E53F14-4854-4059-832F-243D0DC9FD7C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sqlite.WP80", "Sqlite.WP80\Sqlite.WP80.vcxproj", "{59B35F6C-E062-4F0E-88D8-13F3F82A24F3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sqlite.WP81", "Sqlite.WP81\Sqlite.WP81.vcxproj", "{399D80C0-A902-42AA-A182-484F7BBD495A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.net45", "SQLite.WinRT.net45\SQLite.WinRT.net45.csproj", "{75B31A12-C517-4A9E-974A-3B28A23CA353}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.WinRT.Tests.net45", "Tests\SQLite.WinRT.net45.Tests\SQLite.WinRT.Tests.net45.csproj", "{2899EAA0-2811-491B-95E2-CA220C2D982C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -154,6 +158,26 @@ Global
 		{399D80C0-A902-42AA-A182-484F7BBD495A}.Release|x64.ActiveCfg = Release|Win32
 		{399D80C0-A902-42AA-A182-484F7BBD495A}.Release|x86.ActiveCfg = Release|Win32
 		{399D80C0-A902-42AA-A182-484F7BBD495A}.Release|x86.Build.0 = Release|Win32
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Debug|x64.Build.0 = Debug|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Debug|x86.Build.0 = Debug|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Release|ARM.ActiveCfg = Release|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Release|x64.ActiveCfg = Release|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Release|x64.Build.0 = Release|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Release|x86.ActiveCfg = Release|Any CPU
+		{75B31A12-C517-4A9E-974A-3B28A23CA353}.Release|x86.Build.0 = Release|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Debug|x64.Build.0 = Debug|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Debug|x86.Build.0 = Debug|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Release|x64.ActiveCfg = Release|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Release|x64.Build.0 = Release|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Release|x86.ActiveCfg = Release|Any CPU
+		{2899EAA0-2811-491B-95E2-CA220C2D982C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,5 +192,7 @@ Global
 		{F3E53F14-4854-4059-832F-243D0DC9FD7C} = {8873476F-8A32-4012-8D11-C618BD0EBDB4}
 		{59B35F6C-E062-4F0E-88D8-13F3F82A24F3} = {954F8392-B579-47E3-9138-9907BF409E32}
 		{399D80C0-A902-42AA-A182-484F7BBD495A} = {954F8392-B579-47E3-9138-9907BF409E32}
+		{75B31A12-C517-4A9E-974A-3B28A23CA353} = {954F8392-B579-47E3-9138-9907BF409E32}
+		{2899EAA0-2811-491B-95E2-CA220C2D982C} = {8873476F-8A32-4012-8D11-C618BD0EBDB4}
 	EndGlobalSection
 EndGlobal

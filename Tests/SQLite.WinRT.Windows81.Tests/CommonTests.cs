@@ -2,17 +2,23 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using SQLite.WinRT.Linq;
+#if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using SQLite.WinRT.Linq;
+#else
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 // ReSharper disable CheckNamespace
 #if WINDOWS_PHONE_APP
 namespace SQLite.WinRT.Tests.WinPhone81
 #elif NETFX_CORE
 namespace SQLite.WinRT.Tests.Win8
-#else
+#elif WINDOWS_PHONE
 namespace SQLite.WinRT.Tests.WinPhone8
+#else
+namespace SQLite.WinRT.Tests.net45
 #endif
 // ReSharper restore CheckNamespace
 {
@@ -42,6 +48,7 @@ namespace SQLite.WinRT.Tests.WinPhone8
 
         private SQLiteAsyncConnection connection;
 
+#if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
         [TestInitialize]
         public void TestInitialize()
         {
@@ -61,6 +68,26 @@ namespace SQLite.WinRT.Tests.WinPhone8
             var file = await folder.GetFileAsync(DbName);
             await file.DeleteAsync();
         }
+#else
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            var folder = Path.GetTempPath();
+            connection = new SQLiteAsyncConnection(Path.Combine(folder, DbName), true);
+            connection.GetConnection().Trace = true;
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            connection.GetConnection().Close();
+            connection = null;
+            SQLiteConnectionPool.Shared.Reset();
+
+            var folder = Path.GetTempPath();
+            File.Delete(Path.Combine(folder, DbName));
+        }
+#endif
 
         [TestMethod]
         public async Task TestCreateDatabase()
