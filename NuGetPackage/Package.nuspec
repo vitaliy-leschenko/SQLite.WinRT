@@ -2,16 +2,16 @@
 <package >
   <metadata>
     <id>SQLitePortable</id>
-    <version>3.8.6</version>
+    <version>3.8.6.1</version>
     <authors>v.leschenko@vitaliy.org</authors>
     <owners>v.leschenko@vitaliy.org</owners>
     <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
     <projectUrl>https://sqliteportable.codeplex.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>SQLite Portable for Windows 8+ and Windows Phone 8+.</description>
-    <releaseNotes>SQLite 3.8.6</releaseNotes>
+    <description>SQLite Portable for .NET4.5, Windows 8+ and Windows Phone 8+.</description>
+    <releaseNotes>added support .NET 4.5</releaseNotes>
     <copyright>Copyright 2014 Vitaliy Leschenko</copyright>
-    <tags>SQLite WinRT WinPhone LINQ</tags>
+    <tags>SQLite WinRT WinPhone LINQ .NET4.5</tags>
     <dependencies>
     </dependencies>
   </metadata>
