@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,6 +83,7 @@ namespace SQLite.WinRT.Tests.net45
             conn.CreateTable<Category>();
             conn.CreateTable<Item>();
 
+            var items = new List<Item>();
             for (var i = 0; i < 10; i++)
             {
                 var category = new Category();
@@ -97,9 +99,10 @@ namespace SQLite.WinRT.Tests.net45
                     item.Time = DateTime.Today.AddHours(i).AddMinutes(j).AddSeconds(5);
                     item.Title = "item" + j;
 
-                    conn.Insert(item);
+                    items.Add(item);
                 }
             }
+            conn.InsertAll(items);
         }
 
         [TestMethod]

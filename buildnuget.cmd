@@ -1,4 +1,8 @@
 xcopy /y SQLite.WinRT\bin\Release\SQLite.WinRT.dll NuGetPackage\lib\portable-net45+win8+wpa81+wp8
+xcopy /y SQLite.WinRT\bin\Release\SQLite.WinRT.dll NuGetPackage\lib\net45
+xcopy /y SQLite.WinRT\bin\Release\SQLite.WinRT.dll NuGetPackage\lib\win81
+xcopy /y SQLite.WinRT\bin\Release\SQLite.WinRT.dll NuGetPackage\lib\wp8
+xcopy /y SQLite.WinRT\bin\Release\SQLite.WinRT.dll NuGetPackage\lib\wpa81
 
 xcopy /y SQLite.WinRT.net45\bin\Release\SQLite.WinRT.Ext.dll NuGetPackage\lib\net45-hidden
 

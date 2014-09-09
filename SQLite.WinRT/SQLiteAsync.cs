@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using SQLite.WinRT.Linq;
 using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT
@@ -54,7 +55,7 @@ namespace SQLite.WinRT
 	    internal IEntityProvider GetEntityProvider()
 	    {
             var conn = GetConnection();
-	        return conn.GetEntityProvider();
+            return new EntityProvider(conn);
 	    }
 
 		public Task<CreateTablesResult> CreateTableAsync<T> ()
@@ -389,7 +390,7 @@ namespace SQLite.WinRT
 		}
 	}
 
-    class SQLiteConnectionWithLock : SQLiteConnection
+    public class SQLiteConnectionWithLock : SQLiteConnection
 	{
 		readonly object _lockPoint = new object ();
 

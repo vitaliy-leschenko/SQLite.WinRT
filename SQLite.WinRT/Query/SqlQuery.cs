@@ -121,7 +121,13 @@ namespace SQLite.WinRT.Query
 
         public Task<int> ExecuteAsync()
         {
-            return Task.Run(() => Execute());
+            return Task.Run(() =>
+            {
+                using (provider.Connection.Lock())
+                {
+                    return Execute();
+                }
+            });
         }
 
         internal ISqlGenerator GetGenerator()

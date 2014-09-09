@@ -602,20 +602,6 @@ namespace SQLite.WinRT
 			return new TableQuery<T> (this);
 		}
 
-        private IEntityProvider provider;
-        internal IEntityProvider GetEntityProvider()
-        {
-            return new EntityProvider(this);
-        }
-
-        public IEntityTable<T> Entity<T>()
-        {
-            provider = provider ?? GetEntityProvider();
-
-            var tableName = GetMapping<T>().TableName;
-            return provider.GetTable<T>(tableName);
-        }
-
 		/// <summary>
 		/// Attempts to retrieve an object with the given primary key from the table
 		/// associated with the specified type. Use of this method requires that
@@ -1306,7 +1292,7 @@ namespace SQLite.WinRT
 	/// <summary>
 	/// Represents a parsed connection string.
 	/// </summary>
-	class SQLiteConnectionString
+	public class SQLiteConnectionString
 	{
 		public string ConnectionString { get; private set; }
 		public string DatabasePath { get; private set; }

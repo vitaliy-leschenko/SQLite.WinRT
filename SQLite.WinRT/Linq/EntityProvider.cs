@@ -23,11 +23,11 @@ namespace SQLite.WinRT.Linq
     /// </summary>
     public class EntityProvider : IAsyncQueryProvider, IEntityProvider, IQueryProvider
     {
-        private readonly SQLiteConnection connection;
+        private readonly SQLiteConnectionWithLock connection;
         private readonly Dictionary<MappingEntity, IEntityTable> tables;
         private EntityPolicy policy;
 
-        public EntityProvider(SQLiteConnection connection)
+        public EntityProvider(SQLiteConnectionWithLock connection)
         {
             this.connection = connection;
             Mapping = new ImplicitMapping();
@@ -47,7 +47,7 @@ namespace SQLite.WinRT.Linq
         public TextWriter Log { get; set; }
         private bool ActionOpenedConnection { get; set; }
 
-        public SQLiteConnection Connection
+        public SQLiteConnectionWithLock Connection
         {
             get { return connection; }
         }
@@ -85,12 +85,26 @@ namespace SQLite.WinRT.Linq
 
         public virtual Task<object> ExecuteAsync(Expression expression)
         {
-            return Task.Run(() => Execute(expression));
+            return Task.Run(delegate
+            {
+                var conn = Connection;
+                using (conn.Lock())
+                {
+                    return Execute(expression);
+                }
+            });
         }
 
         public virtual Task<TS> ExecuteAsync<TS>(Expression expression)
         {
-            return Task.Run(() => (TS) Execute(expression));
+            return Task.Run(delegate
+            {
+                var conn = Connection;
+                using (conn.Lock())
+                {
+                    return (TS)Execute(expression);
+                }
+            });
         }
 
         public IEntityTable<T> GetTable<T>(string tableId)
@@ -327,6 +341,57 @@ namespace SQLite.WinRT.Linq
             public Delete<T> Delete()
             {
                 return new Delete<T>(TableId, provider);
+            }
+
+            public int Insert(T item)
+            {
+                return provider.Connection.Insert(item);
+            }
+
+            public Task<int> InsertAsync(T item)
+            {
+                return Task.Run(() =>
+                {
+                    var conn = provider.Connection;
+                    using (conn.Lock())
+                    {
+                        return conn.Insert(item);
+                    }
+                });
+            }
+
+            public int Update(T item)
+            {
+                return provider.Connection.Update(item);
+            }
+
+            public Task<int> UpdateAsync(T item)
+            {
+                return Task.Run(() =>
+                {
+                    var conn = provider.Connection;
+                    using (conn.Lock())
+                    {
+                        return conn.Update(item);
+                    }
+                });
+            }
+
+            public int Delete(T item)
+            {
+                return provider.Connection.Delete(item);
+            }
+
+            public Task<int> DeleteAsync(T item)
+            {
+                return Task.Run(() =>
+                {
+                    var conn = provider.Connection;
+                    using (conn.Lock())
+                    {
+                        return conn.Delete(item);
+                    }
+                });
             }
 
             object IEntityTable.GetById(object id)

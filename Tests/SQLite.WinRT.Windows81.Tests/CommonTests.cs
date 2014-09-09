@@ -126,15 +126,15 @@ namespace SQLite.WinRT.Tests.net45
         public async Task TestUpdate()
         {
             await connection.CreateTableAsync<TestTable>();
+            var table = connection.Table<TestTable>();
 
             var item = new TestTable();
             item.IntValue = 100;
-            await connection.InsertAsync(item);
+            await table.InsertAsync(item);
 
             item.IntValue = 200;
-            await connection.UpdateAsync(item);
+            await table.UpdateAsync(item);
 
-            var table = connection.Table<TestTable>();
             var result = await table.Where(t => t.IntValue == 200).FirstAsync();
             Assert.IsTrue(result.ID == item.ID);
         }
@@ -143,17 +143,17 @@ namespace SQLite.WinRT.Tests.net45
         public async Task TestDelete()
         {
             await connection.CreateTableAsync<TestTable>();
+            var table = connection.Table<TestTable>();
 
             var item = new TestTable();
             item.IntValue = 200;
-            await connection.InsertAsync(item);
+            await table.InsertAsync(item);
 
-            var table = connection.Table<TestTable>();
             var result = await table.Where(t => t.IntValue == 200).FirstOrDefaultAsync();
             Assert.IsNotNull(result);
             Assert.IsTrue(result.ID == item.ID);
 
-            await connection.DeleteAsync(item);
+            await table.DeleteAsync(item);
             result = await table.Where(t => t.IntValue == 200).FirstOrDefaultAsync();
             Assert.IsNull(result);
         }
