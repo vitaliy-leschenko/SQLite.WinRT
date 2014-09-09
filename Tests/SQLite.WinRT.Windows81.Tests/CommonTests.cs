@@ -55,7 +55,7 @@ namespace SQLite.WinRT.Tests.net45
         {
             var folder = ApplicationData.Current.LocalFolder;
             var connectionString = new SQLiteConnectionString(Path.Combine(folder.Path, DbName), true);
-            connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
+            var connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
             connection.Trace = true;
             connection.TimeExecution = true;
             provider = connection.GetEntityProvider();
@@ -64,8 +64,8 @@ namespace SQLite.WinRT.Tests.net45
         [TestCleanup]
         public async Task TestCleanup()
         {
-            connection.GetConnection().Close();
-            connection = null;
+            provider.Connection.Close();
+            provider = null;
             SQLiteConnectionPool.Shared.Reset();
 
             var folder = ApplicationData.Current.LocalFolder;

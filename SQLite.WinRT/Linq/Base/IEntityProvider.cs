@@ -14,7 +14,6 @@ namespace SQLite.WinRT.Linq.Base
     {
         IEntityTable<T> GetTable<T>(string tableId = null);
 
-        bool CanBeParameter(Expression expression);
         SQLiteConnection Connection { get; }
 
         int CreateTable(Type type);

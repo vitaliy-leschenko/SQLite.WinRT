@@ -146,28 +146,7 @@ namespace SQLite.WinRT.Linq
 
         public IEntityTable<T> GetTable<T>(string tableId = null)
         {
-            return (IEntityTable<T>) GetTable(typeof (T), tableId);
-        }
-
-        public IEntityTable GetTable(Type type, string tableId = null)
-        {
-            return GetTable(Mapping.GetEntity(type, tableId));
-        }
-
-        public bool CanBeParameter(Expression expression)
-        {
-            Type type = TypeHelper.GetNonNullableType(expression.Type);
-            switch (TypeHelper.GetTypeCode(type))
-            {
-                case TypeCode.Object:
-                    if (expression.Type == typeof (Byte[]) || expression.Type == typeof (Char[]))
-                    {
-                        return true;
-                    }
-                    return false;
-                default:
-                    return true;
-            }
+            return (IEntityTable<T>) GetTable(Mapping.GetEntity(typeof (T), tableId));
         }
 
         public IEntityTable GetTable(MappingEntity entity)
