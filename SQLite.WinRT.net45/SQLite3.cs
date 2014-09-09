@@ -37,7 +37,7 @@ namespace SQLite.WinRT
             IntPtr stmt;
             var r = Prepare2 (db, query, query.Length, out stmt, IntPtr.Zero);
             if (r != SQLiteResult.OK) {
-                throw SQLiteException.New (r, GetErrmsg (db));
+                throw new SQLiteException (r, GetErrmsg (db));
             }
             return stmt;
         }

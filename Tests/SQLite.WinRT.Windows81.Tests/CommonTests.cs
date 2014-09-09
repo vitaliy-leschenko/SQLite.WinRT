@@ -164,5 +164,12 @@ namespace SQLite.WinRT.Tests.net45
             result = await table.Where(t => t.IntValue == 200).FirstOrDefaultAsync();
             Assert.IsNull(result);
         }
+
+        [TestMethod]
+        public void TestExecuteScalar()
+        {
+            var result = provider.Connection.ExecuteScalar<int>("select 1+?", 5);
+            Assert.IsTrue(result == 6);
+        }
     }
 }

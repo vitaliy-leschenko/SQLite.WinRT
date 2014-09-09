@@ -59,7 +59,8 @@ namespace SQLite.WinRT.Linq
 
         public void DropTable(string tableName)
         {
-            connection.DropTable(tableName);
+            var query = string.Format("drop table if exists \"{0}\"", tableName);
+            connection.Execute(query);
         }
 
         public Task<int> CreateTableAsync<T>()
@@ -79,7 +80,7 @@ namespace SQLite.WinRT.Linq
             {
                 using (connection.Lock())
                 {
-                    connection.DropTable(tableName);
+                    DropTable(tableName);
                 }
             });
         }
@@ -446,7 +447,16 @@ namespace SQLite.WinRT.Linq
 
             public int Delete(T item)
             {
-                return provider.Connection.Delete(item);
+                var conn = provider.Connection;
+
+                var pk = mapping.PK;
+                if (pk == null)
+                {
+                    throw new NotSupportedException("Cannot delete " + mapping.TableName + ": it has no PK");
+                }
+
+                var sql = string.Format("delete from \"{0}\" where \"{1}\" = ?", mapping.TableName, pk.Name);
+                return conn.Execute(sql, mapping.PrimaryKeyFunc(item));
             }
 
             public Task<int> DeleteAsync(T item)

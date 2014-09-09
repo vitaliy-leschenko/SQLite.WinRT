@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using SQLite.WinRT.Linq.Base;
 using SQLite.WinRT.Linq.Common;
 
 namespace SQLite.WinRT
@@ -28,29 +30,19 @@ namespace SQLite.WinRT
                 Debug.WriteLine("Executing: " + this);
             }
 
-            var r = SQLiteResult.OK;
             var stmt = Prepare();
-            r = Platform.Current.SQLiteProvider.Step(stmt);// SQLite3.Step (stmt);
+            var r = Platform.Current.SQLiteProvider.Step(stmt);
             Finalize(stmt);
-            if (r == SQLiteResult.Done)
+            switch (r)
             {
-                int rowsAffected = Platform.Current.SQLiteProvider.Changes(conn.Handle);
-                return rowsAffected;
+                case SQLiteResult.Done:
+                    return Platform.Current.SQLiteProvider.Changes(conn.Handle);
+                case SQLiteResult.Error:
+                    var msg = Platform.Current.SQLiteProvider.GetErrorMessage(conn.Handle);
+                    throw new SQLiteException(r, msg);
+                default:
+                    throw new SQLiteException(r, r.ToString());
             }
-            else if (r == SQLiteResult.Error)
-            {
-                string msg = Platform.Current.SQLiteProvider.GetErrorMessage(conn.Handle);
-                throw SQLiteException.New(r, msg);
-            }
-            else
-            {
-                throw SQLiteException.New(r, r.ToString());
-            }
-        }
-
-        public IEnumerable<T> ExecuteDeferredQuery<T>()
-        {
-            return ExecuteDeferredQuery<T>(conn.GetMapping(typeof(T)));
         }
 
         public List<T> ExecuteQuery<T>()
@@ -64,6 +56,13 @@ namespace SQLite.WinRT
             {
                 Debug.WriteLine("Executing: " + this);
             }
+            Stopwatch watch = null;
+            if (conn.TimeExecution)
+            {
+                watch = new Stopwatch();
+                watch.Start();
+            }
+
             var stmt = Prepare();
             try
             {
@@ -76,30 +75,14 @@ namespace SQLite.WinRT
             }
             finally
             {
+                if (conn.TimeExecution && watch != null)
+                {
+                    watch.Stop();
+                    Debug.WriteLine("Finished in {0} ms", watch.ElapsedMilliseconds);
+                }
+
                 Platform.Current.SQLiteProvider.Finalize(stmt);
             }
-        }
-
-        public List<T> ExecuteQuery<T>(TableMapping map)
-        {
-            return ExecuteDeferredQuery<T>(map).ToList();
-        }
-
-        /// <summary>
-        /// Invoked every time an instance is loaded from the database.
-        /// </summary>
-        /// <param name='obj'>
-        /// The newly created object.
-        /// </param>
-        /// <remarks>
-        /// This can be overridden in combination with the <see cref="SQLiteConnection.NewCommand"/>
-        /// method to hook into the life-cycle of objects.
-        ///
-        /// Type safety is not possible because MonoTouch does not support virtual generic methods.
-        /// </remarks>
-        protected virtual void OnInstanceCreated(object obj)
-        {
-            // Can be overridden.
         }
 
         public IEnumerable<T> ExecuteDeferredQuery<T>(TableMapping map)
@@ -109,34 +92,49 @@ namespace SQLite.WinRT
                 Debug.WriteLine("Executing: " + this);
             }
 
+            Stopwatch watch = null;
+            if (conn.TimeExecution)
+            {
+                watch = new Stopwatch();
+                watch.Start();
+            }
+
             var stmt = Prepare();
             try
             {
-                var cols = new TableMapping.Column[Platform.Current.SQLiteProvider.ColumnCount(stmt)];
+                var count = Platform.Current.SQLiteProvider.ColumnCount(stmt);
+                var reader = new FieldReader(stmt);
 
-                for (int i = 0; i < cols.Length; i++)
+                var t = Expression.Parameter(typeof (FieldReader), "t");
+                var memberBindings = new List<MemberBinding>();
+                for (var i = 0; i < count; i++)
                 {
                     var name = Platform.Current.SQLiteProvider.ColumnName16(stmt, i);
-                    cols[i] = map.FindColumn(name);
+                    var column = map.FindColumn(name);
+                    if (column != null)
+                    {
+                        var method = FieldReader.GetReaderMethod(column.Property.PropertyType);
+                        var val = Expression.Call(t, method, new Expression[] { Expression.Constant(i) });
+                        memberBindings.Add(Expression.Bind(column.Property.SetMethod, val));
+                    }
                 }
+
+                var ctor = Expression.New(map.MappedType);
+                var lambda = Expression.Lambda<Func<FieldReader, T>>(Expression.MemberInit(ctor, memberBindings), t);
+                var func = lambda.Compile();
 
                 while (Platform.Current.SQLiteProvider.Step(stmt) == SQLiteResult.Row)
                 {
-                    var obj = Activator.CreateInstance(map.MappedType);
-                    for (int i = 0; i < cols.Length; i++)
-                    {
-                        if (cols[i] == null)
-                            continue;
-                        var colType = Platform.Current.SQLiteProvider.ColumnType(stmt, i);
-                        var val = ReadCol(stmt, i, colType, cols[i].ColumnType);
-                        cols[i].SetValue(obj, val);
-                    }
-                    OnInstanceCreated(obj);
-                    yield return (T)obj;
+                    yield return func(reader);
                 }
             }
             finally
             {
+                if (conn.TimeExecution && watch != null)
+                {
+                    watch.Stop();
+                    Debug.WriteLine("Finished in {0} ms", watch.ElapsedMilliseconds);
+                }
                 Platform.Current.SQLiteProvider.Finalize(stmt);
             }
         }
@@ -150,11 +148,17 @@ namespace SQLite.WinRT
 
             T val = default(T);
 
+            var t = Expression.Parameter(typeof(FieldReader), "t");
+            var method = FieldReader.GetReaderMethod(typeof(T));
+            var eval = Expression.Call(t, method, new Expression[] { Expression.Constant(0) });
+            var lambda = Expression.Lambda<Func<FieldReader, T>>(eval, t);
+            var func = lambda.Compile();
+
             var stmt = Prepare();
+            var reader = new FieldReader(stmt);
             if (Platform.Current.SQLiteProvider.Step(stmt) == SQLiteResult.Row)
             {
-                var colType = Platform.Current.SQLiteProvider.ColumnType(stmt, 0);
-                val = (T)ReadCol(stmt, 0, colType, typeof(T));
+                val = func(reader);
             }
             Finalize(stmt);
 
@@ -218,7 +222,7 @@ namespace SQLite.WinRT
             }
         }
 
-        internal static IntPtr NegativePointer = new IntPtr(-1);
+        internal static IntPtr negativePointer = new IntPtr(-1);
 
         internal static void BindParameter(Object stmt, int index, object value, bool storeDateTimeAsTicks)
         {
@@ -234,7 +238,7 @@ namespace SQLite.WinRT
                 }
                 else if (value is String)
                 {
-                    Platform.Current.SQLiteProvider.BindText(stmt, index, (string)value, -1, NegativePointer);
+                    Platform.Current.SQLiteProvider.BindText(stmt, index, (string)value, -1, negativePointer);
                 }
                 else if (value is Byte || value is UInt16 || value is SByte || value is Int16)
                 {
@@ -260,7 +264,7 @@ namespace SQLite.WinRT
                     }
                     else
                     {
-                        Platform.Current.SQLiteProvider.BindText(stmt, index, ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss"), -1, NegativePointer);
+                        Platform.Current.SQLiteProvider.BindText(stmt, index, ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss"), -1, negativePointer);
                     }
                 }
                 else if (value.GetType().GetTypeInfo().IsEnum)
@@ -269,11 +273,11 @@ namespace SQLite.WinRT
                 }
                 else if (value is byte[])
                 {
-                    Platform.Current.SQLiteProvider.BindBlob(stmt, index, (byte[])value, ((byte[])value).Length, NegativePointer);
+                    Platform.Current.SQLiteProvider.BindBlob(stmt, index, (byte[])value, ((byte[])value).Length, negativePointer);
                 }
                 else if (value is Guid)
                 {
-                    Platform.Current.SQLiteProvider.BindText(stmt, index, ((Guid)value).ToString(), 72, NegativePointer);
+                    Platform.Current.SQLiteProvider.BindText(stmt, index, ((Guid)value).ToString(), 72, negativePointer);
                 }
                 else
                 {
@@ -289,85 +293,6 @@ namespace SQLite.WinRT
             public object Value { get; set; }
 
             public int Index { get; set; }
-        }
-
-        object ReadCol(Object stmt, int index, ColType type, Type clrType)
-        {
-            if (type == ColType.Null)
-            {
-                return null;
-            }
-            if (clrType == typeof(String))
-            {
-                return Platform.Current.SQLiteProvider.ColumnString(stmt, index);
-            }
-            if (clrType == typeof(Int32))
-            {
-                return (int)Platform.Current.SQLiteProvider.ColumnInt(stmt, index);
-            }
-            if (clrType == typeof(Boolean))
-            {
-                return Platform.Current.SQLiteProvider.ColumnInt(stmt, index) == 1;
-            }
-            if (clrType == typeof(double))
-            {
-                return Platform.Current.SQLiteProvider.ColumnDouble(stmt, index);
-            }
-            if (clrType == typeof(float))
-            {
-                return (float)Platform.Current.SQLiteProvider.ColumnDouble(stmt, index);
-            }
-            if (clrType == typeof(DateTime))
-            {
-                if (conn.StoreDateTimeAsTicks)
-                {
-                    return new DateTime(Platform.Current.SQLiteProvider.ColumnInt64(stmt, index));
-                }
-                var text = Platform.Current.SQLiteProvider.ColumnString(stmt, index);
-                return DateTime.Parse(text);
-            }
-            if (clrType.GetTypeInfo().IsEnum)
-            {
-                return Platform.Current.SQLiteProvider.ColumnInt(stmt, index);
-            }
-            if (clrType == typeof(Int64))
-            {
-                return Platform.Current.SQLiteProvider.ColumnInt64(stmt, index);
-            }
-            if (clrType == typeof(UInt32))
-            {
-                return (uint)Platform.Current.SQLiteProvider.ColumnInt64(stmt, index);
-            }
-            if (clrType == typeof(decimal))
-            {
-                return (decimal)Platform.Current.SQLiteProvider.ColumnDouble(stmt, index);
-            }
-            if (clrType == typeof(Byte))
-            {
-                return (byte)Platform.Current.SQLiteProvider.ColumnInt(stmt, index);
-            }
-            if (clrType == typeof(UInt16))
-            {
-                return (ushort)Platform.Current.SQLiteProvider.ColumnInt(stmt, index);
-            }
-            if (clrType == typeof(Int16))
-            {
-                return (short)Platform.Current.SQLiteProvider.ColumnInt(stmt, index);
-            }
-            if (clrType == typeof(sbyte))
-            {
-                return (sbyte)Platform.Current.SQLiteProvider.ColumnInt(stmt, index);
-            }
-            if (clrType == typeof(byte[]))
-            {
-                return Platform.Current.SQLiteProvider.ColumnByteArray(stmt, index);
-            }
-            if (clrType == typeof(Guid))
-            {
-                var text = Platform.Current.SQLiteProvider.ColumnString(stmt, index);
-                return new Guid(text);
-            }
-            throw new NotSupportedException("Don't know how to read " + clrType);
         }
     }
 }

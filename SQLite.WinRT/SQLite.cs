@@ -19,10 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#if WINDOWS_PHONE && !USE_WP8_NATIVE_SQLITE
-#define USE_CSHARP_SQLITE
-#endif
-
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -31,37 +27,10 @@ using System.Threading;
 using SQLite.WinRT.Linq;
 using SQLite.WinRT.Linq.Base;
 using SQLite.WinRT.Linq.Common;
-#if USE_CSHARP_SQLITE
-using Sqlite3 = Community.CsharpSqlite.Sqlite3;
-using Sqlite3DatabaseHandle = Community.CsharpSqlite.Sqlite3.sqlite3;
-using Sqlite3Statement = Community.CsharpSqlite.Sqlite3.Vdbe;
-#elif USE_WP8_NATIVE_SQLITE
-using Sqlite3 = Sqlite.Sqlite3;
-using Sqlite3DatabaseHandle = Sqlite.Database;
-using Sqlite3Statement = Sqlite.Statement;
-#else
 using Sqlite3DatabaseHandle = System.Object;
-
-#endif
 
 namespace SQLite.WinRT
 {
-    public class SQLiteException : System.Exception
-    {
-        public SQLiteResult Result { get; private set; }
-
-        protected SQLiteException(SQLiteResult r, string message)
-            : base(message)
-        {
-            Result = r;
-        }
-
-        public static SQLiteException New(SQLiteResult r, string message)
-        {
-            return new SQLiteException(r, message);
-        }
-    }
-
     [Flags]
     public enum SQLiteOpenFlags
     {
@@ -77,7 +46,7 @@ namespace SQLite.WinRT
     /// <summary>
     /// Represents an open connection to a SQLite database.
     /// </summary>
-    public partial class SQLiteConnection : IDisposable
+    public class SQLiteConnection : IDisposable
     {
         readonly object lockPoint = new object();
 
@@ -103,15 +72,15 @@ namespace SQLite.WinRT
             }
         }
 
-        private bool _open;
-        private TimeSpan _busyTimeout;
-        private Dictionary<string, TableMapping> mappings = null;
-        private Dictionary<string, TableMapping> tables = null;
-        private System.Diagnostics.Stopwatch watch;
-        private long elapsedMilliseconds = 0;
+        private bool open;
+        private TimeSpan busyTimeout;
+        private Dictionary<string, TableMapping> mappings;
+        private Dictionary<string, TableMapping> tables;
+        private Stopwatch watch;
+        private long elapsedMilliseconds;
 
-        private int _trasactionDepth = 0;
-        private Random _rand = new Random();
+        private int trasactionDepth;
+        private readonly Random rand = new Random();
 
         public Sqlite3DatabaseHandle Handle { get; private set; }
         internal static readonly Sqlite3DatabaseHandle NullHandle = default(Sqlite3DatabaseHandle);
@@ -146,58 +115,25 @@ namespace SQLite.WinRT
         {
         }
 
-        /// <summary>
-        /// Constructs a new SQLiteConnection and opens a SQLite database specified by databasePath.
-        /// </summary>
-        /// <param name="databasePath">
-        /// Specifies the path to the database file.
-        /// </param>
-        /// <param name="storeDateTimeAsTicks">
-        /// Specifies whether to store DateTime properties as ticks (true) or strings (false). You
-        /// absolutely do want to store them as Ticks in all new projects. The default of false is
-        /// only here for backwards compatibility. There is a *significant* speed advantage, with no
-        /// down sides, when setting storeDateTimeAsTicks = true.
-        /// </param>
-        public SQLiteConnection(string databasePath, SQLiteOpenFlags openFlags, bool storeDateTimeAsTicks = false)
+        public SQLiteConnection(string databasePath, SQLiteOpenFlags flags, bool storeDateTimeAsTicks = false)
         {
             DatabasePath = databasePath;
 
             Platform.Current.PlatformStorage.SetTempDirectory();
 
             Sqlite3DatabaseHandle handle;
-
-#if SILVERLIGHT || USE_CSHARP_SQLITE
-            var r = SQLite3.Open (databasePath, out handle, (int)openFlags, IntPtr.Zero);
-#else
-            SQLiteResult r = Platform.Current.SQLiteProvider.Open(DatabasePath, out handle, (int)openFlags, IntPtr.Zero);
-#endif
+            var r = Platform.Current.SQLiteProvider.Open(DatabasePath, out handle, (int)flags, IntPtr.Zero);
 
             Handle = handle;
             if (r != SQLiteResult.OK)
             {
-                throw SQLiteException.New(r, String.Format("Could not open database file: {0} ({1})", DatabasePath, r));
+                throw new SQLiteException(r, String.Format("Could not open database file: {0} ({1})", DatabasePath, r));
             }
-            _open = true;
+            open = true;
 
             StoreDateTimeAsTicks = storeDateTimeAsTicks;
-
             BusyTimeout = TimeSpan.FromSeconds(0.1);
         }
-
-        static SQLiteConnection()
-        {
-            if (_preserveDuringLinkMagic)
-            {
-                var ti = new ColumnInfo();
-                ti.Name = "magic";
-            }
-        }
-
-        /// <summary>
-        /// Used to list some code that we want the MonoTouch linker
-        /// to see, but that we never want to actually execute.
-        /// </summary>
-        static bool _preserveDuringLinkMagic = false;
 
         /// <summary>
         /// Sets a busy handler to sleep the specified amount of time when a table is locked.
@@ -205,13 +141,13 @@ namespace SQLite.WinRT
         /// </summary>
         public TimeSpan BusyTimeout
         {
-            get { return _busyTimeout; }
+            get { return busyTimeout; }
             set
             {
-                _busyTimeout = value;
+                busyTimeout = value;
                 if (Handle != NullHandle)
                 {
-                    Platform.Current.SQLiteProvider.BusyTimeout(Handle, (int)_busyTimeout.TotalMilliseconds);
+                    Platform.Current.SQLiteProvider.BusyTimeout(Handle, (int)busyTimeout.TotalMilliseconds);
                 }
             }
         }
@@ -224,14 +160,7 @@ namespace SQLite.WinRT
         {
             get
             {
-                if (tables == null)
-                {
-                    return Enumerable.Empty<TableMapping>();
-                }
-                else
-                {
-                    return tables.Values;
-                }
+                return tables == null ? Enumerable.Empty<TableMapping>() : tables.Values;
             }
         }
 
@@ -274,36 +203,16 @@ namespace SQLite.WinRT
 
         private struct IndexedColumn
         {
-            public int Order;
-            public string ColumnName;
+            public int Order { get; set; }
+            public string ColumnName { get; set; }
         }
 
         private struct IndexInfo
         {
-            public string IndexName;
-            public string TableName;
-            public bool Unique;
-            public List<IndexedColumn> Columns;
-        }
-
-        public int DropTable(string tableName)
-        {
-            var query = string.Format("drop table if exists \"{0}\"", tableName);
-            return Execute(query);
-        }
-
-        /// <summary>
-        /// Executes a "create table if not exists" on the database. It also
-        /// creates any specified indexes on the columns of the table. It uses
-        /// a schema automatically generated from the specified type. You can
-        /// later access this schema by calling GetMapping.
-        /// </summary>
-        /// <returns>
-        /// The number of entries added to the database schema.
-        /// </returns>
-        public int CreateTable<T>()
-        {
-            return CreateTable(typeof(T));
+            public string IndexName { get; set; }
+            public string TableName { get; set; }
+            public bool Unique { get; set; }
+            public List<IndexedColumn> Columns { get; set; }
         }
 
         /// <summary>
@@ -383,7 +292,7 @@ namespace SQLite.WinRT
         public class ColumnInfo
         {
             [Column("cid")]
-            public int CID { get; set; }
+            public int ColumnID { get; set; }
             [Column("name")]
             public string Name { get; set; }
             [Column("type")]
@@ -407,9 +316,9 @@ namespace SQLite.WinRT
             return Query<ColumnInfo>(query);
         }
 
-        void MigrateTable(TableMapping map)
+        private void MigrateTable(TableMapping map)
         {
-            var existingCols = GetTableInfo(map.TableName);
+            var existingCols = GetTableInfo(map.TableName).ToList();
 
             var toBeAdded = new List<TableMapping.Column>();
 
@@ -419,8 +328,7 @@ namespace SQLite.WinRT
                 foreach (var c in existingCols)
                 {
                     found = (string.Compare(p.Name, c.Name, StringComparison.OrdinalIgnoreCase) == 0);
-                    if (found)
-                        break;
+                    if (found) break;
                 }
                 if (!found)
                 {
@@ -436,15 +344,6 @@ namespace SQLite.WinRT
         }
 
         /// <summary>
-        /// Creates a new SQLiteCommand. Can be overridden to provide a sub-class.
-        /// </summary>
-        /// <seealso cref="SQLiteCommand.OnInstanceCreated"/>
-        protected virtual SQLiteCommand NewCommand()
-        {
-            return new SQLiteCommand(this);
-        }
-
-        /// <summary>
         /// Creates a new SQLiteCommand given the command text with arguments. Place a '?'
         /// in the command text for each of the arguments.
         /// </summary>
@@ -457,22 +356,17 @@ namespace SQLite.WinRT
         /// <returns>
         /// A <see cref="SQLiteCommand"/>
         /// </returns>
-        public SQLiteCommand CreateCommand(string cmdText, params object[] ps)
+        public SQLiteCommand CreateCommand(string cmdText, params object[] args)
         {
-            if (!_open)
+            if (!open) throw new SQLiteException(SQLiteResult.Error, "Cannot create commands from unopened database");
+
+            var cmd = new SQLiteCommand(this);
+            cmd.CommandText = cmdText;
+            foreach (var o in args)
             {
-                throw SQLiteException.New(SQLiteResult.Error, "Cannot create commands from unopened database");
+                cmd.Bind(o);
             }
-            else
-            {
-                var cmd = NewCommand();
-                cmd.CommandText = cmdText;
-                foreach (var o in ps)
-                {
-                    cmd.Bind(o);
-                }
-                return cmd;
-            }
+            return cmd;
         }
 
         /// <summary>
@@ -500,7 +394,7 @@ namespace SQLite.WinRT
             {
                 if (watch == null)
                 {
-                    watch = new System.Diagnostics.Stopwatch();
+                    watch = new Stopwatch();
                 }
                 watch.Reset();
                 watch.Start();
@@ -531,7 +425,7 @@ namespace SQLite.WinRT
             {
                 if (watch == null)
                 {
-                    watch = new System.Diagnostics.Stopwatch();
+                    watch = new Stopwatch();
                 }
                 watch.Reset();
                 watch.Start();
@@ -543,7 +437,7 @@ namespace SQLite.WinRT
             {
                 watch.Stop();
                 elapsedMilliseconds += watch.ElapsedMilliseconds;
-                Debug.WriteLine(string.Format("Finished in {0} ms ({1:0.0} s total)", watch.ElapsedMilliseconds, elapsedMilliseconds / 1000.0));
+                Debug.WriteLine("Finished in {0} ms ({1:0.0} s total)", watch.ElapsedMilliseconds, elapsedMilliseconds / 1000.0);
             }
 
             return r;
@@ -571,143 +465,11 @@ namespace SQLite.WinRT
         }
 
         /// <summary>
-        /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'
-        /// in the command text for each of the arguments and then executes that command.
-        /// It returns each row of the result using the mapping automatically generated for
-        /// the given type.
-        /// </summary>
-        /// <param name="query">
-        /// The fully escaped SQL.
-        /// </param>
-        /// <param name="args">
-        /// Arguments to substitute for the occurences of '?' in the query.
-        /// </param>
-        /// <returns>
-        /// An enumerable with one result for each row returned by the query.
-        /// The enumerator will call sqlite3_step on each call to MoveNext, so the database
-        /// connection must remain open for the lifetime of the enumerator.
-        /// </returns>
-        public IEnumerable<T> DeferredQuery<T>(string query, params object[] args) where T : new()
-        {
-            var cmd = CreateCommand(query, args);
-            return cmd.ExecuteDeferredQuery<T>();
-        }
-
-        /// <summary>
-        /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'
-        /// in the command text for each of the arguments and then executes that command.
-        /// It returns each row of the result using the specified mapping. This function is
-        /// only used by libraries in order to query the database via introspection. It is
-        /// normally not used.
-        /// </summary>
-        /// <param name="map">
-        /// A <see cref="TableMapping"/> to use to convert the resulting rows
-        /// into objects.
-        /// </param>
-        /// <param name="query">
-        /// The fully escaped SQL.
-        /// </param>
-        /// <param name="args">
-        /// Arguments to substitute for the occurences of '?' in the query.
-        /// </param>
-        /// <returns>
-        /// An enumerable with one result for each row returned by the query.
-        /// </returns>
-        public List<object> Query(TableMapping map, string query, params object[] args)
-        {
-            var cmd = CreateCommand(query, args);
-            return cmd.ExecuteQuery<object>(map);
-        }
-
-        /// <summary>
-        /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'
-        /// in the command text for each of the arguments and then executes that command.
-        /// It returns each row of the result using the specified mapping. This function is
-        /// only used by libraries in order to query the database via introspection. It is
-        /// normally not used.
-        /// </summary>
-        /// <param name="map">
-        /// A <see cref="TableMapping"/> to use to convert the resulting rows
-        /// into objects.
-        /// </param>
-        /// <param name="query">
-        /// The fully escaped SQL.
-        /// </param>
-        /// <param name="args">
-        /// Arguments to substitute for the occurences of '?' in the query.
-        /// </param>
-        /// <returns>
-        /// An enumerable with one result for each row returned by the query.
-        /// The enumerator will call sqlite3_step on each call to MoveNext, so the database
-        /// connection must remain open for the lifetime of the enumerator.
-        /// </returns>
-        public IEnumerable<object> DeferredQuery(TableMapping map, string query, params object[] args)
-        {
-            var cmd = CreateCommand(query, args);
-            return cmd.ExecuteDeferredQuery<object>(map);
-        }
-
-
-        /// <summary>
-        /// Whether <see cref="BeginTransaction"/> has been called and the database is waiting for a <see cref="Commit"/>.
+        /// Whether <see cref="SaveTransactionPoint"/> has been called and the database is waiting for a <see cref="Release"/>.
         /// </summary>
         public bool IsInTransaction
         {
-            get { return _trasactionDepth > 0; }
-        }
-
-        /// <summary>
-        /// Begins a new transaction. Call <see cref="Commit"/> to end the transaction.
-        /// </summary>
-        /// <example cref="System.InvalidOperationException">Throws if a transaction has already begun.</example>
-        public void BeginTransaction()
-        {
-            // The BEGIN command only works if the transaction stack is empty, 
-            //    or in other words if there are no pending transactions. 
-            // If the transaction stack is not empty when the BEGIN command is invoked, 
-            //    then the command fails with an error.
-            // Rather than crash with an error, we will just ignore calls to BeginTransaction
-            //    that would result in an error.
-            if (Interlocked.CompareExchange(ref _trasactionDepth, 1, 0) == 0)
-            {
-                try
-                {
-                    Execute("begin transaction");
-                }
-                catch (Exception ex)
-                {
-                    var sqlExp = ex as SQLiteException;
-                    if (sqlExp != null)
-                    {
-                        // It is recommended that applications respond to the errors listed below 
-                        //    by explicitly issuing a ROLLBACK command.
-                        // TODO: This rollback failsafe should be localized to all throw sites.
-                        switch (sqlExp.Result)
-                        {
-                            case SQLiteResult.IOError:
-                            case SQLiteResult.Full:
-                            case SQLiteResult.Busy:
-                            case SQLiteResult.NoMem:
-                            case SQLiteResult.Interrupt:
-                                RollbackTo(null, true);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        // Call decrement and not VolatileWrite in case we've already 
-                        //    created a transaction point in SaveTransactionPoint since the catch.
-                        Interlocked.Decrement(ref _trasactionDepth);
-                    }
-
-                    throw;
-                }
-            }
-            else
-            {
-                // Calling BeginTransaction on an already open transaction is invalid
-                throw new System.InvalidOperationException("Cannot begin a transaction while already in a transaction.");
-            }
+            get { return trasactionDepth > 0; }
         }
 
         /// <summary>
@@ -716,13 +478,12 @@ namespace SQLite.WinRT
         /// 
         /// Call <see cref="RollbackTo"/> to undo transactions since the returned savepoint.
         /// Call <see cref="Release"/> to commit transactions after the savepoint returned here.
-        /// Call <see cref="Commit"/> to end the transaction, committing all changes.
         /// </summary>
         /// <returns>A string naming the savepoint.</returns>
         public string SaveTransactionPoint()
         {
-            var depth = Interlocked.Increment(ref _trasactionDepth) - 1;
-            var retVal = "S" + (short)_rand.Next(short.MaxValue) + "D" + depth;
+            var depth = Interlocked.Increment(ref trasactionDepth) - 1;
+            var retVal = "S" + (short)rand.Next(short.MaxValue) + "D" + depth;
 
             try
             {
@@ -749,7 +510,7 @@ namespace SQLite.WinRT
                 }
                 else
                 {
-                    Interlocked.Decrement(ref _trasactionDepth);
+                    Interlocked.Decrement(ref trasactionDepth);
                 }
 
                 throw;
@@ -759,7 +520,7 @@ namespace SQLite.WinRT
         }
 
         /// <summary>
-        /// Rolls back the transaction that was begun by <see cref="BeginTransaction"/> or <see cref="SaveTransactionPoint"/>.
+        /// Rolls back the transaction that was begun by <see cref="SaveTransactionPoint"/> or <see cref="SaveTransactionPoint"/>.
         /// </summary>
         public void Rollback()
         {
@@ -767,7 +528,7 @@ namespace SQLite.WinRT
         }
 
         /// <summary>
-        /// Rolls back the savepoint created by <see cref="BeginTransaction"/> or SaveTransactionPoint.
+        /// Rolls back the savepoint created by <see cref="SaveTransactionPoint"/> or SaveTransactionPoint.
         /// </summary>
         /// <param name="savepoint">The name of the savepoint to roll back to, as returned by <see cref="SaveTransactionPoint"/>.  If savepoint is null or empty, this method is equivalent to a call to <see cref="Rollback"/></param>
         public void RollbackTo(string savepoint)
@@ -776,8 +537,9 @@ namespace SQLite.WinRT
         }
 
         /// <summary>
-        /// Rolls back the transaction that was begun by <see cref="BeginTransaction"/>.
+        /// Rolls back the transaction that was begun by <see cref="SaveTransactionPoint"/>.
         /// </summary>
+        /// <param name="savepoint"></param>
         /// <param name="noThrow">true to avoid throwing exceptions, false otherwise</param>
         private void RollbackTo(string savepoint, bool noThrow)
         {
@@ -787,7 +549,7 @@ namespace SQLite.WinRT
             {
                 if (String.IsNullOrEmpty(savepoint))
                 {
-                    if (Interlocked.Exchange(ref _trasactionDepth, 0) > 0)
+                    if (Interlocked.Exchange(ref trasactionDepth, 0) > 0)
                     {
                         Execute("rollback");
                     }
@@ -807,14 +569,6 @@ namespace SQLite.WinRT
             // No need to rollback if there are no transactions open.
         }
 
-        /// <summary>
-        /// Releases a savepoint returned from <see cref="SaveTransactionPoint"/>.  Releasing a savepoint 
-        ///    makes changes since that savepoint permanent if the savepoint began the transaction,
-        ///    or otherwise the changes are permanent pending a call to <see cref="Commit"/>.
-        /// 
-        /// The RELEASE command is like a COMMIT for a SAVEPOINT.
-        /// </summary>
-        /// <param name="savepoint">The name of the savepoint to release.  The string should be the result of a call to <see cref="SaveTransactionPoint"/></param>
         public void Release(string savepoint)
         {
             DoSavePointExecute(savepoint, "release ");
@@ -830,39 +584,25 @@ namespace SQLite.WinRT
                 if (Int32.TryParse(savepoint.Substring(firstLen + 1), out depth))
                 {
                     // TODO: Mild race here, but inescapable without locking almost everywhere.
-                    if (0 <= depth && depth < _trasactionDepth)
+                    if (0 <= depth && depth < trasactionDepth)
                     {
-                        Volatile.Write(ref _trasactionDepth, depth);
+                        Volatile.Write(ref trasactionDepth, depth);
                         Execute(cmd + savepoint);
                         return;
                     }
                 }
             }
 
-            throw new ArgumentException("savePoint", "savePoint is not valid, and should be the result of a call to SaveTransactionPoint.");
+            throw new ArgumentException("SavePoint is not valid, and should be the result of a call to SaveTransactionPoint.", "savepoint");
         }
 
         /// <summary>
-        /// Commits the transaction that was begun by <see cref="BeginTransaction"/>.
-        /// </summary>
-        public void Commit()
-        {
-            if (Interlocked.Exchange(ref _trasactionDepth, 0) != 0)
-            {
-                Execute("commit");
-            }
-            // Do nothing on a commit with no open transaction
-        }
-
-        /// <summary>
-        /// Executes <param name="action"> within a (possibly nested) transaction by wrapping it in a SAVEPOINT. If an
+        /// Executes <param name="action" /> within a (possibly nested) transaction by wrapping it in a SAVEPOINT. If an
         /// exception occurs the whole transaction is rolled back, not just the current savepoint. The exception
         /// is rethrown.
         /// </summary>
         /// <param name="action">
-        /// The <see cref="Action"/> to perform within a transaction. <param name="action"> can contain any number
-        /// of operations on the connection but should never call <see cref="BeginTransaction"/> or
-        /// <see cref="Commit"/>.
+        /// The <see cref="Action"/> to perform within a transaction.
         /// </param>
         public void RunInTransaction(Action action)
         {
@@ -918,7 +658,7 @@ namespace SQLite.WinRT
 
         public void Close()
         {
-            if (_open && Handle != NullHandle)
+            if (open && Handle != NullHandle)
             {
                 try
                 {
@@ -934,13 +674,13 @@ namespace SQLite.WinRT
                     if (r != SQLiteResult.OK)
                     {
                         string msg = Platform.Current.SQLiteProvider.GetErrorMessage(Handle);
-                        throw SQLiteException.New(r, msg);
+                        throw new SQLiteException(r, msg);
                     }
                 }
                 finally
                 {
                     Handle = NullHandle;
-                    _open = false;
+                    open = false;
                 }
             }
         }

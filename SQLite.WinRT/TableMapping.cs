@@ -183,11 +183,11 @@ namespace SQLite.WinRT
 
         public class Column
         {
-            readonly PropertyInfo prop;
+            private readonly PropertyInfo prop;
 
             public string Name { get; private set; }
 
-            public string PropertyName { get { return prop.Name; } }
+            public string PropertyName { get { return Property.Name; } }
 
             public Type ColumnType { get; private set; }
 
@@ -202,6 +202,11 @@ namespace SQLite.WinRT
             public bool IsNullable { get; private set; }
 
             public int MaxStringLength { get; private set; }
+
+            public PropertyInfo Property
+            {
+                get { return prop; }
+            }
 
             public Column(PropertyInfo prop)
             {
@@ -220,12 +225,12 @@ namespace SQLite.WinRT
 
             public void SetValue(object obj, object val)
             {
-                prop.SetValue(obj, val, null);
+                Property.SetValue(obj, val, null);
             }
 
             public object GetValue(object obj)
             {
-                return prop.GetValue(obj, null);
+                return Property.GetValue(obj, null);
             }
         }
     }
