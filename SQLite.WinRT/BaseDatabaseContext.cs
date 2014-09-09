@@ -18,15 +18,17 @@ namespace SQLite.WinRT
 
         public async Task CreateSchemeAsync()
         {
-            await connection.RunInTransactionAsync(CreateScheme);
+            var provider = connection.GetEntityProvider();
+            await connection.RunInTransactionAsync(conn => CreateScheme(conn, provider));
         }
 
         public async Task UpdateSchemeAsync()
         {
-            await connection.RunAsync(UpdateScheme);
+            var provider = connection.GetEntityProvider();
+            await connection.RunAsync(conn => UpdateScheme(conn, provider));
         }
 
-        private void UpdateScheme(SQLiteConnection conn)
+        private void UpdateScheme(SQLiteConnection conn, IEntityProvider provider)
         {
             var schemeVersion = GetSchemeVersion();
             var dbVersion = GetDatabaseVersion(conn);
@@ -37,12 +39,12 @@ namespace SQLite.WinRT
                 foreach (var changeset in changesets)
                 {
                     changeset.Update(conn);
-                    UpdateDatabaseVersion(conn, changeset.Version);
+                    UpdateDatabaseVersion(conn, provider, changeset.Version);
                 }
             }
         }
 
-        private void CreateScheme(SQLiteConnection conn)
+        private void CreateScheme(SQLiteConnection conn, IEntityProvider provider)
         {
             var contextType = GetType();
 
@@ -57,7 +59,7 @@ namespace SQLite.WinRT
             }
         }
 
-        private static void UpdateDatabaseVersion(SQLiteConnection conn, int versionNumber)
+        private static void UpdateDatabaseVersion(SQLiteConnection conn, IEntityProvider provider, int versionNumber)
         {
             conn.CreateTable<DataVersion>();
 
@@ -65,7 +67,7 @@ namespace SQLite.WinRT
             if (version == null)
             {
                 version = new DataVersion {Value = versionNumber};
-                conn.Insert(version);
+                provider.GetTable<DataVersion>("DataVersion").Insert(version);
             }
             else
             {

@@ -124,16 +124,6 @@ namespace SQLite.WinRT
 			});
 		}
 
-		public Task<int> InsertAsync (object item)
-		{
-			return Task.Factory.StartNew (() => {
-				var conn = GetConnection ();
-				using (conn.Lock ()) {
-					return conn.Insert (item);
-				}
-			});
-		}
-
 		public Task<int> UpdateAsync (object item)
 		{
 			return Task.Factory.StartNew (() => {
@@ -212,16 +202,6 @@ namespace SQLite.WinRT
 			});
 		}
 
-		public Task<int> InsertAllAsync (IEnumerable items)
-		{
-			return Task.Factory.StartNew (() => {
-				var conn = GetConnection ();
-				using (conn.Lock ()) {
-					return conn.InsertAll (items);
-				}
-			});
-		}
-
         [Obsolete("Will cause a deadlock if any call in action ends up in a different thread. Use RunInTransactionAsync(Action<SQLiteConnection>) instead.")]
 		public Task RunInTransactionAsync (Action<SQLiteAsyncConnection> action)
 		{
@@ -241,7 +221,7 @@ namespace SQLite.WinRT
 			});
 		}
 
-        public Task RunAsync(Action<SQLiteConnection> action)
+        public Task RunAsync(Action<SQLiteConnectionWithLock> action)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -253,11 +233,11 @@ namespace SQLite.WinRT
             });
         }
 
-        public Task RunInTransactionAsync(Action<SQLiteConnection> action)
+        public Task RunInTransactionAsync(Action<SQLiteConnectionWithLock> action)
         {
             return Task.Factory.StartNew(() =>
             {
-                var conn = this.GetConnection();
+                var conn = GetConnection();
                 using (conn.Lock())
                 {
                     conn.BeginTransaction();

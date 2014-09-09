@@ -895,215 +895,6 @@ namespace SQLite.WinRT
 		}
 
 		/// <summary>
-		/// Inserts all specified objects.
-		/// </summary>
-		/// <param name="objects">
-		/// An <see cref="IEnumerable{T}"/> of the objects to insert.
-		/// </param>
-		/// <returns>
-		/// The number of rows added to the table.
-		/// </returns>
-		public int InsertAll (System.Collections.IEnumerable objects)
-		{
-			var c = 0;
-			RunInTransaction(() => {
-				foreach (var r in objects) {
-					c += Insert (r);
-				}
-			});
-			return c;
-		}
-
-		/// <summary>
-		/// Inserts all specified objects.
-		/// </summary>
-		/// <param name="objects">
-		/// An <see cref="IEnumerable{T}"/> of the objects to insert.
-		/// </param>
-		/// <param name="extra">
-		/// Literal SQL code that gets placed into the command. INSERT {extra} INTO ...
-		/// </param>
-		/// <returns>
-		/// The number of rows added to the table.
-		/// </returns>
-		public int InsertAll (System.Collections.IEnumerable objects, string extra)
-		{
-			var c = 0;
-			RunInTransaction (() => {
-				foreach (var r in objects) {
-					c += Insert (r, extra);
-				}
-			});
-			return c;
-		}
-
-		/// <summary>
-		/// Inserts all specified objects.
-		/// </summary>
-		/// <param name="objects">
-		/// An <see cref="IEnumerable{T}"/> of the objects to insert.
-		/// </param>
-		/// <param name="objType">
-		/// The type of object to insert.
-		/// </param>
-		/// <returns>
-		/// The number of rows added to the table.
-		/// </returns>
-		public int InsertAll (System.Collections.IEnumerable objects, Type objType)
-		{
-			var c = 0;
-			RunInTransaction (() => {
-				foreach (var r in objects) {
-					c += Insert (r, objType);
-				}
-			});
-			return c;
-		}
-		
-		/// <summary>
-		/// Inserts the given object and retrieves its
-		/// auto incremented primary key if it has one.
-		/// </summary>
-		/// <param name="obj">
-		/// The object to insert.
-		/// </param>
-		/// <returns>
-		/// The number of rows added to the table.
-		/// </returns>
-		public int Insert (object obj)
-		{
-			if (obj == null) {
-				return 0;
-			}
-			return Insert (obj, "", obj.GetType ());
-		}
-
-		/// <summary>
-		/// Inserts the given object and retrieves its
-		/// auto incremented primary key if it has one.
-		/// If a UNIQUE constraint violation occurs with
-		/// some pre-existing object, this function deletes
-		/// the old object.
-		/// </summary>
-		/// <param name="obj">
-		/// The object to insert.
-		/// </param>
-		/// <returns>
-		/// The number of rows modified.
-		/// </returns>
-		public int InsertOrReplace (object obj)
-		{
-			if (obj == null) {
-				return 0;
-			}
-			return Insert (obj, "OR REPLACE", obj.GetType ());
-		}
-
-		/// <summary>
-		/// Inserts the given object and retrieves its
-		/// auto incremented primary key if it has one.
-		/// </summary>
-		/// <param name="obj">
-		/// The object to insert.
-		/// </param>
-		/// <param name="objType">
-		/// The type of object to insert.
-		/// </param>
-		/// <returns>
-		/// The number of rows added to the table.
-		/// </returns>
-		public int Insert (object obj, Type objType)
-		{
-			return Insert (obj, "", objType);
-		}
-
-		/// <summary>
-		/// Inserts the given object and retrieves its
-		/// auto incremented primary key if it has one.
-		/// If a UNIQUE constraint violation occurs with
-		/// some pre-existing object, this function deletes
-		/// the old object.
-		/// </summary>
-		/// <param name="obj">
-		/// The object to insert.
-		/// </param>
-		/// <param name="objType">
-		/// The type of object to insert.
-		/// </param>
-		/// <returns>
-		/// The number of rows modified.
-		/// </returns>
-		public int InsertOrReplace (object obj, Type objType)
-		{
-			return Insert (obj, "OR REPLACE", objType);
-		}
-		
-		/// <summary>
-		/// Inserts the given object and retrieves its
-		/// auto incremented primary key if it has one.
-		/// </summary>
-		/// <param name="obj">
-		/// The object to insert.
-		/// </param>
-		/// <param name="extra">
-		/// Literal SQL code that gets placed into the command. INSERT {extra} INTO ...
-		/// </param>
-		/// <returns>
-		/// The number of rows added to the table.
-		/// </returns>
-		public int Insert (object obj, string extra)
-		{
-			if (obj == null) {
-				return 0;
-			}
-			return Insert (obj, extra, obj.GetType ());
-		}
-
-	    /// <summary>
-	    /// Inserts the given object and retrieves its
-	    /// auto incremented primary key if it has one.
-	    /// </summary>
-	    /// <param name="obj">
-	    /// The object to insert.
-	    /// </param>
-	    /// <param name="extra">
-	    /// Literal SQL code that gets placed into the command. INSERT {extra} INTO ...
-	    /// </param>
-	    /// <param name="objType">
-	    /// The type of object to insert.
-	    /// </param>
-	    /// <returns>
-	    /// The number of rows added to the table.
-	    /// </returns>
-	    public int Insert (object obj, string extra, Type objType)
-		{
-			if (obj == null || objType == null) {
-				return 0;
-			}
-			
-			var map = GetMapping (objType);
-
-			var replacing = string.Compare (extra, "OR REPLACE", StringComparison.OrdinalIgnoreCase) == 0;
-			
-			var cols = replacing ? map.InsertOrReplaceColumns : map.InsertColumns;
-			var vals = new object[cols.Length];
-			for (var i = 0; i < vals.Length; i++) {
-				vals [i] = cols [i].GetValue (obj);
-			}
-			
-			var insertCmd = map.GetInsertCommand (this, extra);
-			var count = insertCmd.ExecuteNonQuery (vals);
-			
-			if (map.HasAutoIncPK)
-			{
-			    var id = Platform.Current.SQLiteProvider.LastInsertRowid(Handle);
-				map.SetAutoIncPK (obj, id);
-			}
-			
-			return count;
-		}
-
-		/// <summary>
 		/// Updates all of the columns of a table using the specified object
 		/// except for its primary key.
 		/// The object is required to have a primary key.
@@ -1413,30 +1204,21 @@ namespace SQLite.WinRT
 		{
 			MappedType = type;
 
-#if NETFX_CORE
-			var tableAttr = (TableAttribute)System.Reflection.CustomAttributeExtensions
+            var tableAttr = (TableAttribute)System.Reflection.CustomAttributeExtensions
                 .GetCustomAttribute(type.GetTypeInfo(), typeof(TableAttribute), true);
-#else
-			var tableAttr = (TableAttribute)type.GetCustomAttributes (typeof (TableAttribute), true).FirstOrDefault ();
-#endif
 
 			TableName = tableAttr != null ? tableAttr.Name : MappedType.Name;
 
-#if !NETFX_CORE
-			var props = MappedType.GetProperties (BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty);
-#else
-			var props = from p in MappedType.GetRuntimeProperties()
-						where ((p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic) || (p.GetMethod != null && p.GetMethod.IsStatic) || (p.SetMethod != null && p.SetMethod.IsStatic))
-						select p;
-#endif
-			var cols = new List<Column> ();
-			foreach (var p in props) {
-#if !NETFX_CORE
-				var ignore = p.GetCustomAttributes (typeof(IgnoreAttribute), true).Length > 0;
-#else
-				var ignore = p.GetCustomAttributes (typeof(IgnoreAttribute), true).Count() > 0;
-#endif
-				if (p.CanWrite && !ignore) {
+            var props = from p in MappedType.GetRuntimeProperties()
+                        where ((p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic) || (p.GetMethod != null && p.GetMethod.IsStatic) || (p.SetMethod != null && p.SetMethod.IsStatic))
+                        select p;
+
+            var cols = new List<Column>();
+			foreach (var p in props)
+            {
+                var ignore = p.GetCustomAttributes(typeof(IgnoreAttribute), true).Count() > 0;
+                if (p.CanWrite && !ignore)
+                {
 					cols.Add (new Column (p));
 				}
 			}
@@ -1500,21 +1282,21 @@ namespace SQLite.WinRT
 			return exact;
 		}
 		
-		PreparedSqlLiteInsertCommand _insertCommand;
+		internal PreparedSqlLiteInsertCommand insertCommand;
 		string _insertCommandExtra = null;
 
 		public PreparedSqlLiteInsertCommand GetInsertCommand(SQLiteConnection conn, string extra)
 		{
-			if (_insertCommand == null) {
-				_insertCommand = CreateInsertCommand(conn, extra);
+			if (insertCommand == null) {
+				insertCommand = CreateInsertCommand(conn, extra);
 				_insertCommandExtra = extra;
 			}
 			else if (_insertCommandExtra != extra) {
-				_insertCommand.Dispose();
-				_insertCommand = CreateInsertCommand(conn, extra);
+				insertCommand.Dispose();
+				insertCommand = CreateInsertCommand(conn, extra);
 				_insertCommandExtra = extra;
 			}
-			return _insertCommand;
+			return insertCommand;
 		}
 		
 		private PreparedSqlLiteInsertCommand CreateInsertCommand(SQLiteConnection conn, string extra)
@@ -1548,9 +1330,9 @@ namespace SQLite.WinRT
 		
 		protected internal void Dispose()
 		{
-			if (_insertCommand != null) {
-				_insertCommand.Dispose();
-				_insertCommand = null;
+			if (insertCommand != null) {
+				insertCommand.Dispose();
+				insertCommand = null;
 			}
 		}
 
@@ -1660,26 +1442,17 @@ namespace SQLite.WinRT
 		public static bool IsPK (MemberInfo p)
 		{
 			var attrs = p.GetCustomAttributes (typeof(PrimaryKeyAttribute), true);
-#if !NETFX_CORE
-			return attrs.Length > 0;
-#else
-			return attrs.Count() > 0;
-#endif
-		}
+            return attrs.Any();
+        }
 
 		public static string Collation (MemberInfo p)
 		{
-			var attrs = p.GetCustomAttributes (typeof(CollationAttribute), true);
-#if !NETFX_CORE
-			if (attrs.Length > 0) {
-				return ((CollationAttribute)attrs [0]).Value;
-#else
-			if (attrs.Count() > 0) {
+			var attrs = p.GetCustomAttributes (typeof(CollationAttribute), true).ToList();
+            if (attrs.Any())
+            {
                 return ((CollationAttribute)attrs.First()).Value;
-#endif
-			} else {
-				return string.Empty;
-			}
+            }
+		    return string.Empty;
 		}
 
 		public static bool IsAutoInc (MemberInfo p)

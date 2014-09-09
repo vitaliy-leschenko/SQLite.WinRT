@@ -138,6 +138,7 @@
     <Compile Include="Query\SqlGenerator.cs" />
     <Compile Include="Query\SqlQuery.cs" />
     <Compile Include="Query\StringConstraint.cs" />
+    <Compile Include="Query\TableQueryMapping.cs" />
     <Compile Include="Query\Update.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />

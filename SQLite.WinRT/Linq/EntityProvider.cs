@@ -151,10 +151,9 @@ namespace SQLite.WinRT.Linq
 
         private IEntityTable CreateTable(MappingEntity entity)
         {
-            return
-                (IEntityTable)
-                    Activator.CreateInstance(typeof (EntityTable<>).MakeGenericType(entity.ElementType),
-                        new object[] {this, entity});
+            return (IEntityTable) Activator.CreateInstance(
+                typeof (EntityTable<>).MakeGenericType(entity.ElementType),
+                new object[] {this, entity});
         }
 
         public IEntityTable<T> GetTable<T>()
@@ -288,15 +287,16 @@ namespace SQLite.WinRT.Linq
             }
         }
 
-        public class EntityTable<T> : Query<T>, IEntityTable<T>, IHaveMappingEntity
+        public class EntityTable<T> : Query<T>, IEntityTable<T>, IHaveMappingEntity where T: class
         {
             private readonly MappingEntity entity;
-
             private readonly EntityProvider provider;
+            private readonly TableQueryMapping<T> mapping;
 
             public EntityTable(EntityProvider provider, MappingEntity entity)
                 : base(provider, typeof (IEntityTable<T>))
             {
+                mapping = new TableQueryMapping<T>();
                 this.provider = provider;
                 this.entity = entity;
             }
@@ -345,7 +345,48 @@ namespace SQLite.WinRT.Linq
 
             public int Insert(T item)
             {
-                return provider.Connection.Insert(item);
+                if (item == null)
+                {
+                    return 0;
+                }
+
+                var conn = provider.Connection;
+                var cmd = conn.GetMapping<T>().insertCommand;
+                if (cmd == null)
+                {
+                    var cols = mapping.ColumnNames;
+                    var insertSql = string.Format("insert into \"{0}\"({1}) values ({2})",
+                        mapping.TableName,
+                        string.Join(",", cols.Select(c => "\"" + c + "\"")),
+                        string.Join(",", cols.Select(c => "?")));
+
+                    cmd = new PreparedSqlLiteInsertCommand(conn);
+                    cmd.CommandText = insertSql;
+
+                    conn.GetMapping<T>().insertCommand = cmd;
+                }
+                var vals = mapping.ColumnValuesFunc(item);
+                var count = cmd.ExecuteNonQuery(vals);
+
+                if (mapping.HasAutoIncPK)
+                {
+                    var id = Platform.Current.SQLiteProvider.LastInsertRowid(conn.Handle);
+                    mapping.PrimaryKeySetter.Invoke(item, new[] { Convert.ChangeType(id, mapping.PrimaryKeyType) });
+                }
+
+                return count;
+            }
+
+            public int InsertAll(IEnumerable<T> items)
+            {
+                var conn = provider.Connection;
+                var count = 0;
+                conn.RunInTransaction(
+                    delegate
+                    {
+                        count = items.Aggregate(0, (i, t) => i + Insert(t));
+                    });
+                return count;
             }
 
             public Task<int> InsertAsync(T item)
@@ -355,7 +396,19 @@ namespace SQLite.WinRT.Linq
                     var conn = provider.Connection;
                     using (conn.Lock())
                     {
-                        return conn.Insert(item);
+                        return Insert(item);
+                    }
+                });
+            }
+
+            public Task<int> InsertAllAsync(IEnumerable<T> items)
+            {
+                return Task.Run(() =>
+                {
+                    var conn = provider.Connection;
+                    using (conn.Lock())
+                    {
+                        return InsertAll(items);
                     }
                 });
             }

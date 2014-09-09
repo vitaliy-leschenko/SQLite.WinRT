@@ -94,12 +94,14 @@ namespace SQLite.WinRT.Tests.net45
             conn.CreateTable<Category>();
             conn.CreateTable<Item>();
 
+            var categories = connection.Table<Category>();
             var items = new List<Item>();
+
             for (var i = 0; i < 10; i++)
             {
                 var category = new Category();
                 category.Name = "category " + (i + 1);
-                conn.Insert(category);
+                categories.Insert(category);
 
                 for (int j = 0; j < 2 + i * 2; j++)
                 {
@@ -113,7 +115,7 @@ namespace SQLite.WinRT.Tests.net45
                     items.Add(item);
                 }
             }
-            conn.InsertAll(items);
+            connection.Table<Item>().InsertAll(items);
         }
 
         [TestMethod]

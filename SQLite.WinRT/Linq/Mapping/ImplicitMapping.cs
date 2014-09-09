@@ -24,13 +24,7 @@ namespace SQLite.WinRT.Linq.Mapping
 
         public override bool IsPrimaryKey(MappingEntity entity, MemberInfo member)
         {
-            // Customers has CustomerID, Orders has OrderID, etc
-            if (IsColumn(entity, member))
-            {
-                return member.Name.EndsWith("ID") &&
-                       member.DeclaringType.Name.StartsWith(member.Name.Substring(0, member.Name.Length - 2));
-            }
-            return false;
+            return Orm.IsPK(member);
         }
 
         public override bool IsColumn(MappingEntity entity, MemberInfo member)

@@ -117,7 +117,7 @@ namespace SQLite.WinRT.Tests.net45
 
             var item = new TestTable();
             item.IntValue = rnd.Next();
-            await connection.InsertAsync(item);
+            await connection.Table<TestTable>().InsertAsync(item);
 
             Assert.IsTrue(item.ID != 0);
         }

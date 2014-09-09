@@ -2,6 +2,7 @@
 // This source code is made available under the terms of the Microsoft Public License (MS-PL)
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -40,6 +41,8 @@ namespace SQLite.WinRT.Linq.Base
         int Update(T item);
         Task<int> UpdateAsync(T item);
         int Insert(T item);
+        int InsertAll(IEnumerable<T> items);
         Task<int> InsertAsync(T item);
+        Task<int> InsertAllAsync(IEnumerable<T> items);
     }
 }
