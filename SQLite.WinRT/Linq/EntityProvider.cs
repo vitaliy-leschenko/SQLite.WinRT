@@ -356,8 +356,7 @@ namespace SQLite.WinRT.Linq
                     return 0;
                 }
 
-                var vals = mapping.ColumnValuesFunc(item);
-                var cmd = mapping.GetUpdateCommand(vals, mapping.PrimaryKeyFunc(item));
+                var cmd = mapping.GetUpdateCommand(item);
                 return cmd.ExecuteNonQuery();
             }
 

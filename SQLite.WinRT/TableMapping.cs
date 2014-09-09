@@ -134,6 +134,13 @@ namespace SQLite.WinRT
 
         private PreparedSqlLiteInsertCommand insertCommand;
 
+        public SQLiteCommand GetUpdateCommand<T>(T item)
+        {
+            var vals = ColumnValuesFunc(item);
+            var pk = PrimaryKeyFunc(item);
+            return GetUpdateCommand(vals, pk);
+        }
+
         public SQLiteCommand GetUpdateCommand(object[] vals, object pk)
         {
             var cols = InsertColumns;
