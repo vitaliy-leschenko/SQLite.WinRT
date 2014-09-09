@@ -52,6 +52,11 @@ namespace SQLite.WinRT.Linq
             get { return connection; }
         }
 
+        public void CreateTable(Type type)
+        {
+            connection.CreateTable(type);
+        }
+
         IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
         {
             return new Query<S>(this, expression);

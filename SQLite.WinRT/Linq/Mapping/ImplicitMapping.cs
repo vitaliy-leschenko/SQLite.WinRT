@@ -136,81 +136,10 @@ namespace SQLite.WinRT.Linq.Mapping
             return !string.IsNullOrEmpty(entity.TableId) ? entity.TableId : InferTableName(entity.EntityType);
         }
 
-        private string InferTableName(Type rowType)
+        private string InferTableName(Type type)
         {
-            return SplitWords(Plural(rowType.Name));
-        }
-
-        public static string SplitWords(string name)
-        {
-            StringBuilder sb = null;
-            bool lastIsLower = char.IsLower(name[0]);
-            for (int i = 0, n = name.Length; i < n; i++)
-            {
-                bool thisIsLower = char.IsLower(name[i]);
-                if (lastIsLower && !thisIsLower)
-                {
-                    if (sb == null)
-                    {
-                        sb = new StringBuilder();
-                        sb.Append(name, 0, i);
-                    }
-                    sb.Append(" ");
-                }
-                if (sb != null)
-                {
-                    sb.Append(name[i]);
-                }
-                lastIsLower = thisIsLower;
-            }
-            if (sb != null)
-            {
-                return sb.ToString();
-            }
-            return name;
-        }
-
-        public static string Plural(string name)
-        {
-            if (name.EndsWith("x", StringComparison.OrdinalIgnoreCase)
-                || name.EndsWith("ch", StringComparison.OrdinalIgnoreCase)
-                || name.EndsWith("ss", StringComparison.OrdinalIgnoreCase))
-            {
-                return name + "es";
-            }
-            if (name.EndsWith("y", StringComparison.OrdinalIgnoreCase))
-            {
-                return name.Substring(0, name.Length - 1) + "ies";
-            }
-            if (!name.EndsWith("s"))
-            {
-                return name + "s";
-            }
-            return name;
-        }
-
-        public static string Singular(string name)
-        {
-            if (name.EndsWith("es", StringComparison.OrdinalIgnoreCase))
-            {
-                string rest = name.Substring(0, name.Length - 2);
-                if (rest.EndsWith("x", StringComparison.OrdinalIgnoreCase)
-                    || name.EndsWith("ch", StringComparison.OrdinalIgnoreCase)
-                    || name.EndsWith("ss", StringComparison.OrdinalIgnoreCase))
-                {
-                    return rest;
-                }
-            }
-            if (name.EndsWith("ies", StringComparison.OrdinalIgnoreCase))
-            {
-                return name.Substring(0, name.Length - 3) + "y";
-            }
-            if (name.EndsWith("s", StringComparison.OrdinalIgnoreCase)
-                && !name.EndsWith("ss", StringComparison.OrdinalIgnoreCase))
-            {
-                return name.Substring(0, name.Length - 1);
-            }
-            return name;
+            var tableAttr = (TableAttribute)type.GetTypeInfo().GetCustomAttribute(typeof(TableAttribute), true);
+            return tableAttr != null ? tableAttr.Name : type.Name;
         }
     }
 }

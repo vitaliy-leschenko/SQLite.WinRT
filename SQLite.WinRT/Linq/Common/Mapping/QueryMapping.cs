@@ -61,7 +61,8 @@ namespace SQLite.WinRT.Linq.Common.Mapping
         /// <returns></returns>
         public virtual string GetTableId(Type type)
         {
-            return type.Name;
+            var tableAttr = (TableAttribute)type.GetTypeInfo().GetCustomAttribute(typeof(TableAttribute), true);
+            return tableAttr != null ? tableAttr.Name : type.Name;
         }
 
         /// <summary>

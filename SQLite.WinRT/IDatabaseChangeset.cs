@@ -1,8 +1,10 @@
-﻿namespace SQLite.WinRT
+﻿using SQLite.WinRT.Linq.Base;
+
+namespace SQLite.WinRT
 {
     public interface IDatabaseChangeset
     {
         int Version { get; }
-        void Update(SQLiteConnection connection);
+        void Update(IEntityProvider provider);
     }
 }

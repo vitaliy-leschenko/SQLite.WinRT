@@ -54,8 +54,9 @@ namespace SQLite.WinRT
 	    private IEntityProvider provider;
 	    internal IEntityProvider GetEntityProvider()
 	    {
+	        if (provider != null) return provider;
             var conn = GetConnection();
-            return new EntityProvider(conn);
+            return provider = new EntityProvider(conn);
 	    }
 
 		public Task<CreateTablesResult> CreateTableAsync<T> ()
@@ -64,44 +65,10 @@ namespace SQLite.WinRT
 			return CreateTablesAsync (typeof (T));
 		}
 
-		public Task<CreateTablesResult> CreateTablesAsync<T, T2> ()
-			where T : new ()
-			where T2 : new ()
-		{
-			return CreateTablesAsync (typeof (T), typeof (T2));
-		}
-
-		public Task<CreateTablesResult> CreateTablesAsync<T, T2, T3> ()
-			where T : new ()
-			where T2 : new ()
-			where T3 : new ()
-		{
-			return CreateTablesAsync (typeof (T), typeof (T2), typeof (T3));
-		}
-
-		public Task<CreateTablesResult> CreateTablesAsync<T, T2, T3, T4> ()
-			where T : new ()
-			where T2 : new ()
-			where T3 : new ()
-			where T4 : new ()
-		{
-			return CreateTablesAsync (typeof (T), typeof (T2), typeof (T3), typeof (T4));
-		}
-
-		public Task<CreateTablesResult> CreateTablesAsync<T, T2, T3, T4, T5> ()
-			where T : new ()
-			where T2 : new ()
-			where T3 : new ()
-			where T4 : new ()
-			where T5 : new ()
-		{
-			return CreateTablesAsync (typeof (T), typeof (T2), typeof (T3), typeof (T4), typeof (T5));
-		}
-
 		public Task<CreateTablesResult> CreateTablesAsync (params Type[] types)
 		{
 			return Task.Factory.StartNew (() => {
-				CreateTablesResult result = new CreateTablesResult ();
+				var result = new CreateTablesResult ();
 				var conn = GetConnection ();
 				using (conn.Lock ()) {
 					foreach (Type type in types) {
@@ -202,38 +169,19 @@ namespace SQLite.WinRT
 			});
 		}
 
-        [Obsolete("Will cause a deadlock if any call in action ends up in a different thread. Use RunInTransactionAsync(Action<SQLiteConnection>) instead.")]
-		public Task RunInTransactionAsync (Action<SQLiteAsyncConnection> action)
-		{
-			return Task.Factory.StartNew (() => {
-				var conn = this.GetConnection ();
-				using (conn.Lock ()) {
-					conn.BeginTransaction ();
-					try {
-						action (this);
-						conn.Commit ();
-					}
-					catch (Exception) {
-						conn.Rollback ();
-						throw;
-					}
-				}
-			});
-		}
-
-        public Task RunAsync(Action<SQLiteConnectionWithLock> action)
+        public Task RunAsync(Action<IEntityProvider> action)
         {
             return Task.Factory.StartNew(() =>
             {
                 var conn = GetConnection();
                 using (conn.Lock())
                 {
-                    action(conn);
+                    action(GetEntityProvider());
                 }
             });
         }
 
-        public Task RunInTransactionAsync(Action<SQLiteConnectionWithLock> action)
+        public Task RunInTransactionAsync(Action<IEntityProvider> action)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -243,7 +191,7 @@ namespace SQLite.WinRT
                     conn.BeginTransaction();
                     try
                     {
-                        action(conn);
+                        action(GetEntityProvider());
                         conn.Commit();
                     }
                     catch (Exception)
@@ -257,10 +205,7 @@ namespace SQLite.WinRT
 
         public IEntityTable<T> Table<T>()
         {
-            provider = provider ?? GetEntityProvider();
-
-            var tableName = GetConnection().GetMapping<T>().TableName;
-            return provider.GetTable<T>(tableName);
+            return GetEntityProvider().GetTable<T>(null);
         }
 
 		public Task<T> ExecuteScalarAsync<T> (string sql, params object[] args)

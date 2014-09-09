@@ -20,6 +20,7 @@ namespace SQLite.WinRT.Linq.Base
 
         bool CanBeParameter(Expression expression);
         SQLiteConnectionWithLock Connection { get; }
+        void CreateTable(Type type);
     }
 
     public interface IEntityTable : IQueryable

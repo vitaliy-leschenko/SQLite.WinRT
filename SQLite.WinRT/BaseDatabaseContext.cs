@@ -18,33 +18,31 @@ namespace SQLite.WinRT
 
         public async Task CreateSchemeAsync()
         {
-            var provider = connection.GetEntityProvider();
-            await connection.RunInTransactionAsync(conn => CreateScheme(conn, provider));
+            await connection.RunInTransactionAsync(CreateScheme);
         }
 
         public async Task UpdateSchemeAsync()
         {
-            var provider = connection.GetEntityProvider();
-            await connection.RunAsync(conn => UpdateScheme(conn, provider));
+            await connection.RunAsync(UpdateScheme);
         }
 
-        private void UpdateScheme(SQLiteConnection conn, IEntityProvider provider)
+        private void UpdateScheme(IEntityProvider provider)
         {
             var schemeVersion = GetSchemeVersion();
-            var dbVersion = GetDatabaseVersion(conn);
+            var dbVersion = GetDatabaseVersion(provider);
 
             if (schemeVersion > dbVersion)
             {
                 var changesets = GetDatabaseChangesets().Where(t => t.Version > dbVersion);
                 foreach (var changeset in changesets)
                 {
-                    changeset.Update(conn);
-                    UpdateDatabaseVersion(conn, provider, changeset.Version);
+                    changeset.Update(provider);
+                    UpdateDatabaseVersion(provider, changeset.Version);
                 }
             }
         }
 
-        private void CreateScheme(SQLiteConnection conn, IEntityProvider provider)
+        private void CreateScheme(IEntityProvider provider)
         {
             var contextType = GetType();
 
@@ -55,24 +53,26 @@ namespace SQLite.WinRT
                 .Select(t => t.PropertyType.GenericTypeArguments)
                 .Where(t => t != null && t.Length == 1))
             {
-                conn.CreateTable(types[0]);
+                provider.CreateTable(types[0]);
             }
         }
 
-        private static void UpdateDatabaseVersion(SQLiteConnection conn, IEntityProvider provider, int versionNumber)
+        private static void UpdateDatabaseVersion(IEntityProvider provider, int versionNumber)
         {
-            conn.CreateTable<DataVersion>();
+            provider.CreateTable(typeof(DataVersion));
 
-            var version = conn.Table<DataVersion>().FirstOrDefault();
+            var table = provider.GetTable<DataVersion>(null);
+
+            var version = table.FirstOrDefault();
             if (version == null)
             {
                 version = new DataVersion {Value = versionNumber};
-                provider.GetTable<DataVersion>("DataVersion").Insert(version);
+                provider.GetTable<DataVersion>(null).Insert(version);
             }
             else
             {
                 version.Value = versionNumber;
-                conn.Update(version);
+                table.Update(version);
             }
         }
 
@@ -85,10 +85,10 @@ namespace SQLite.WinRT
             return changesets.Aggregate(0, (max, c) => Math.Max(max, c.Version));
         }
 
-        protected int GetDatabaseVersion(SQLiteConnection conn)
+        protected int GetDatabaseVersion(IEntityProvider provider)
         {
-            conn.CreateTable<DataVersion>();
-            var version = conn.Table<DataVersion>().FirstOrDefault();
+            provider.CreateTable(typeof(DataVersion));
+            var version = provider.GetTable<DataVersion>(null).FirstOrDefault();
             return version != null ? version.Value : 0;
         }
 
