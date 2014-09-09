@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SQLite.WinRT.Linq;
+using SQLite.WinRT.Linq.Base;
 #if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -46,15 +47,18 @@ namespace SQLite.WinRT.Tests.net45
 
         private const string DbName = "db.sqlite";
 
-        private SQLiteAsyncConnection connection;
+        private IEntityProvider provider;
 
 #if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
         [TestInitialize]
         public void TestInitialize()
         {
             var folder = ApplicationData.Current.LocalFolder;
-            connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName), true);
-            connection.GetConnection().Trace = true;
+            var connectionString = new SQLiteConnectionString(Path.Combine(folder.Path, DbName), true);
+            connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
+            connection.Trace = true;
+            connection.TimeExecution = true;
+            provider = connection.GetEntityProvider();
         }
 
         [TestCleanup]
@@ -73,15 +77,18 @@ namespace SQLite.WinRT.Tests.net45
         public void TestInitialize()
         {
             var folder = Path.GetTempPath();
-            connection = new SQLiteAsyncConnection(Path.Combine(folder, DbName), true);
-            connection.GetConnection().Trace = true;
+            var connectionString = new SQLiteConnectionString(Path.Combine(folder, DbName), true);
+            var connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
+            connection.Trace = true;
+            connection.TimeExecution = true;
+            provider = connection.GetEntityProvider();
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            connection.GetConnection().Close();
-            connection = null;
+            provider.Connection.Close();
+            provider = null;
             SQLiteConnectionPool.Shared.Reset();
 
             var folder = Path.GetTempPath();
@@ -92,32 +99,32 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestCreateDatabase()
         {
-            await connection.CreateTableAsync<TestTable>();
+            await provider.CreateTableAsync<TestTable>();
         }
 
 
         [TestMethod]
         public async Task TestUpdateDatabase()
         {
-            await connection.CreateTableAsync<TestTable>();
-            await connection.CreateTableAsync<TestTable2>();
+            await provider.CreateTableAsync<TestTable>();
+            await provider.CreateTableAsync<TestTable2>();
         }
 
         [TestMethod]
         public async Task TestDropTable()
         {
-            await connection.CreateTableAsync<TestTable2>();
-            await connection.DropTableAsync<TestTable2>();
+            await provider.CreateTableAsync<TestTable2>();
+            await provider.DropTableAsync("TestTable2");
         }
 
         [TestMethod]
         public async Task TestInsert()
         {
-            await connection.CreateTableAsync<TestTable>();
+            await provider.CreateTableAsync<TestTable>();
 
             var item = new TestTable();
             item.IntValue = rnd.Next();
-            await connection.Table<TestTable>().InsertAsync(item);
+            await provider.GetTable<TestTable>().InsertAsync(item);
 
             Assert.IsTrue(item.ID != 0);
         }
@@ -125,8 +132,8 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestUpdate()
         {
-            await connection.CreateTableAsync<TestTable>();
-            var table = connection.Table<TestTable>();
+            await provider.CreateTableAsync<TestTable>();
+            var table = provider.GetTable<TestTable>();
 
             var item = new TestTable();
             item.IntValue = 100;
@@ -142,8 +149,8 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestDelete()
         {
-            await connection.CreateTableAsync<TestTable>();
-            var table = connection.Table<TestTable>();
+            await provider.CreateTableAsync<TestTable>();
+            var table = provider.GetTable<TestTable>();
 
             var item = new TestTable();
             item.IntValue = 200;

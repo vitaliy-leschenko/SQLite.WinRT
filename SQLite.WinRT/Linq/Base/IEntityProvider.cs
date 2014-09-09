@@ -12,15 +12,16 @@ namespace SQLite.WinRT.Linq.Base
 {
     public interface IEntityProvider : IQueryProvider
     {
-        IEntityTable<T> GetTable<T>(string tableId);
-
-        IEntityTable GetTable(Type type, string tableId);
-
-        bool CanBeEvaluatedLocally(Expression expression);
+        IEntityTable<T> GetTable<T>(string tableId = null);
 
         bool CanBeParameter(Expression expression);
-        SQLiteConnectionWithLock Connection { get; }
-        void CreateTable(Type type);
+        SQLiteConnection Connection { get; }
+
+        int CreateTable(Type type);
+        int CreateTable<T>();
+        void DropTable(string tableName);
+        Task<int> CreateTableAsync<T>();
+        Task DropTableAsync(string tableName);
     }
 
     public interface IEntityTable : IQueryable
@@ -28,22 +29,24 @@ namespace SQLite.WinRT.Linq.Base
         new IEntityProvider Provider { get; }
 
         string TableId { get; }
-
-        object GetById(object id);
     }
 
     public interface IEntityTable<T> : IQueryable<T>, IEntityTable
     {
-        new T GetById(object id);
         Update<T> Update();
         Delete<T> Delete();
+
         int Delete(T item);
         Task<int> DeleteAsync(T item);
-        int Update(T item);
-        Task<int> UpdateAsync(T item);
+
         int Insert(T item);
         int InsertAll(IEnumerable<T> items);
         Task<int> InsertAsync(T item);
         Task<int> InsertAllAsync(IEnumerable<T> items);
+
+        int Update(T item);
+        Task<int> UpdateAsync(T item);
+        int UpdateAll(IEnumerable<T> items);
+        Task<int> UpdateAllAsync(IEnumerable<T> items);
     }
 }

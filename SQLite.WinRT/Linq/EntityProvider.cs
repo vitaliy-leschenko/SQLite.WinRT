@@ -23,11 +23,11 @@ namespace SQLite.WinRT.Linq
     /// </summary>
     public class EntityProvider : IAsyncQueryProvider, IEntityProvider, IQueryProvider
     {
-        private readonly SQLiteConnectionWithLock connection;
+        private readonly SQLiteConnection connection;
         private readonly Dictionary<MappingEntity, IEntityTable> tables;
         private EntityPolicy policy;
 
-        public EntityProvider(SQLiteConnectionWithLock connection)
+        public EntityProvider(SQLiteConnection connection)
         {
             this.connection = connection;
             Mapping = new ImplicitMapping();
@@ -47,14 +47,46 @@ namespace SQLite.WinRT.Linq
         public TextWriter Log { get; set; }
         private bool ActionOpenedConnection { get; set; }
 
-        public SQLiteConnectionWithLock Connection
+        public SQLiteConnection Connection
         {
             get { return connection; }
         }
 
-        public void CreateTable(Type type)
+        public int CreateTable<T>()
         {
-            connection.CreateTable(type);
+            return connection.CreateTable(typeof(T));
+        }
+
+        public void DropTable(string tableName)
+        {
+            connection.DropTable(tableName);
+        }
+
+        public Task<int> CreateTableAsync<T>()
+        {
+            return Task.Run(() =>
+            {
+                using (connection.Lock())
+                {
+                    return connection.CreateTable(typeof(T));
+                }
+            });
+        }
+
+        public Task DropTableAsync(string tableName)
+        {
+            return Task.Run(() =>
+            {
+                using (connection.Lock())
+                {
+                    connection.DropTable(tableName);
+                }
+            });
+        }
+
+        public int CreateTable(Type type)
+        {
+            return connection.CreateTable(type);
         }
 
         IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
@@ -112,19 +144,14 @@ namespace SQLite.WinRT.Linq
             });
         }
 
-        public IEntityTable<T> GetTable<T>(string tableId)
+        public IEntityTable<T> GetTable<T>(string tableId = null)
         {
             return (IEntityTable<T>) GetTable(typeof (T), tableId);
         }
 
-        public IEntityTable GetTable(Type type, string tableId)
+        public IEntityTable GetTable(Type type, string tableId = null)
         {
             return GetTable(Mapping.GetEntity(type, tableId));
-        }
-
-        public bool CanBeEvaluatedLocally(Expression expression)
-        {
-            return Mapping.CanBeEvaluatedLocally(expression);
         }
 
         public bool CanBeParameter(Expression expression)
@@ -159,16 +186,6 @@ namespace SQLite.WinRT.Linq
             return (IEntityTable) Activator.CreateInstance(
                 typeof (EntityTable<>).MakeGenericType(entity.ElementType),
                 new object[] {this, entity});
-        }
-
-        public IEntityTable<T> GetTable<T>()
-        {
-            return GetTable<T>(null);
-        }
-
-        public IEntityTable GetTable(Type type)
-        {
-            return GetTable(type, null);
         }
 
         public Executor CreateExecutor()
@@ -274,7 +291,7 @@ namespace SQLite.WinRT.Linq
         {
             private readonly List<QueryCommand> commands = new List<QueryCommand>();
 
-            public static ReadOnlyCollection<QueryCommand> Gather(Expression expression)
+            public static IEnumerable<QueryCommand> Gather(Expression expression)
             {
                 var gatherer = new CommandGatherer();
                 gatherer.Visit(expression);
@@ -296,12 +313,12 @@ namespace SQLite.WinRT.Linq
         {
             private readonly MappingEntity entity;
             private readonly EntityProvider provider;
-            private readonly TableQueryMapping<T> mapping;
+            private readonly TableMapping mapping;
 
             public EntityTable(EntityProvider provider, MappingEntity entity)
                 : base(provider, typeof (IEntityTable<T>))
             {
-                mapping = new TableQueryMapping<T>();
+                mapping = provider.Connection.GetMapping<T>();
                 this.provider = provider;
                 this.entity = entity;
             }
@@ -319,23 +336,6 @@ namespace SQLite.WinRT.Linq
             public string TableId
             {
                 get { return entity.TableId; }
-            }
-
-            public T GetById(object id)
-            {
-                IEntityProvider dbProvider = Provider;
-                if (dbProvider != null)
-                {
-                    var keys = id as IEnumerable<object>;
-                    if (keys == null)
-                    {
-                        keys = new[] {id};
-                    }
-                    Expression query = ((EntityProvider) dbProvider).Mapping.GetPrimaryKeyQuery(
-                        entity, Expression, keys.Select(v => Expression.Constant(v)).ToArray());
-                    return Provider.Execute<T>(query);
-                }
-                return default(T);
             }
 
             public Update<T> Update()
@@ -356,40 +356,63 @@ namespace SQLite.WinRT.Linq
                 }
 
                 var conn = provider.Connection;
-                var cmd = conn.GetMapping<T>().insertCommand;
-                if (cmd == null)
-                {
-                    var cols = mapping.ColumnNames;
-                    var insertSql = string.Format("insert into \"{0}\"({1}) values ({2})",
-                        mapping.TableName,
-                        string.Join(",", cols.Select(c => "\"" + c + "\"")),
-                        string.Join(",", cols.Select(c => "?")));
-
-                    cmd = new PreparedSqlLiteInsertCommand(conn);
-                    cmd.CommandText = insertSql;
-
-                    conn.GetMapping<T>().insertCommand = cmd;
-                }
+                var cmd = mapping.GetInsertCommand();
                 var vals = mapping.ColumnValuesFunc(item);
                 var count = cmd.ExecuteNonQuery(vals);
 
                 if (mapping.HasAutoIncPK)
                 {
                     var id = Platform.Current.SQLiteProvider.LastInsertRowid(conn.Handle);
-                    mapping.PrimaryKeySetter.Invoke(item, new[] { Convert.ChangeType(id, mapping.PrimaryKeyType) });
+                    mapping.SetAutoIncPK(item, id);
                 }
 
                 return count;
             }
 
-            public int InsertAll(IEnumerable<T> items)
+            public int Update(T item)
+            {
+                if (item == null)
+                {
+                    return 0;
+                }
+
+                var vals = mapping.ColumnValuesFunc(item);
+                var cmd = mapping.GetUpdateCommand(vals, mapping.PrimaryKeyFunc(item));
+                return cmd.ExecuteNonQuery();
+            }
+
+            public int UpdateAll(IEnumerable<T> items)
             {
                 var conn = provider.Connection;
                 var count = 0;
                 conn.RunInTransaction(
                     delegate
                     {
-                        count = items.Aggregate(0, (i, t) => i + Insert(t));
+                        count = items.Aggregate(0, (s, i) => s + Update(i));
+                    });
+                return count;
+            }
+
+            public int InsertAll(IEnumerable<T> items)
+            {
+                var conn = provider.Connection;
+                var cmd = mapping.GetInsertCommand();
+
+                var count = 0;
+                conn.RunInTransaction(
+                    delegate
+                    {
+                        foreach (var item in items)
+                        {
+                            var vals = mapping.ColumnValuesFunc(item);
+                            count += cmd.ExecuteNonQuery(vals);
+
+                            if (mapping.HasAutoIncPK)
+                            {
+                                var id = Platform.Current.SQLiteProvider.LastInsertRowid(conn.Handle);
+                                mapping.SetAutoIncPK(item, id);
+                            }
+                        }
                     });
                 return count;
             }
@@ -418,11 +441,6 @@ namespace SQLite.WinRT.Linq
                 });
             }
 
-            public int Update(T item)
-            {
-                return provider.Connection.Update(item);
-            }
-
             public Task<int> UpdateAsync(T item)
             {
                 return Task.Run(() =>
@@ -430,7 +448,19 @@ namespace SQLite.WinRT.Linq
                     var conn = provider.Connection;
                     using (conn.Lock())
                     {
-                        return conn.Update(item);
+                        return Update(item);
+                    }
+                });
+            }
+
+            public Task<int> UpdateAllAsync(IEnumerable<T> items)
+            {
+                return Task.Run(() =>
+                {
+                    var conn = provider.Connection;
+                    using (conn.Lock())
+                    {
+                        return UpdateAll(items);
                     }
                 });
             }
@@ -447,14 +477,9 @@ namespace SQLite.WinRT.Linq
                     var conn = provider.Connection;
                     using (conn.Lock())
                     {
-                        return conn.Delete(item);
+                        return Delete(item);
                     }
                 });
-            }
-
-            object IEntityTable.GetById(object id)
-            {
-                return GetById(id);
             }
 
             public MappingEntity Entity

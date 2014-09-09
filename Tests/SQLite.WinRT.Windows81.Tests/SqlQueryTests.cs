@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using SQLite.WinRT.Linq.Base;
 using SQLite.WinRT.Tests.Data;
 #if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
 using Windows.Storage;
@@ -28,25 +29,31 @@ namespace SQLite.WinRT.Tests.net45
     {
         private const string DbName = "db.sqlite";
 
-        protected SQLiteAsyncConnection connection;
+        private IEntityProvider provider;
+        private DbContext db;
 
 #if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
         [TestInitialize]
         public void TestInitialize()
         {
             var folder = ApplicationData.Current.LocalFolder;
-            connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName), true);
+            var connectionString = new SQLiteConnectionString(Path.Combine(folder.Path, DbName), true);
+            var connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
+            connection.Trace = false;
+            provider = connection.GetEntityProvider();
 
             DataInitialize();
 
             connection.Trace = true;
+            connection.TimeExecution = true;
+            db = new DbContext(connection);
         }
 
         [TestCleanup]
         public async Task TestCleanup()
         {
-            connection.GetConnection().Close();
-            connection = null;
+            provider.Connection.Close();
+            provider = null;
             SQLiteConnectionPool.Shared.Reset();
 
             var folder = ApplicationData.Current.LocalFolder;
@@ -58,18 +65,23 @@ namespace SQLite.WinRT.Tests.net45
         public void TestInitialize()
         {
             var folder = Path.GetTempPath();
-            connection = new SQLiteAsyncConnection(Path.Combine(folder, DbName), true);
+            var connectionString = new SQLiteConnectionString(Path.Combine(folder, DbName), true);
+            var connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
+            connection.Trace = false;
+            provider = connection.GetEntityProvider();
 
             DataInitialize();
 
-            connection.GetConnection().Trace = true;
+            connection.Trace = true;
+            connection.TimeExecution = true;
+            db = new DbContext(connection);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            connection.GetConnection().Close();
-            connection = null;
+            provider.Connection.Close();
+            provider = null;
             SQLiteConnectionPool.Shared.Reset();
 
             var folder = Path.GetTempPath();
@@ -79,13 +91,12 @@ namespace SQLite.WinRT.Tests.net45
 
         private void DataInitialize()
         {
-            var conn = connection.GetConnection();
-            conn.CreateTable<Category>();
-            conn.CreateTable<Item>();
+            provider.CreateTable<Category>();
+            provider.CreateTable<Item>();
 
-            var categories = connection.Table<Category>();
-
+            var categories = provider.GetTable<Category>();
             var items = new List<Item>();
+
             for (var i = 0; i < 10; i++)
             {
                 var category = new Category();
@@ -104,13 +115,12 @@ namespace SQLite.WinRT.Tests.net45
                     items.Add(item);
                 }
             }
-            connection.Table<Item>().InsertAll(items);
+            provider.GetTable<Item>().InsertAll(items);
         }
 
         [TestMethod]
         public void UpdateTest()
         {
-            var db = new DbContext(connection);
             var count = db.Categories
                 .Update()
                 .Set(t => t.Name).EqualTo("test name")
@@ -132,7 +142,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public void DeleteTest()
         {
-            var db = new DbContext(connection);
             var count = db.Categories.Delete().Where(t => t.CategoryID).IsLessThanOrEqualTo(3).Execute();
             Assert.IsTrue(count == 3);
             Assert.IsFalse(db.Categories.Any(t => t.CategoryID <= 3));
@@ -141,7 +150,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public void DeleteAllTest()
         {
-            var db = new DbContext(connection);
             db.Items.Delete().Execute();
 
             Assert.IsFalse(db.Items.Any());

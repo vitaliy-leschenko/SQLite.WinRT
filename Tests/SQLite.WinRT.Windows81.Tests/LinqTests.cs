@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SQLite.WinRT.Linq;
+using SQLite.WinRT.Linq.Base;
 using SQLite.WinRT.Tests.Data;
 #if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
 using Windows.Storage;
@@ -30,25 +31,30 @@ namespace SQLite.WinRT.Tests.net45
     {
         private const string DbName = "db.sqlite";
 
-        protected SQLiteAsyncConnection connection;
+        private IEntityProvider provider;
+        private DbContext db;
 
 #if WINDOWS_PHONE_APP || NETFX_CORE || WINDOWS_PHONE
         [TestInitialize]
         public void TestInitialize()
         {
             var folder = ApplicationData.Current.LocalFolder;
-            connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, DbName), true);
+            var connectionString = new SQLiteConnectionString(Path.Combine(folder.Path, DbName), true);
+            var connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
+            provider = connection.GetEntityProvider();
 
             DataInitialize();
 
-            connection.GetConnection().Trace = true;
+            connection.Trace = true;
+            connection.TimeExecution = true;
+            db = new DbContext(connection);
         }
 
         [TestCleanup]
         public async Task TestCleanup()
         {
-            connection.GetConnection().Close();
-            connection = null;
+            provider.Connection.Close();
+            provider = null;
             SQLiteConnectionPool.Shared.Reset();
 
             var folder = ApplicationData.Current.LocalFolder;
@@ -59,42 +65,37 @@ namespace SQLite.WinRT.Tests.net45
         [TestInitialize]
         public void TestInitialize()
         {
-            var time = new Stopwatch();
-            time.Start();
             var folder = Path.GetTempPath();
-            connection = new SQLiteAsyncConnection(Path.Combine(folder, DbName), true);
+            var connectionString = new SQLiteConnectionString(Path.Combine(folder, DbName), true);
+            var connection = SQLiteConnectionPool.Shared.GetConnection(connectionString);
+            provider = connection.GetEntityProvider();
 
             DataInitialize();
 
-            connection.GetConnection().Trace = true;
-            time.Stop();
-            Console.WriteLine("Initialize: " + time.ElapsedMilliseconds + "ms.");
+            connection.Trace = true;
+            connection.TimeExecution = true;
+            db = new DbContext(connection);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            var time = new Stopwatch();
-            time.Start();
-            connection.GetConnection().Close();
-            connection = null;
+            provider.Connection.Close();
+            provider = null;
             SQLiteConnectionPool.Shared.Reset();
 
             var folder = Path.GetTempPath();
             File.Delete(Path.Combine(folder, DbName));
-            time.Stop();
-            Console.WriteLine("Cleanup: " + time.ElapsedMilliseconds + "ms.");
         }
 #endif
 
 
         private void DataInitialize()
         {
-            var conn = connection.GetConnection();
-            conn.CreateTable<Category>();
-            conn.CreateTable<Item>();
+            provider.CreateTable<Category>();
+            provider.CreateTable<Item>();
 
-            var categories = connection.Table<Category>();
+            var categories = provider.GetTable<Category>();
             var items = new List<Item>();
 
             for (var i = 0; i < 10; i++)
@@ -115,13 +116,12 @@ namespace SQLite.WinRT.Tests.net45
                     items.Add(item);
                 }
             }
-            connection.Table<Item>().InsertAll(items);
+            provider.GetTable<Item>().InsertAll(items);
         }
 
         [TestMethod]
         public async Task TestSelect()
         {
-            var db = new DbContext(connection);
             var categories = await db.Categories.ToListAsync();
             Assert.IsNotNull(categories);
             Assert.IsTrue(categories.Count == 10);
@@ -130,7 +130,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestSelectWithWhere()
         {
-            var db = new DbContext(connection);
             var items = await db.Items.Where(t => t.Boolean).ToListAsync();
             Assert.IsNotNull(items);
         }
@@ -138,7 +137,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestJoin()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 join i in db.Items on c.CategoryID equals i.CategoryID
@@ -151,7 +149,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestJoinMultiKey()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 join i in db.Items on new { a = c.CategoryID, b = c.CategoryID } equals new { a = i.CategoryID, b = i.CategoryID }
@@ -164,7 +161,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestJoinInto()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 join i in db.Items on c.CategoryID equals i.CategoryID into ords
@@ -177,7 +173,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestJoinIntoCount()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 join i in db.Items on c.CategoryID equals i.CategoryID into ords
@@ -190,7 +185,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestJoinIntoDefaultIfEmpty()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 join i in db.Items on c.CategoryID equals i.CategoryID into ords
@@ -204,7 +198,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestJoinWithWhere()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 join i in db.Items on c.CategoryID equals i.CategoryID
@@ -220,7 +213,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestJoinWithMissingJoinCondition()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 from i in db.Items
@@ -235,7 +227,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestSelectWithLimits()
         {
-            var db = new DbContext(connection);
             var items = await db.Items.Skip(3).Take(5).ToListAsync();
             Assert.IsNotNull(items);
             Assert.IsTrue(items.Count == 5);
@@ -244,7 +235,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestCount()
         {
-            var db = new DbContext(connection);
             var count = await db.Categories.CountAsync(t => t.CategoryID % 2 == 0);
             Assert.IsTrue(count == 5);
         }
@@ -252,7 +242,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestOrderBy()
         {
-            var db = new DbContext(connection);
             var items = await db.Items.OrderBy(t => t.Data).ToListAsync();
             Assert.IsNotNull(items);
 
@@ -268,7 +257,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestSubQueryCount()
         {
-            var db = new DbContext(connection);
             var query = 
                 from c in db.Categories
                 where c.CategoryID % 2 == 0
@@ -280,7 +268,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestSubQuerySelect()
         {
-            var db = new DbContext(connection);
             var query =
                 from c in db.Categories
                 where c.CategoryID % 2 == 0
@@ -292,7 +279,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestArrayContains()
         {
-            var db = new DbContext(connection);
             int[] ids = { 1, 2, 5000 };
             var items = await db.Items.Where(t => ids.Contains(t.ItemID)).ToListAsync();
             Assert.IsTrue(items.Count == 2);
@@ -301,7 +287,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestCollectionContains()
         {
-            var db = new DbContext(connection);
             ICollection<int> ids = new[] { 1, 2, 5000 };
             var items = await db.Items.Where(t => ids.Contains(t.ItemID)).ToListAsync();
             Assert.IsTrue(items.Count == 2);
@@ -310,7 +295,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestSum()
         {
-            var db = new DbContext(connection);
             var sum = await db.Categories.ExecuteAsync(t => t.Sum(q => q.CategoryID));
             Assert.AreEqual(sum, (1 + 10) * 10 / 2);
         }
@@ -318,7 +302,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestGroupByCount()
         {
-            var db = new DbContext(connection);
             var query = 
                 from i in db.Items
                 group i by i.CategoryID into g
@@ -331,7 +314,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestGroupBySelectMany()
         {
-            var db = new DbContext(connection);
             var items = await db.Items.GroupBy(t => t.CategoryID).SelectMany(t => t).ToListAsync();
             Assert.IsNotNull(items);
         }
@@ -339,7 +321,6 @@ namespace SQLite.WinRT.Tests.net45
         [TestMethod]
         public async Task TestDistinct()
         {
-            var db = new DbContext(connection);
             var query =
                 from i in db.Items
                 select i.Boolean;

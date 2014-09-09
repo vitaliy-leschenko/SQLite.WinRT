@@ -37,14 +37,9 @@ namespace SQLite.WinRT.Linq.Base
         {
             if (fnCanBeEvaluated == null)
             {
-                fnCanBeEvaluated = CanBeEvaluatedLocally;
+                fnCanBeEvaluated = t => t.NodeType != ExpressionType.Parameter;
             }
             return SubtreeEvaluator.Eval(Nominator.Nominate(fnCanBeEvaluated, expression), expression);
-        }
-
-        private static bool CanBeEvaluatedLocally(Expression expression)
-        {
-            return expression.NodeType != ExpressionType.Parameter;
         }
 
         /// <summary>

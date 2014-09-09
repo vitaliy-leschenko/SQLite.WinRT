@@ -9,21 +9,37 @@ namespace SQLite.WinRT
 {
     public abstract class BaseDatabaseContext
     {
-        protected readonly SQLiteAsyncConnection connection;
+        protected readonly SQLiteConnection connection;
+        protected readonly IEntityProvider provider;
 
-        protected BaseDatabaseContext(SQLiteAsyncConnection connection)
+        protected BaseDatabaseContext(SQLiteConnection connection)
         {
             this.connection = connection;
+            provider = connection.GetEntityProvider();
         }
 
-        public async Task CreateSchemeAsync()
+        public Task CreateSchemeAsync()
         {
-            await connection.RunInTransactionAsync(CreateScheme);
+            return Task.Run(
+                delegate
+                {
+                    using (connection.Lock())
+                    {
+                        CreateScheme(connection.GetEntityProvider());
+                    }
+                });
         }
 
-        public async Task UpdateSchemeAsync()
+        public Task UpdateSchemeAsync()
         {
-            await connection.RunAsync(UpdateScheme);
+            return Task.Run(
+                delegate
+                {
+                    using (connection.Lock())
+                    {
+                        UpdateScheme(connection.GetEntityProvider());
+                    }
+                });
         }
 
         private void UpdateScheme(IEntityProvider provider)
@@ -61,13 +77,13 @@ namespace SQLite.WinRT
         {
             provider.CreateTable(typeof(DataVersion));
 
-            var table = provider.GetTable<DataVersion>(null);
+            var table = provider.GetTable<DataVersion>();
 
             var version = table.FirstOrDefault();
             if (version == null)
             {
                 version = new DataVersion {Value = versionNumber};
-                provider.GetTable<DataVersion>(null).Insert(version);
+                provider.GetTable<DataVersion>().Insert(version);
             }
             else
             {
@@ -88,7 +104,7 @@ namespace SQLite.WinRT
         protected int GetDatabaseVersion(IEntityProvider provider)
         {
             provider.CreateTable(typeof(DataVersion));
-            var version = provider.GetTable<DataVersion>(null).FirstOrDefault();
+            var version = provider.GetTable<DataVersion>().FirstOrDefault();
             return version != null ? version.Value : 0;
         }
 
