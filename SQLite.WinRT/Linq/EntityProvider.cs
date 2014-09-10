@@ -338,6 +338,10 @@ namespace SQLite.WinRT.Linq
                 var conn = provider.Connection;
                 var cmd = mapping.GetInsertCommand();
                 var vals = mapping.ColumnValuesFunc(item);
+                if (!mapping.HasAutoIncPK)
+                {
+                    vals = vals.Union(new[] {mapping.PrimaryKeyFunc(item)}).ToArray();
+                }
                 var count = cmd.ExecuteNonQuery(vals);
 
                 if (mapping.HasAutoIncPK)
@@ -384,8 +388,11 @@ namespace SQLite.WinRT.Linq
                         foreach (var item in items)
                         {
                             var vals = mapping.ColumnValuesFunc(item);
+                            if (!mapping.HasAutoIncPK)
+                            {
+                                vals = vals.Union(new[] { mapping.PrimaryKeyFunc(item) }).ToArray();
+                            }
                             count += cmd.ExecuteNonQuery(vals);
-
                             if (mapping.HasAutoIncPK)
                             {
                                 var id = Platform.Current.SQLiteProvider.LastInsertRowid(conn.Handle);

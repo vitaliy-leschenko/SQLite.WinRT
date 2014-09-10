@@ -56,6 +56,9 @@
     <Compile Include="..\SQLite.WinRT.Windows81.Tests\Data\Category.cs">
       <Link>Data\Category.cs</Link>
     </Compile>
+    <Compile Include="..\SQLite.WinRT.Windows81.Tests\Data\Country.cs">
+      <Link>Data\Country.cs</Link>
+    </Compile>
     <Compile Include="..\SQLite.WinRT.Windows81.Tests\Data\DbContext.cs">
       <Link>Data\DbContext.cs</Link>
     </Compile>

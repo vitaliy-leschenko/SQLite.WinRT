@@ -17,5 +17,10 @@ namespace SQLite.WinRT.Tests.Data
         {
             get { return provider.GetTable<Item>(); }
         }
+
+        public IEntityTable<Country> Countries
+        {
+            get { return provider.GetTable<Country>(); }
+        }
     }
 }

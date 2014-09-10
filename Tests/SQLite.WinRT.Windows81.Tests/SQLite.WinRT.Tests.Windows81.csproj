@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Category.cs" />
+    <Compile Include="Data\Country.cs" />
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\Item.cs" />
     <Compile Include="LinqTests.cs" />

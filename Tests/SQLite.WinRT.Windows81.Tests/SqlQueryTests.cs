@@ -154,5 +154,18 @@ namespace SQLite.WinRT.Tests.net45
 
             Assert.IsFalse(db.Items.Any());
         }
+
+        [TestMethod]
+        public void InsertTest()
+        {
+            provider.CreateTable<Country>();
+
+            var count = db.Countries.InsertAll(new[]
+            {
+                new Country {CountryCode = "BY", Text = "Belarus"},
+                new Country {CountryCode = "RU", Text = "Russia"}
+            });
+            Assert.IsTrue(count == 2);
+        }
     }
 }
