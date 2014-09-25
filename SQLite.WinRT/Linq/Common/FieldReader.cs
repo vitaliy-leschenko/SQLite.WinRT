@@ -70,33 +70,34 @@ namespace SQLite.WinRT.Linq.Common
         public DateTime ReadDateTime(int ordinal)
         {
             ColType type = provider.ColumnType(stmt, ordinal);
-            switch (type)
+            try
             {
-                case ColType.Integer:
-                    long ticks = provider.ColumnInt64(stmt, ordinal);
-                    return new DateTime(ticks);
-                case ColType.Text:
-                    string text = provider.ColumnString(stmt, ordinal);
-                    return DateTime.Parse(text, CultureInfo.InvariantCulture);
-                default:
-                    return DateTime.MinValue;
+                switch (type)
+                {
+                    case ColType.Integer:
+                        var ticks = provider.ColumnInt64(stmt, ordinal);
+                        return new DateTime(ticks);
+                    case ColType.Text:
+                        var text = provider.ColumnString(stmt, ordinal);
+                        DateTime result;
+                        if (DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out result)) return result;
+                        if (DateTime.TryParse(text, CultureInfo.CurrentCulture, DateTimeStyles.None, out result)) return result;
+                        return DateTime.MinValue;
+                    default:
+                        return DateTime.MinValue;
+                }
+            }
+            catch (Exception)
+            {
+                return DateTime.MinValue;
             }
         }
 
         public DateTime? ReadNullableDateTime(int ordinal)
         {
-            ColType type = provider.ColumnType(stmt, ordinal);
-            switch (type)
-            {
-                case ColType.Integer:
-                    long ticks = provider.ColumnInt64(stmt, ordinal);
-                    return new DateTime(ticks);
-                case ColType.Text:
-                    string text = provider.ColumnString(stmt, ordinal);
-                    return DateTime.Parse(text, CultureInfo.InvariantCulture);
-                default:
-                    return null;
-            }
+            var type = provider.ColumnType(stmt, ordinal);
+            if (type == ColType.Null) return null;
+            return ReadDateTime(ordinal);
         }
 
         public Decimal ReadDecimal(int ordinal)
