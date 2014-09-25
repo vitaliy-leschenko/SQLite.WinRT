@@ -167,7 +167,11 @@ namespace SQLite.WinRT
 
         private PreparedSqlLiteInsertCommand CreateInsertCommand()
         {
-            var cols = InsertColumns;
+            var cols = new List<string>(InsertColumns);
+            if (!HasAutoIncPK)
+            {
+                cols.Add(PK.Name);
+            }
 
             var sql = string.Format("insert into \"{0}\"({1}) values ({2})",
                 TableName,
