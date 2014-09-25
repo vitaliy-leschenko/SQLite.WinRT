@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using SQLite.WinRT.Linq.Base;
 using SQLite.WinRT.Linq.Common;
 
 namespace SQLite.WinRT

@@ -148,11 +148,22 @@ namespace SQLite.WinRT.Tests.net45
         }
 
         [TestMethod]
+        public void Delete2Test()
+        {
+            var count = db.Items.Delete()
+                .Where(t => t.CategoryID).IsLessThanOrEqualTo(3)
+                .And(t => t.Title).IsEqualTo("item0")
+                .Execute();
+            Assert.IsTrue(count == 3);
+        }
+
+        [TestMethod]
         public void DeleteAllTest()
         {
             db.Items.Delete().Execute();
 
             Assert.IsFalse(db.Items.Any());
         }
+
     }
 }
