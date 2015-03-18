@@ -31,6 +31,25 @@ namespace SQLite.WinRT.Tests.net45
         public int IntValue { get; set; }
     }
 
+    public class TestIndexTable
+    {
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
+
+        [Indexed]
+        public int Data { get; set; }
+
+        [Indexed(Unique = true)]
+        public int UniqueItem { get; set; }
+
+        [Indexed("IX_TestIndex", 1)]
+        public int Index1 { get; set; }
+
+        [Indexed("IX_TestIndex", 2)]
+        public int Index2 { get; set; }
+    }
+
+
     [Table("TestTable")]
     public class TestTable2
     {
@@ -95,6 +114,12 @@ namespace SQLite.WinRT.Tests.net45
             File.Delete(Path.Combine(folder, DbName));
         }
 #endif
+
+        [TestMethod]
+        public async Task TestCreateIndex()
+        {
+            await provider.CreateTableAsync<TestIndexTable>();
+        }
 
         [TestMethod]
         public async Task TestCreateDatabase()
