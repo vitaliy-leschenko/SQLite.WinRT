@@ -2,9 +2,8 @@
 
 namespace SQLite.WinRT
 {
-    public interface IDatabaseChangeset
+    public interface IDatabaseChangeset : IBaseDatabaseChangeset
     {
-        int Version { get; }
         void Update(IEntityProvider provider);
     }
 }
