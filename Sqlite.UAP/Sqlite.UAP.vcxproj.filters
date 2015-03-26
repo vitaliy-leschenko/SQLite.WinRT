@@ -8,11 +8,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="SqliteWP8.cpp" />
+    <ClCompile Include="SqliteUAP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="sqlite3.h" />
-    <ClInclude Include="SqliteWP8.h" />
+    <ClInclude Include="SqliteUAP.h" />
   </ItemGroup>
 </Project>
