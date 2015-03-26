@@ -31,4 +31,22 @@ xcopy /y SQLite.WinRT.WindowsPhone81\bin\x86\Release\SQLite.WinRT.Ext.dll NuGetP
 xcopy /y SQLite.WP81\bin\Win32\Release\Sqlite.WP81.winmd                  NuGetPackage\lib\wpa81-hidden\x86
 xcopy /y SQLite.WP81\bin\Win32\Release\Sqlite.WP81.dll                    NuGetPackage\lib\wpa81-hidden\x86
 
+xcopy /y SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.dll NuGetPackage\lib\windows10-hidden\ARM
+xcopy /y SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.pri NuGetPackage\lib\windows10-hidden\ARM
+
+xcopy /y SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.dll NuGetPackage\lib\windows10-hidden\x64
+xcopy /y SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.pri NuGetPackage\lib\windows10-hidden\x64
+
+xcopy /y SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll NuGetPackage\lib\windows10-hidden\x86
+xcopy /y SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri NuGetPackage\lib\windows10-hidden\x86
+
+xcopy /y Sqlite.UAP\bin\Win32\Release\Sqlite.UAP.winmd NuGetPackage\lib\windows10-hidden\x86
+xcopy /y Sqlite.UAP\bin\Win32\Release\Sqlite.UAP.dll   NuGetPackage\lib\windows10-hidden\x86
+
+xcopy /y Sqlite.UAP\bin\x64\Release\Sqlite.UAP.winmd NuGetPackage\lib\windows10-hidden\x64
+xcopy /y Sqlite.UAP\bin\x64\Release\Sqlite.UAP.dll   NuGetPackage\lib\windows10-hidden\x64
+
+xcopy /y Sqlite.UAP\bin\ARM\Release\Sqlite.UAP.winmd NuGetPackage\lib\windows10-hidden\ARM
+xcopy /y Sqlite.UAP\bin\ARM\Release\Sqlite.UAP.dll   NuGetPackage\lib\windows10-hidden\ARM
+
 .nuget\NuGet.exe pack NuGetPackage\Package.nuspec
