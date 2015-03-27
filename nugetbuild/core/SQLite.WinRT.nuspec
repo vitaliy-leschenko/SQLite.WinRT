@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>SQLite.WinRT</id>
+        <version>3.8.8.3</version>
+        <authors>v.leschenko@vitaliy.org</authors>
+        <owners>v.leschenko@vitaliy.org</owners>
+        <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
+        <projectUrl>https://sqliteportable.codeplex.com</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SQLite Library Core</description>
+        <releaseNotes />
+        <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
+        <tags>SQLite Windows UAP WinRT</tags>
+    </metadata>
+    <files>
+        <file src="..\..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\portable-net45+win81+wpa81+wp8\SQLite.WinRT.dll" />
+    </files>
+</package>
