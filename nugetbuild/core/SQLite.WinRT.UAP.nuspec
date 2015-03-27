@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SQLite.WinRT.UAP</id>
-        <version>3.8.8.3</version>
+        <version>3.8.8.4</version>
         <authors>v.leschenko@vitaliy.org</authors>
         <owners>v.leschenko@vitaliy.org</owners>
         <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
         <projectUrl>https://sqliteportable.codeplex.com</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>SQLite Library for Windows 8.1</description>
+        <description>SQLite Library for Windows UAP</description>
         <releaseNotes />
         <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
         <tags>SQLite WinRT</tags>
