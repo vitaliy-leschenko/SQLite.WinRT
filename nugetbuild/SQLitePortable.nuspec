@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>SQLitePortable</id>
+        <version>3.8.8.3</version>
+        <authors>v.leschenko@vitaliy.org</authors>
+        <owners>v.leschenko@vitaliy.org</owners>
+        <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
+        <projectUrl>https://sqliteportable.codeplex.com</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SQLite Portable for .NET4.5, Windows 8+ and Windows Phone 8+.</description>
+        <releaseNotes>added support .NET 4.5</releaseNotes>
+        <copyright>Copyright 2014-2015 Vitaliy Leschenko</copyright>
+        <tags>SQLite WinRT WinPhone LINQ .NET4.5</tags>
+    </metadata>
+    <files>
+        <file src="legacy\build\net45\SQLitePortable.targets" target="build\net45\SQLitePortable.targets" />
+        <file src="legacy\build\win81\SQLitePortable.targets" target="build\win81\SQLitePortable.targets" />
+        <file src="legacy\build\wp8\SQLitePortable.targets" target="build\wp8\SQLitePortable.targets" />
+        <file src="legacy\build\wpa81\SQLitePortable.targets" target="build\wpa81\SQLitePortable.targets" />
+        <file src="legacy\tools\install.ps1" target="tools\install.ps1" />
+        <file src="..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\net45\SQLite.WinRT.dll" />
+        <file src="..\SQLite.WinRT.net45\bin\Release\SQLite.WinRT.Ext.dll" target="lib\net45-hidden\SQLite.WinRT.Ext.dll" />
+        <file src="..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\portable-net45+win81+wpa81+wp8\SQLite.WinRT.dll" />
+        <file src="..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\win81\SQLite.WinRT.dll" />
+        <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.dll" />
+        <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.dll" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.dll" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\wp8\SQLite.WinRT.dll" />
+        <file src="..\SQLite.WinRT.WindowsPhone8\Bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\wp8-hidden\ARM\SQLite.WinRT.Ext.dll" />
+        <file src="..\Sqlite.WP80\bin\ARM\Release\Sqlite.WP80.dll" target="lib\wp8-hidden\ARM\Sqlite.WP80.dll" />
+        <file src="..\Sqlite.WP80\bin\ARM\Release\Sqlite.WP80.winmd" target="lib\wp8-hidden\ARM\Sqlite.WP80.winmd" />
+        <file src="..\SQLite.WinRT.WindowsPhone8\Bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\wp8-hidden\x86\SQLite.WinRT.Ext.dll" />
+        <file src="..\Sqlite.WP80\bin\Win32\Release\Sqlite.WP80.dll" target="lib\wp8-hidden\x86\Sqlite.WP80.dll" />
+        <file src="..\Sqlite.WP80\bin\Win32\Release\Sqlite.WP80.winmd" target="lib\wp8-hidden\x86\Sqlite.WP80.winmd" />
+        <file src="..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\wpa81\SQLite.WinRT.dll" />
+        <file src="..\SQLite.WinRT.WindowsPhone81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\ARM\SQLite.WinRT.Ext.dll" />
+        <file src="..\Sqlite.WP81\bin\ARM\Release\Sqlite.WP81.dll" target="lib\wpa81-hidden\ARM\Sqlite.WP81.dll" />
+        <file src="..\Sqlite.WP81\bin\ARM\Release\Sqlite.WP81.winmd" target="lib\wpa81-hidden\ARM\Sqlite.WP81.winmd" />
+        <file src="..\SQLite.WinRT.WindowsPhone81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\x86\SQLite.WinRT.Ext.dll" />
+        <file src="..\Sqlite.WP81\bin\Win32\Release\Sqlite.WP81.dll" target="lib\wpa81-hidden\x86\Sqlite.WP81.dll" />
+        <file src="..\Sqlite.WP81\bin\Win32\Release\Sqlite.WP81.winmd" target="lib\wpa81-hidden\x86\Sqlite.WP81.winmd" />
+    </files>
+</package>

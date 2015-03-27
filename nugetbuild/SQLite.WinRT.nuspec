@@ -14,6 +14,6 @@
         <tags>SQLite Windows UAP WinRT</tags>
     </metadata>
     <files>
-        <file src="..\..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\portable-net45+win81+wpa81+wp8\SQLite.WinRT.dll" />
+        <file src="..\SQLite.WinRT\bin\Release\SQLite.WinRT.dll" target="lib\portable-net45+win81+wpa81+wp8\SQLite.WinRT.dll" />
     </files>
 </package>

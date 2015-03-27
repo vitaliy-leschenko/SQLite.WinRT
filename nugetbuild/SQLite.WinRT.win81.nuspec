@@ -19,11 +19,11 @@
     <files>
         <file src="tools\win81\install.ps1" target="tools\install.ps1" />
         <file src="build\win81\SQLite.WinRT.Win81.targets" target="build\win81\SQLite.WinRT.Win81.targets" />
-        <file src="..\..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.dll" />
-        <file src="..\..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pri" />
-        <file src="..\..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.dll" />
-        <file src="..\..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.pri" />
-        <file src="..\..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.dll" />
-        <file src="..\..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.dll" />
+        <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.dll" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.dll" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.pri" />
     </files>
 </package>
