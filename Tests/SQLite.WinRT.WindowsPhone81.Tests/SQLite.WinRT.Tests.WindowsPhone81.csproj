@@ -73,11 +73,12 @@
     <SDKReference Include="Microsoft.VCLibs, version=12.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>
     </SDKReference>
-    <SDKReference Include="MSTestFramework, Version=12.0" />
+    <SDKReference Include="MSTestFramework, Version=14.0">
+      <Name>MSTest for Managed Projects</Name>
+    </SDKReference>
     <SDKReference Include="SQLite.WP81, Version=3.8.5">
       <Name>SQLite for Windows Phone 8.1</Name>
     </SDKReference>
-    <SDKReference Include="TestPlatform, Version=12.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SQLite.WinRT.Windows81.Tests\CommonTests.cs">
