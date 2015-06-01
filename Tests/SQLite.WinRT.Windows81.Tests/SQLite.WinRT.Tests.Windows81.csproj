@@ -9,7 +9,7 @@
     <ProjectGuid>{A9500958-8D3C-4718-A867-135A226259E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SQLite.WinRT.Tests.Win8</RootNamespace>
+    <RootNamespace>SQLite.WinRT.Tests</RootNamespace>
     <AssemblyName>SQLite.WinRT.Tests.Win8</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>

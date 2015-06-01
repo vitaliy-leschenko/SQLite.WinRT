@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
 
-  <Identity Name="c7699085-2c81-44ae-9b9d-c39e1f0b1ae3"
+  <Identity Name="79aac3a3-9c32-42ff-ab62-26fbeb923888"
             Publisher="CN=v.leschenko"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="c7699085-2c81-44ae-9b9d-c39e1f0b1ae3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="79aac3a3-9c32-42ff-ab62-26fbeb923888" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>SQLite.WinRT.WindowsPhone81.Tests</DisplayName>
