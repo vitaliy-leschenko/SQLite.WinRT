@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SQLite.WinRT.UAP</id>
-        <version>3.8.8.5</version>
+        <version>3.8.11</version>
         <authors>v.leschenko@vitaliy.org</authors>
         <owners>v.leschenko@vitaliy.org</owners>
         <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
@@ -13,11 +13,11 @@
         <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
         <tags>SQLite WinRT</tags>
         <dependencies>
-            <dependency id="SQLite.WinRT" version="3.8.8.5" />
+            <dependency id="SQLite.WinRT" version="3.8.11" />
+            <dependency id="SQLite.Core.Universal" version="3.8.11" />
         </dependencies>
     </metadata>
     <files>
-        <file src="tools\uap\install.ps1" target="tools\install.ps1" />
         <file src="build\uap\SQLite.WinRT.UAP.targets" target="build\win81\SQLite.WinRT.UAP.targets" />
         <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pri" />
@@ -25,15 +25,5 @@
         <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.pri" />
         <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.pri" />
-
-        <file src="..\Sqlite.UAP\bin\ARM\Release\Sqlite.UAP.dll" target="lib\win81-hidden\ARM\Sqlite.UAP.dll" />
-        <file src="..\Sqlite.UAP\bin\ARM\Release\Sqlite.UAP.winmd" target="lib\win81-hidden\ARM\Sqlite.UAP.winmd" />
-
-        <file src="..\Sqlite.UAP\bin\x64\Release\Sqlite.UAP.dll" target="lib\win81-hidden\x64\Sqlite.UAP.dll" />
-        <file src="..\Sqlite.UAP\bin\x64\Release\Sqlite.UAP.winmd" target="lib\win81-hidden\x64\Sqlite.UAP.winmd" />
-
-        <file src="..\Sqlite.UAP\bin\Win32\Release\Sqlite.UAP.dll" target="lib\win81-hidden\x86\Sqlite.UAP.dll" />
-        <file src="..\Sqlite.UAP\bin\Win32\Release\Sqlite.UAP.winmd" target="lib\win81-hidden\x86\Sqlite.UAP.winmd" />
-
     </files>
 </package>

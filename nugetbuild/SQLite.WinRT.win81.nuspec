@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SQLite.WinRT.win81</id>
-        <version>3.8.8.5</version>
+        <version>3.8.11</version>
         <authors>v.leschenko@vitaliy.org</authors>
         <owners>v.leschenko@vitaliy.org</owners>
         <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
@@ -13,11 +13,11 @@
         <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
         <tags>SQLite WinRT</tags>
         <dependencies>
-            <dependency id="SQLite.WinRT" version="3.8.8.5" />
+            <dependency id="SQLite.WinRT" version="3.8.11" />
+            <dependency id="SQLite.Core.Windows" version="3.8.11" />
         </dependencies>
     </metadata>
     <files>
-        <file src="tools\win81\install.ps1" target="tools\install.ps1" />
         <file src="build\win81\SQLite.WinRT.Win81.targets" target="build\win81\SQLite.WinRT.Win81.targets" />
         <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pri" />
