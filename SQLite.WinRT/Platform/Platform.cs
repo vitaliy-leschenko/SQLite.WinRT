@@ -8,7 +8,7 @@ namespace SQLite.WinRT
     {
         private static IPlatform current;
 
-        private const string PlatformAssemblyName = "SQLite.WinRT.Ext";
+        private const string PlatformAssemblyName = "SQLite.WinRT.Ext, Version=*, Culture=neutral, PublicKeyToken=null";
         private const string PlatformTypeFullName = "SQLite.WinRT.CurrentPlatform";
 
         public static IPlatform Current
@@ -17,12 +17,8 @@ namespace SQLite.WinRT
             {
                 if (current == null)
                 {
-                    var provider = typeof(IPlatform);
-                    var asm = new AssemblyName(provider.GetTypeInfo().Assembly.FullName);
-
                     // change name to the specified name
-                    asm.Name = PlatformAssemblyName;
-                    var name = PlatformTypeFullName + ", " + asm.FullName;
+                    var name = PlatformTypeFullName + ", " + PlatformAssemblyName;
 
                     // look for the type information but do not throw if not found
                     var type = Type.GetType(name, false);
