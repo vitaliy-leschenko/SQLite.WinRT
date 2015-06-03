@@ -8,10 +8,7 @@ namespace SQLite.WinRT
         {
         }
 
-        public static IPlatformStorage Instance
-        {
-            get { return instance ?? (instance = new PlatformStorage()); }
-        }
+        public static IPlatformStorage Instance => instance ?? (instance = new PlatformStorage());
 
         public void SetTempDirectory()
         {
