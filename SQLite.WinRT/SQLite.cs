@@ -135,6 +135,11 @@ namespace SQLite.WinRT
             BusyTimeout = TimeSpan.FromSeconds(0.1);
         }
 
+        public void SetLimits(int id, int val)
+        {
+            Platform.Current.SQLiteProvider.SetLimits(Handle, id, val);
+        }
+
         /// <summary>
         /// Sets a busy handler to sleep the specified amount of time when a table is locked.
         /// The handler will sleep multiple times until a total time of <see cref="BusyTimeout"/> has accumulated.

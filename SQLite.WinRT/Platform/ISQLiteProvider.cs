@@ -30,5 +30,6 @@ namespace SQLite.WinRT
         double ColumnDouble(object stmt, int index);
         byte[] ColumnByteArray(object stmt, int index);
         void Reset(object stmt);
+        int SetLimits(object handle, int id, int val);
     }
 }

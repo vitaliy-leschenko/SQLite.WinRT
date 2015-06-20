@@ -155,6 +155,7 @@
     <Compile Include="SQLiteConnectionPool.cs" />
     <Compile Include="SQLiteConnectionString.cs" />
     <Compile Include="SQLiteException.cs" />
+    <Compile Include="SQLiteLimit.cs" />
     <Compile Include="SQLiteResult.cs" />
     <Compile Include="TableAttribute.cs" />
     <Compile Include="TableMapping.cs" />

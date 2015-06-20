@@ -150,5 +150,10 @@ namespace SQLite.WinRT
         {
             return Encoding.UTF8.GetBytes(s);
         }
+
+        public int SetLimits(object handle, int id, int val)
+        {
+            return SQLite3.SetLimits((IntPtr)handle, id, val);
+        }
     }
 }

@@ -146,5 +146,10 @@ namespace SQLite.WinRT
         {
             Sqlite3.sqlite3_reset((Statement)stmt);
         }
+
+        public int SetLimits(object handle, int id, int val)
+        {
+            return Sqlite3.sqlite3_limit((Database)handle, id, val);
+        }
     }
 }
