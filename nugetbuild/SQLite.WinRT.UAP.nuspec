@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SQLite.WinRT.UAP</id>
-        <version>3.8.11.3</version>
+        <version>3.8.11.5</version>
         <authors>v.leschenko@vitaliy.org</authors>
         <owners>v.leschenko@vitaliy.org</owners>
         <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
@@ -13,8 +13,8 @@
         <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
         <tags>SQLite WinRT</tags>
         <dependencies>
-            <dependency id="SQLite.WinRT" version="3.8.11.3" />
-            <dependency id="SQLite.Core.Universal" version="3.8.11.2" />
+            <dependency id="SQLite.WinRT" version="3.8.11.5" />
+            <dependency id="SQLite.Core.Universal" version="3.8.11.5" />
         </dependencies>
     </metadata>
     <files>
