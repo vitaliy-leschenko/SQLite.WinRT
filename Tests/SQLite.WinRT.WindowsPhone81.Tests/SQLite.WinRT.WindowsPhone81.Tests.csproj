@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SQLite.WinRT.Tests</RootNamespace>
-    <AssemblyName>SQLite.WinRT.Tests.WP81</AssemblyName>
+    <AssemblyName>SQLite.WinRT.Tests</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>

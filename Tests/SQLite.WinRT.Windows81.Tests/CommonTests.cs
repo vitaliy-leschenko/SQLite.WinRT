@@ -11,17 +11,7 @@ using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endif
 
-// ReSharper disable CheckNamespace
-#if WINDOWS_PHONE_APP
-namespace SQLite.WinRT.Tests.WinPhone81
-#elif NETFX_CORE
-namespace SQLite.WinRT.Tests.Win8
-#elif WINDOWS_PHONE
-namespace SQLite.WinRT.Tests.WinPhone8
-#else
-namespace SQLite.WinRT.Tests.net45
-#endif
-// ReSharper restore CheckNamespace
+namespace SQLite.WinRT.Tests
 {
     [Table("TestTable")]
     public class TestTable
