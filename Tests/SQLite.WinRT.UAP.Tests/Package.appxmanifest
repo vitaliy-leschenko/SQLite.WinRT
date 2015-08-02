@@ -5,40 +5,41 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="33445e2b-88fb-4269-bd94-d0b287be285f"
+  <Identity Name="3d07107b-1f6e-4675-9573-e32e18932b26"
             Publisher="CN=v.leschenko"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="33445e2b-88fb-4269-bd94-d0b287be285f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="3d07107b-1f6e-4675-9573-e32e18932b26" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>SQLite.WinRT.UAP.Tests</DisplayName>
     <PublisherDisplayName>v.leschenko</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
+  
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10069.0" MaxVersionTested="10.0.10069.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
   </Dependencies>
 
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="vstest.executionengine.universal.App"
-        Executable="vstest.executionengine.appcontainer.uap.exe"
-        EntryPoint="Microsoft.VisualStudio.TestPlatform.TestExecutor.AppContainer.App">
+    <Application Id="vstest.executionengine.universal.App" 
+        Executable="$targetnametoken$.exe"
+        EntryPoint="SQLite.WinRT.UAP.Tests.App">
       <uap:VisualElements
         DisplayName="SQLite.WinRT.UAP.Tests"
-        Square150x150Logo="Assets\Logo.png"
-        Square44x44Logo="Assets\SmallLogo.png"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
         Description="SQLite.WinRT.UAP.Tests"
-        BackgroundColor="#464646">
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClientServer" />
-  </Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities> 
 </Package>
