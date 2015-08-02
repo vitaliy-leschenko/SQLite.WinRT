@@ -21,9 +21,12 @@
         <file src="build\uap\SQLite.WinRT.UAP.targets" target="build\uap10.0\SQLite.WinRT.UAP.targets" />
         <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\uap10.0-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\uap10.0-hidden\ARM\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.UAP\Properties\SQLite.WinRT.UAP.rd.xml"   target="lib\uap10.0-hidden\ARM\SQLite.WinRT.Ext\Properties\SQLite.WinRT.UAP.rd.xml" />
         <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.dll" target="lib\uap10.0-hidden\x64\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.pri" target="lib\uap10.0-hidden\x64\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.UAP\Properties\SQLite.WinRT.UAP.rd.xml"   target="lib\uap10.0-hidden\x64\SQLite.WinRT.Ext\Properties\SQLite.WinRT.UAP.rd.xml" />
         <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\uap10.0-hidden\x86\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri" target="lib\uap10.0-hidden\x86\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.UAP\Properties\SQLite.WinRT.UAP.rd.xml"   target="lib\uap10.0-hidden\x86\SQLite.WinRT.Ext\Properties\SQLite.WinRT.UAP.rd.xml" />
     </files>
 </package>
