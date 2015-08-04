@@ -1,23 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>SQLite.WinRT.UAP</id>
+    <id>SQLite.WinRT.UAP-x86</id>
     <version>3.8.11.150</version>
     <authors>v.leschenko@vitaliy.org</authors>
     <owners>v.leschenko@vitaliy.org</owners>
-    <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
-    <projectUrl>https://sqliteportable.codeplex.com</projectUrl>
+    <licenseUrl>https://github.com/vlechenko/SQLite.WinRT/blob/master/README.md</licenseUrl>
+    <projectUrl>https://github.com/vlechenko/SQLite.WinRT</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>SQLite Library for Windows UAP</description>
     <releaseNotes />
     <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
     <tags>SQLite WinRT</tags>
-    <dependencies>
-      <dependency id="SQLite.WinRT" version="3.8.11.150" />
-      <dependency id="SQLite.Core.Universal" version="3.8.11.150" />
-    </dependencies>
   </metadata>
   <files>
-    <file src="runtime.json" />
+    <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\uap10.0\SQLite.WinRT.Ext.dll" />
+    <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri" target="lib\uap10.0\SQLite.WinRT.Ext.pri" />
   </files>
 </package>

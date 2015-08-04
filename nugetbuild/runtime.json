@@ -1,0 +1,19 @@
+{
+  "runtimes": {
+    "win10-arm": {
+      "SQLite.WinRT.UAP": {
+        "SQLite.WinRT.UAP-arm": "3.8.11.150"
+      }
+    },
+    "win10-x64": {
+      "SQLite.WinRT.UAP": {
+        "SQLite.WinRT.UAP-x64": "3.8.11.150"
+      }
+    },
+    "win10-x86": {
+      "SQLite.WinRT.UAP": {
+        "SQLite.WinRT.UAP-x86": "3.8.11.150"
+      }
+    }
+  }
+}
