@@ -8,7 +8,7 @@ namespace SQLite.WinRT
     {
         private static IPlatform current;
 
-        private const string PlatformAssemblyName = "SQLite.WinRT.Ext, Version=*, Culture=neutral, PublicKeyToken=null";
+        private const string PlatformAssemblyName = "SQLite.WinRT.Ext";
         private const string PlatformTypeFullName = "SQLite.WinRT.CurrentPlatform";
 
         public static IPlatform Current

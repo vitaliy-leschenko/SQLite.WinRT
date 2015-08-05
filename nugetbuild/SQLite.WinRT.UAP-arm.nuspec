@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>SQLite.WinRT.UAP-arm</id>
-    <version>3.8.11.155</version>
+    <version>3.8.11.157</version>
     <authors>v.leschenko@vitaliy.org</authors>
     <owners>v.leschenko@vitaliy.org</owners>
     <licenseUrl>https://github.com/vlechenko/SQLite.WinRT/blob/master/README.md</licenseUrl>
