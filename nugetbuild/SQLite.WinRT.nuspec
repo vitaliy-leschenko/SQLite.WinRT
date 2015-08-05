@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SQLite.WinRT</id>
-        <version>3.8.11.157</version>
+        <version>3.8.11.158</version>
         <authors>v.leschenko@vitaliy.org</authors>
         <owners>v.leschenko@vitaliy.org</owners>
         <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Target Name="BeforeBuild" Condition=" ( ('$(Platform)' != 'x86') AND ('$(Platform)' != 'ARM') AND  ('$(Platform)' != 'x64') )">
-        <Error  Text="$(MSBuildThisFileName) does not work correctly on '$(Platform)' platform. You need to specify platform (x86 / x64 or ARM)." />
-    </Target>
-    <ItemGroup>
-        <Reference Include="SQLite.WinRT.Ext">
-            <HintPath>$(MSBuildThisFileDirectory)..\..\lib\uap10.0-hidden\$(Platform)\SQLite.WinRT.Ext.dll</HintPath>
-        </Reference>
-    </ItemGroup>
+  <PropertyGroup>
+    <SQLitePlatform Condition="'$(Platform)' == 'Win32'">x86</SQLitePlatform>
+    <SQLitePlatform Condition="'$(Platform)' != 'Win32'">$(Platform)</SQLitePlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SQLite.WinRT.Ext">
+      <HintPath>$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(SQLitePlatform)\SQLite.WinRT.Ext.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

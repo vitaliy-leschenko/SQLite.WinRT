@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>SQLite.WinRT.UAP</id>
-    <version>3.8.11.157</version>
+    <version>3.8.11.158</version>
     <authors>v.leschenko@vitaliy.org</authors>
     <owners>v.leschenko@vitaliy.org</owners>
     <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
@@ -13,10 +13,18 @@
     <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
     <tags>SQLite WinRT</tags>
     <dependencies>
-      <dependency id="SQLite.WinRT" version="3.8.11.157" />
+      <dependency id="SQLite.WinRT" version="3.8.11.158" />
+      <dependency id="SQLite.Core.UAP" version="3.8.11.158" />
     </dependencies>
   </metadata>
   <files>
-    <file src="runtime.json" />
+    <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-arm\SQLite.WinRT.Ext.dll" />
+    <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-arm\SQLite.WinRT.Ext.pri" />
+    <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-x64\SQLite.WinRT.Ext.dll" />
+    <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-x64\SQLite.WinRT.Ext.pri" />
+    <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-x86\SQLite.WinRT.Ext.dll" />
+    <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-x86\SQLite.WinRT.Ext.pri" />
+
+    <file src="build\uap\SQLite.WinRT.UAP.targets" target="build\uap\SQLite.WinRT.UAP.targets" />
   </files>
 </package>

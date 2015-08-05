@@ -201,6 +201,14 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
+      "SQLite.Core.UAP/3.8.11.158": {
+        "compile": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "runtime": {
+          "lib/uap/SQLite.Core.winmd": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Runtime": "[4.0.20, )",
@@ -1777,6 +1785,17 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "SQLite.Core.UAP/3.8.11.158": {
+        "compile": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "runtime": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-arm/native/SQLite.Core.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -3388,6 +3407,17 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "SQLite.Core.UAP/3.8.11.158": {
+        "compile": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "runtime": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-arm/native/SQLite.Core.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -5006,6 +5036,17 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
+      "SQLite.Core.UAP/3.8.11.158": {
+        "compile": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "runtime": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x86/native/SQLite.Core.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Runtime": "[4.0.20, )",
@@ -6615,6 +6656,17 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "SQLite.Core.UAP/3.8.11.158": {
+        "compile": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "runtime": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x86/native/SQLite.Core.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -8233,6 +8285,17 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
+      "SQLite.Core.UAP/3.8.11.158": {
+        "compile": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "runtime": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x64/native/SQLite.Core.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Runtime": "[4.0.20, )",
@@ -9842,6 +9905,17 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "SQLite.Core.UAP/3.8.11.158": {
+        "compile": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "runtime": {
+          "lib/uap/SQLite.Core.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x64/native/SQLite.Core.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -11865,6 +11939,21 @@
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._",
         "package/services/metadata/core-properties/1d4eb9d0228b48b88d2df3822fba2d86.psmdcp",
+        "[Content_Types].xml"
+      ]
+    },
+    "SQLite.Core.UAP/3.8.11.158": {
+      "sha512": "RpRa/xAl+IaBc5uHvkANN7R5DR+d2cOOh75PVt0OQ3nYLUN0mgbUlhGEvSW12TbL0nxFb2rorc8xHE/eaJe82A==",
+      "type": "Package",
+      "files": [
+        "_rels/.rels",
+        "SQLite.Core.UAP.nuspec",
+        "runtimes/win10-arm/native/SQLite.Core.dll",
+        "runtimes/win10-x64/native/SQLite.Core.dll",
+        "runtimes/win10-x86/native/SQLite.Core.dll",
+        "lib/uap/SQLite.Core.winmd",
+        "build/native/SQLite.Core.UAP.targets",
+        "package/services/metadata/core-properties/d58475f64f4d4ad8aeaa1c7dda766952.psmdcp",
         "[Content_Types].xml"
       ]
     },
@@ -14566,7 +14655,8 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0"
+      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
+      "SQLite.Core.UAP >= 3.8.11.158"
     ],
     "UAP,Version=v10.0": []
   }
