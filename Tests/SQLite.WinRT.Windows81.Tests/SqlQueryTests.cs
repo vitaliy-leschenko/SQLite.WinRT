@@ -156,6 +156,15 @@ namespace SQLite.WinRT.Tests
         }
 
         [TestMethod]
+        public void QueryableAnyTest()
+        {
+            var t = new[] {true};
+            var q = System.Linq.Enumerable.SingleOrDefault(t);
+
+            Assert.IsTrue(db.Items.Any());
+        }
+
+        [TestMethod]
         public void InsertTest()
         {
             provider.CreateTable<Country>();

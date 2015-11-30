@@ -1,0 +1,75 @@
+<!--
+    This file contains Runtime Directives used by .NET Native. The defaults here are suitable for most
+    developers. However, you can modify these parameters to modify the behavior of the .NET Native
+    optimizer.
+
+    Runtime Directives are documented at http://go.microsoft.com/fwlink/?LinkID=391919
+
+    To fully enable reflection for App1.MyClass and all of its public/private members
+    <Type Name="App1.MyClass" Dynamic="Required All"/>
+
+    To enable dynamic creation of the specific instantiation of AppClass<T> over System.Int32
+    <TypeInstantiation Name="App1.AppClass" Arguments="System.Int32" Activate="Required Public" />
+
+    Using the Namespace directive to apply reflection policy to all the types in a particular namespace
+    <Namespace Name="DataClasses.ViewModels" Seralize="All" />
+-->
+
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+  <Library Name="SQLite.WinRT">
+    <Type Name="SQLite.WinRT.Linq.EntityProvider.Executor" Dynamic="Required All">
+      <MethodInstantiation Name="Execute" Arguments="System.Int32" Dynamic="Required" />
+      <MethodInstantiation Name="Execute" Arguments="System.Boolean" Dynamic="Required" />
+    </Type>
+
+
+    <Assembly Name="System.Linq" Activate="Required All" Browse="Required All" Serialize="Required All" Dynamic="Required All">
+      <Type Name="System.Linq.Enumerable" Dynamic="Required All" Browse="Required All">
+        <MethodInstantiation Name="Distinct" Arguments="System.Int32" Dynamic="Required" />
+        <MethodInstantiation Name="ToArray" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="Reverse" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="AsEnumerable" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="ToList" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="DefaultIfEmpty" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="First" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="FirstOrDefault" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="Last" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="LastOrDefault" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="Single" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="SingleOrDefault" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="Any" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="Count" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="LongCount" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="Min" Arguments="System.Int32" Dynamic="Required"/>
+        <MethodInstantiation Name="Max" Arguments="System.Int32" Dynamic="Required"/>
+
+        <MethodInstantiation Name="Distinct" Arguments="System.Boolean" Dynamic="Required" />
+        <MethodInstantiation Name="ToArray" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="Reverse" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="AsEnumerable" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="ToList" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="DefaultIfEmpty" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="First" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="FirstOrDefault" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="Last" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="LastOrDefault" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="Single" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="SingleOrDefault" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="Any" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="Count" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="LongCount" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="Min" Arguments="System.Boolean" Dynamic="Required"/>
+        <MethodInstantiation Name="Max" Arguments="System.Boolean" Dynamic="Required"/>
+      </Type>
+    </Assembly>
+    <Assembly Name="System.Linq.Queryable" Activate="Required All" Browse="Required All" Serialize="Required All" Dynamic="Required All">
+      <Type Name="System.Linq.Queryable" Dynamic="Required All" Browse="Required All">
+        <MethodInstantiation Name="AsQueryable" Arguments="System.Int32" Dynamic="Required" />
+        <MethodInstantiation Name="AsQueryable" Arguments="System.Boolean" Dynamic="Required" />
+      </Type>
+    </Assembly>
+    
+    <Namespace Name="System.Collections.Generic" Activate="Required All" Browse="Required All" Serialize="Required All" Dynamic="Required All" />
+    <Namespace Name="System.Linq" Activate="Required All" Browse="Required All" Serialize="Required All" Dynamic="Required All" />
+  </Library>
+</Directives>

@@ -319,5 +319,12 @@ namespace SQLite.WinRT.Tests
             Assert.IsTrue(values.Count == 2);
             Assert.AreNotEqual(values[0], values[1]);
         }
+
+        [TestMethod]
+        public void TextSelectSingleColumn()
+        {
+            var test = db.Items.Where(t => t.ItemID % 2 == 0).Select(t => t.ItemID).Any();
+            Assert.IsTrue(test);
+        }
     }
 }

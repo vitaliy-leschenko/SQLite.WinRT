@@ -22,9 +22,24 @@
       the application package. The asterisks are not wildcards.
     -->
     <Assembly Name="*Application*" Dynamic="Required All" />
-    
-    <!-- Add your application specific runtime directives here. -->
 
+    <Type Name="SQLite.WinRT.Linq.EntityProvider.Executor" Dynamic="Required All">
+      <MethodInstantiation Name="Execute" Arguments="System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;" Dynamic="Required" />
+    </Type>
 
+    <TypeInstantiation Name="System.Collections.Generic.KeyValuePair" Arguments="System.Int32,SQLite.WinRT.Tests.Data.Item" Dynamic="Required All" />
+    <TypeInstantiation Name="System.Func" Arguments="SQLite.WinRT.Linq.Common.FieldReader,System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;" Dynamic="Required All" />
+    <TypeInstantiation Name="System.Func" Arguments="System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;,System.Boolean" Dynamic="Required All" />
+    <TypeInstantiation Name="System.Func" Arguments="System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;,System.Int32" Dynamic="Required All" />
+    <TypeInstantiation Name="System.Func" Arguments="System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;,SQLite.WinRT.Tests.Data.Item" Dynamic="Required All" />
+    <TypeInstantiation Name="SQLite.WinRT.Linq.Base.Grouping" Arguments="System.Int32,SQLite.WinRT.Tests.Data.Item" Dynamic="Required All" />
+
+    <Assembly Name="System.Linq" Activate="Required All" Browse="Required All" Serialize="Required All" Dynamic="Required All">
+      <Type Name="System.Linq.Enumerable" Dynamic="Required All" Browse="Required All">
+        <MethodInstantiation Name="Where" Arguments="System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;" Dynamic="Required" />
+        <MethodInstantiation Name="ToLookup" Arguments="System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;,SQLite.WinRT.Tests.Data.Item" Dynamic="Required" />
+        <MethodInstantiation Name="ToLookup" Arguments="System.Collections.Generic.KeyValuePair&lt;System.Int32,SQLite.WinRT.Tests.Data.Item&gt;,System.Int32,SQLite.WinRT.Tests.Data.Item" Dynamic="Required" />
+      </Type>
+    </Assembly>
   </Application>
 </Directives>
