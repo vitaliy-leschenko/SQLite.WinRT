@@ -14,7 +14,6 @@
     <tags>SQLite WinRT</tags>
     <dependencies>
       <dependency id="SQLite.WinRT" version="3.8.11.158" />
-      <dependency id="SQLite.Core.UAP" version="3.8.11.158" />
     </dependencies>
   </metadata>
   <files>
@@ -25,6 +24,12 @@
     <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-x86\SQLite.WinRT.Ext.dll" />
     <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-x86\SQLite.WinRT.Ext.pri" />
 
+    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\ARM\Release\SQLite.Core.dll" target="runtimes\win10-arm\native\SQLite.Core.dll" />
+    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\x64\Release\SQLite.Core.dll" target="runtimes\win10-x64\native\SQLite.Core.dll" />
+    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\Win32\Release\SQLite.Core.dll" target="runtimes\win10-x86\native\SQLite.Core.dll" />
+    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\Win32\Release\SQLite.Core.winmd" target="lib\uap\SQLite.Core.winmd" />
+
+    <file src="build\uap\SQLite.Core.UAP.targets" target="build\native\SQLite.Core.UAP.targets" />
     <file src="build\uap\SQLite.WinRT.UAP.targets" target="build\uap\SQLite.WinRT.UAP.targets" />
   </files>
 </package>

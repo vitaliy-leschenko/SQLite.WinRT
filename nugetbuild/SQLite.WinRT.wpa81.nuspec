@@ -14,12 +14,18 @@
         <tags>SQLite WinRT</tags>
         <dependencies>
             <dependency id="SQLite.WinRT" version="3.8.11.158" />
-            <dependency id="SQLite.Core.WindowsPhone" version="3.8.11.158" />
         </dependencies>
     </metadata>
     <files>
         <file src="build\wpa81\SQLite.WinRT.wpa81.targets" target="build\wpa81\SQLite.WinRT.wpa81.targets" />
+        <file src="build\wpa81\SQLite.Core.WindowsPhone.targets" target="build\wpa81\SQLite.Core.WindowsPhone.targets" />
+
         <file src="..\SQLite.WinRT.WindowsPhone81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.WindowsPhone81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\x86\SQLite.WinRT.Ext.dll" />
+
+        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\ARM\Release\SQLite.Core.dll" target="lib\wpa81-hidden\ARM\SQLite.Core.dll" />
+        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\ARM\Release\SQLite.Core.winmd" target="lib\wpa81-hidden\ARM\SQLite.Core.winmd" />
+        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\Win32\Release\SQLite.Core.dll" target="lib\wpa81-hidden\x86\SQLite.Core.dll" />
+        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\Win32\Release\SQLite.Core.winmd" target="lib\wpa81-hidden\x86\SQLite.Core.winmd" />
     </files>
 </package>
