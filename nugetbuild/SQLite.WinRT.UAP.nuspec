@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>SQLite.WinRT.UAP</id>
-    <version>3.8.11.158</version>
+    <version>2016.4.13.7-prerelease</version>
     <authors>v.leschenko@vitaliy.org</authors>
     <owners>v.leschenko@vitaliy.org</owners>
     <licenseUrl>https://sqliteportable.codeplex.com/license</licenseUrl>
@@ -13,7 +13,7 @@
     <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
     <tags>SQLite WinRT</tags>
     <dependencies>
-      <dependency id="SQLite.WinRT" version="3.8.11.158" />
+      <dependency id="SQLite.WinRT" version="2016.4.13.6" />
     </dependencies>
   </metadata>
   <files>
@@ -29,8 +29,6 @@
     <file src="..\SQLite.Core\SQLite.Core.Universal\bin\ARM\Release\SQLite.Core.dll" target="runtimes\win10-arm\native\SQLite.Core.dll" />
     <file src="..\SQLite.Core\SQLite.Core.Universal\bin\x64\Release\SQLite.Core.dll" target="runtimes\win10-x64\native\SQLite.Core.dll" />
     <file src="..\SQLite.Core\SQLite.Core.Universal\bin\Win32\Release\SQLite.Core.dll" target="runtimes\win10-x86\native\SQLite.Core.dll" />
-    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\ARM\Release\SQLite.Core.winmd" target="runtimes\win10-arm\native\SQLite.Core.winmd" />
-    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\x64\Release\SQLite.Core.winmd" target="runtimes\win10-x64\native\SQLite.Core.winmd" />
-    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\Win32\Release\SQLite.Core.winmd" target="runtimes\win10-x86\native\SQLite.Core.winmd" />
+    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\Win32\Release\SQLite.Core.winmd" target="lib\uap10.0\SQLite.Core.winmd" />
   </files>
 </package>
