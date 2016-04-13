@@ -18,7 +18,6 @@
     </metadata>
     <files>
         <file src="build\wpa81\SQLite.WinRT.wpa81.targets" target="build\wpa81\SQLite.WinRT.wpa81.targets" />
-        <file src="build\wpa81\SQLite.Core.WindowsPhone.targets" target="build\wpa81\SQLite.Core.WindowsPhone.targets" />
 
         <file src="..\SQLite.WinRT.WindowsPhone81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.WindowsPhone81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\x86\SQLite.WinRT.Ext.dll" />

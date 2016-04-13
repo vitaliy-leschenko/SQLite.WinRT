@@ -18,7 +18,6 @@
     </metadata>
     <files>
         <file src="build\win81\SQLite.WinRT.Win81.targets" target="build\win81\SQLite.WinRT.Win81.targets" />
-        <file src="build\win81\SQLite.Core.Windows.targets" target="build\win81\SQLite.Core.Windows.targets" />
 
         <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pri" />
