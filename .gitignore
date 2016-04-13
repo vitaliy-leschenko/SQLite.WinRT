@@ -156,3 +156,5 @@ $RECYCLE.BIN/
 *.DotSettings
 *.nupkg
 /packages
+*.db
+*.opendb

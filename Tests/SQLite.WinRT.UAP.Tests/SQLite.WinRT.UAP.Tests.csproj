@@ -19,6 +19,7 @@
     <PackageCertificateKeyFile>SQLite.WinRT.UAP.Tests_TemporaryKey.pfx</PackageCertificateKeyFile>
     <UnitTestPlatformVersion Condition="'$(UnitTestPlatformVersion)' == ''">14.0</UnitTestPlatformVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
+    <PackageCertificateThumbprint>F73DEDD7BB88ADB8D4FCF6C6EA3C0B30B340CEBA</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -95,6 +96,7 @@
   <ItemGroup>
     <!--A reference to the entire .Net Framework and Windows SDK are automatically included-->
     <None Include="project.json" />
+    <None Include="SQLite.WinRT.UAP.Tests_TemporaryKey.pfx" />
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
@@ -138,7 +140,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="SQLite.WinRT.UAP.Tests_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\UnitTestApp.rd.xml">
@@ -153,6 +154,10 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SQLite.Core\SQLite.Core.Universal\SQLite.Core.Universal.vcxproj">
+      <Project>{aaccfc0f-a3a0-4898-8ef2-1eb98a04fd7d}</Project>
+      <Name>SQLite.Core.Universal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SQLite.WinRT.UAP\SQLite.WinRT.UAP.csproj">
       <Project>{fc1b4156-0606-4f6b-9f85-f071bfa4c9d0}</Project>
       <Name>SQLite.WinRT.UAP</Name>
