@@ -10,9 +10,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(Platform)' != 'AnyCPU'">
-    <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0\SQLite.Core.winmd">
-      <Implementation>SQLite.Core.dll</Implementation>
-    </Reference>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(SQLitePlatform)\native\SQLite.Core.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0\SQLite.Core.winmd" />
   </ItemGroup>
 </Project>
