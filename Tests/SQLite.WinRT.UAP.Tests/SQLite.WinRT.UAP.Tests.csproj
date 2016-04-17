@@ -154,10 +154,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SQLite.Core\SQLite.Core.Universal\SQLite.Core.Universal.vcxproj">
-      <Project>{aaccfc0f-a3a0-4898-8ef2-1eb98a04fd7d}</Project>
-      <Name>SQLite.Core.Universal</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SQLite.WinRT.UAP\SQLite.WinRT.UAP.csproj">
       <Project>{fc1b4156-0606-4f6b-9f85-f071bfa4c9d0}</Project>
       <Name>SQLite.WinRT.UAP</Name>

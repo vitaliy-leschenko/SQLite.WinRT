@@ -13,7 +13,8 @@
         <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
         <tags>SQLite WinRT</tags>
         <dependencies>
-            <dependency id="SQLite.WinRT" version="3.8.11.158" />
+            <dependency id="SQLite.WinRT" version="__" />
+            <dependency id="SQLite.Core.WindowsPhone" version="2016.04.12.5" />
         </dependencies>
     </metadata>
     <files>
@@ -21,10 +22,5 @@
 
         <file src="..\SQLite.WinRT.WindowsPhone81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.WindowsPhone81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\wpa81-hidden\x86\SQLite.WinRT.Ext.dll" />
-
-        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\ARM\Release\SQLite.Core.dll" target="lib\wpa81-hidden\ARM\SQLite.Core.dll" />
-        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\ARM\Release\SQLite.Core.winmd" target="lib\wpa81-hidden\ARM\SQLite.Core.winmd" />
-        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\Win32\Release\SQLite.Core.dll" target="lib\wpa81-hidden\x86\SQLite.Core.dll" />
-        <file src="..\SQLite.Core\SQLite.Core.WindowsPhone\bin\Win32\Release\SQLite.Core.winmd" target="lib\wpa81-hidden\x86\SQLite.Core.winmd" />
     </files>
 </package>

@@ -120,10 +120,6 @@
     <EmbeddedResource Include="Properties\SQLite.WinRT.UAP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLite.Core\SQLite.Core.Universal\SQLite.Core.Universal.vcxproj">
-      <Project>{aaccfc0f-a3a0-4898-8ef2-1eb98a04fd7d}</Project>
-      <Name>SQLite.Core.Universal</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SQLite.WinRT\SQLite.WinRT.csproj">
       <Project>{94bf16e1-6978-425f-8629-dfbe5016bd9e}</Project>
       <Name>SQLite.WinRT</Name>

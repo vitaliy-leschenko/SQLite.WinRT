@@ -7,8 +7,5 @@
         <Reference Include="SQLite.WinRT.Ext">
             <HintPath>$(MSBuildThisFileDirectory)..\..\lib\wpa81-hidden\$(Platform)\SQLite.WinRT.Ext.dll</HintPath>
         </Reference>
-        <Reference Include="SQLite.Core.WindowsPhone">
-            <HintPath>$(MSBuildThisFileDirectory)..\..\lib\wpa81-hidden\$(Platform)\SQLite.Core.winmd</HintPath>
-        </Reference>
     </ItemGroup>
 </Project>

@@ -82,10 +82,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\SQLite.Core\SQLite.Core.WindowsPhone\SQLite.Core.WindowsPhone.vcxproj">
-      <Project>{a5b506eb-8567-43b6-ac7e-309d241687cc}</Project>
-      <Name>SQLite.Core.WindowsPhone</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SQLite.WinRT\SQLite.WinRT.csproj">
       <Project>{94bf16e1-6978-425f-8629-dfbe5016bd9e}</Project>
       <Name>SQLite.WinRT</Name>
@@ -101,6 +97,9 @@
     <SDKReference Include="Microsoft.VCLibs, Version=12.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
@@ -156,4 +155,11 @@
   <PropertyGroup>
     <SDKReferenceDirectoryRoot>$(SolutionDir)\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
   </PropertyGroup>
+  <Import Project="..\packages\SQLite.Core.WindowsPhone.2016.04.12.5\build\wpa81\SQLite.Core.WindowsPhone.targets" Condition="Exists('..\packages\SQLite.Core.WindowsPhone.2016.04.12.5\build\wpa81\SQLite.Core.WindowsPhone.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SQLite.Core.WindowsPhone.2016.04.12.5\build\wpa81\SQLite.Core.WindowsPhone.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLite.Core.WindowsPhone.2016.04.12.5\build\wpa81\SQLite.Core.WindowsPhone.targets'))" />
+  </Target>
 </Project>

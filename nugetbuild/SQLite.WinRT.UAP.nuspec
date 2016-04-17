@@ -13,7 +13,9 @@
     <copyright>Copyright 2015 Vitaliy Leschenko</copyright>
     <tags>SQLite WinRT</tags>
     <dependencies>
-      <dependency id="SQLite.WinRT" version="2016.4.13.6" />
+      <dependency id="SQLite.WinRT" version="__" />
+      <dependency id="SQLite.Core.UAP" version="2016.04.12.5" />
+      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.1.0" />
     </dependencies>
   </metadata>
   <files>
@@ -25,10 +27,5 @@
     <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-x64\SQLite.WinRT.Ext.pri" />
     <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-x86\SQLite.WinRT.Ext.dll" />
     <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-x86\SQLite.WinRT.Ext.pri" />
-
-    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\ARM\Release\SQLite.Core.dll" target="runtimes\win10-arm\native\SQLite.Core.dll" />
-    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\x64\Release\SQLite.Core.dll" target="runtimes\win10-x64\native\SQLite.Core.dll" />
-    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\Win32\Release\SQLite.Core.dll" target="runtimes\win10-x86\native\SQLite.Core.dll" />
-    <file src="..\SQLite.Core\SQLite.Core.Universal\bin\Win32\Release\SQLite.Core.winmd" target="lib\uap10.0\SQLite.Core.winmd" />
   </files>
 </package>

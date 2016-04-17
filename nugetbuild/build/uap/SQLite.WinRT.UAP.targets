@@ -9,7 +9,4 @@
       <HintPath>$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(SQLitePlatform)\SQLite.WinRT.Ext.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(Platform)' != 'AnyCPU'">
-    <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0\SQLite.Core.winmd" />
-  </ItemGroup>
 </Project>
