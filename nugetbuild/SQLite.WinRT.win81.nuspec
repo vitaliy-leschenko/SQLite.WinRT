@@ -22,9 +22,12 @@
 
         <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\ARM\Release\SQLite.WinRT.Ext.pdb" target="lib\win81-hidden\ARM\SQLite.WinRT.Ext.pdb" />
         <file src="..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x64\Release\SQLite.WinRT.Ext.pdb" target="lib\win81-hidden\x64\SQLite.WinRT.Ext.pdb" />
         <file src="..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.dll" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.dll" />
         <file src="..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.pri" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.pri" />
+        <file src="..\SQLite.WinRT.Windows81\bin\x86\Release\SQLite.WinRT.Ext.pdb" target="lib\win81-hidden\x86\SQLite.WinRT.Ext.pdb" />
     </files>
 </package>

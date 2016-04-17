@@ -23,9 +23,12 @@
 
     <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-arm\SQLite.WinRT.Ext.dll" />
     <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-arm\SQLite.WinRT.Ext.pri" />
+    <file src="..\SQLite.WinRT.UAP\bin\ARM\Release\SQLite.WinRT.Ext.pdb" target="runtimes\win10-arm\SQLite.WinRT.Ext.pdb" />
     <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-x64\SQLite.WinRT.Ext.dll" />
     <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-x64\SQLite.WinRT.Ext.pri" />
+    <file src="..\SQLite.WinRT.UAP\bin\x64\Release\SQLite.WinRT.Ext.pdb" target="runtimes\win10-x64\SQLite.WinRT.Ext.pdb" />
     <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.dll" target="runtimes\win10-x86\SQLite.WinRT.Ext.dll" />
     <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pri" target="runtimes\win10-x86\SQLite.WinRT.Ext.pri" />
+    <file src="..\SQLite.WinRT.UAP\bin\x86\Release\SQLite.WinRT.Ext.pdb" target="runtimes\win10-x86\SQLite.WinRT.Ext.pdb" />
   </files>
 </package>
