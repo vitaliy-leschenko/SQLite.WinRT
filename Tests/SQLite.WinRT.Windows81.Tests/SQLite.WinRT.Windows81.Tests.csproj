@@ -161,12 +161,12 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <Import Project="..\..\packages\SQLite.Core.Windows.2016.04.17.1\build\win81\SQLite.Core.Windows.targets" Condition="Exists('..\..\packages\SQLite.Core.Windows.2016.04.17.1\build\win81\SQLite.Core.Windows.targets')" />
+  <Import Project="..\..\packages\SQLite.Core.Windows.2016.04.18.1\build\win81\SQLite.Core.Windows.targets" Condition="Exists('..\..\packages\SQLite.Core.Windows.2016.04.18.1\build\win81\SQLite.Core.Windows.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\SQLite.Core.Windows.2016.04.17.1\build\win81\SQLite.Core.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLite.Core.Windows.2016.04.17.1\build\win81\SQLite.Core.Windows.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SQLite.Core.Windows.2016.04.18.1\build\win81\SQLite.Core.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLite.Core.Windows.2016.04.18.1\build\win81\SQLite.Core.Windows.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -14,7 +14,7 @@
     <tags>SQLite WinRT</tags>
     <dependencies>
       <dependency id="SQLite.WinRT" version="__" />
-      <dependency id="SQLite.Core.UAP" version="2016.04.17.1" />
+      <dependency id="SQLite.Core.UAP" version="2016.04.18.1" />
       <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.1.0" />
     </dependencies>
   </metadata>

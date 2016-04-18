@@ -262,7 +262,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "SQLite.Core.UAP/2016.4.17.1": {
+      "SQLite.Core.UAP/2016.4.18.1": {
         "compile": {
           "lib/uap/SQLite.Core.winmd": {}
         },
@@ -2073,7 +2073,7 @@
           "runtimes/win8-arm/native/mscorrc.dll": {}
         }
       },
-      "SQLite.Core.UAP/2016.4.17.1": {
+      "SQLite.Core.UAP/2016.4.18.1": {
         "compile": {
           "lib/uap/SQLite.Core.winmd": {}
         },
@@ -3701,7 +3701,7 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "SQLite.Core.UAP/2016.4.17.1": {
+      "SQLite.Core.UAP/2016.4.18.1": {
         "compile": {
           "lib/uap/SQLite.Core.winmd": {}
         },
@@ -5339,7 +5339,7 @@
           "runtimes/win7-x64/native/mscorrc.dll": {}
         }
       },
-      "SQLite.Core.UAP/2016.4.17.1": {
+      "SQLite.Core.UAP/2016.4.18.1": {
         "compile": {
           "lib/uap/SQLite.Core.winmd": {}
         },
@@ -6967,7 +6967,7 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "SQLite.Core.UAP/2016.4.17.1": {
+      "SQLite.Core.UAP/2016.4.18.1": {
         "compile": {
           "lib/uap/SQLite.Core.winmd": {}
         },
@@ -8605,7 +8605,7 @@
           "runtimes/win7-x86/native/mscorrc.dll": {}
         }
       },
-      "SQLite.Core.UAP/2016.4.17.1": {
+      "SQLite.Core.UAP/2016.4.18.1": {
         "compile": {
           "lib/uap/SQLite.Core.winmd": {}
         },
@@ -10233,7 +10233,7 @@
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
         }
       },
-      "SQLite.Core.UAP/2016.4.17.1": {
+      "SQLite.Core.UAP/2016.4.18.1": {
         "compile": {
           "lib/uap/SQLite.Core.winmd": {}
         },
@@ -12292,11 +12292,11 @@
         "runtimes/win8-arm/native/mscorrc.dll"
       ]
     },
-    "SQLite.Core.UAP/2016.4.17.1": {
-      "sha512": "yG3POxVbWMUe2omW6FJvEfdqQQdwcNSiHlnJKCUv35W9hKJIWci/QNzCBDD23fXccCkOOqSmEq8NELF65FiBlg==",
+    "SQLite.Core.UAP/2016.4.18.1": {
+      "sha512": "/5Nl7ZOnQRGhIT5gMkcTCs01yU9WGTLS0d5XK71GIV/f4gwp8+LcOL6a5gHKojXY0yN5e69xPdZqZJ0j5/8o+w==",
       "type": "package",
       "files": [
-        "SQLite.Core.UAP.2016.4.17.1.nupkg.sha512",
+        "SQLite.Core.UAP.2016.4.18.1.nupkg.sha512",
         "SQLite.Core.UAP.nuspec",
         "build/native/SQLite.Core.UAP.targets",
         "lib/uap/SQLite.Core.winmd",
@@ -15083,7 +15083,7 @@
   "projectFileDependencyGroups": {
     "": [
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0",
-      "SQLite.Core.UAP >= 2016.4.17.1"
+      "SQLite.Core.UAP >= 2016.4.18.1"
     ],
     "UAP,Version=v10.0": []
   }
