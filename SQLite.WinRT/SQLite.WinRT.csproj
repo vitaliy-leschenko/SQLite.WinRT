@@ -52,7 +52,6 @@
     <Compile Include="DataVersion.cs" />
     <Compile Include="IBaseDatabaseChangeset.cs" />
     <Compile Include="IDatabaseChangeset.cs" />
-    <Compile Include="IDatabaseAsyncChangeset.cs" />
     <Compile Include="IgnoreAttribute.cs" />
     <Compile Include="IndexedAttribute.cs" />
     <Compile Include="Linq\AsyncQueryable.cs" />
