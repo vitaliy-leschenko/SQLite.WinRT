@@ -19,7 +19,7 @@
     <PackageCertificateKeyFile>SQLite.WinRT.UAP.Tests_TemporaryKey.pfx</PackageCertificateKeyFile>
     <UnitTestPlatformVersion Condition="'$(UnitTestPlatformVersion)' == ''">14.0</UnitTestPlatformVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
-    <PackageCertificateThumbprint>F73DEDD7BB88ADB8D4FCF6C6EA3C0B30B340CEBA</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>474D14B98615D2B140EF98EEA6F32116FBEAD368</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
