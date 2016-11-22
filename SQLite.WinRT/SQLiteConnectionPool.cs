@@ -4,21 +4,29 @@ namespace SQLite.WinRT
 {
     public class SQLiteConnectionPool
     {
-        class Entry
+        private class Entry
         {
-            public SQLiteConnectionString ConnectionString { get; private set; }
             public SQLiteConnection Connection { get; private set; }
 
             public Entry(SQLiteConnectionString connectionString)
             {
-                ConnectionString = connectionString;
                 Connection = new SQLiteConnection(connectionString);
             }
 
             public void OnApplicationSuspended()
             {
-                Connection.Dispose();
-                Connection = null;
+                try
+                {
+                    Connection.Dispose();
+                }
+                catch
+                {
+                    // ignore
+                }
+                finally
+                {
+                    Connection = null;
+                }
             }
         }
 

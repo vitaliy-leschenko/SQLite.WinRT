@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using SQLite.WinRT.Linq.Base;
 
 namespace SQLite.WinRT
@@ -18,7 +17,7 @@ namespace SQLite.WinRT
             provider = connection.GetEntityProvider();
         }
 
-        public Task CreateSchemeAsync()
+        public void CreateScheme()
         {
             using (connection.Lock())
             {
@@ -34,10 +33,9 @@ namespace SQLite.WinRT
                     provider.CreateTable(types[0]);
                 }
             }
-            return Task.FromResult(0);
         }
 
-        public async Task UpdateSchemeAsync()
+        public void UpdateScheme()
         {
             using (connection.Lock())
             {
@@ -49,18 +47,10 @@ namespace SQLite.WinRT
                     var changesets = GetDatabaseChangesets().Where(t => t.Version > dbVersion);
                     foreach (var changeset in changesets)
                     {
-                        var aset = changeset as IDatabaseAsyncChangeset;
-                        if (aset != null)
+                        var sset = changeset as IDatabaseChangeset;
+                        if (sset != null)
                         {
-                            await aset.UpdateAsync(provider);
-                        }
-                        else
-                        {
-                            var sset = changeset as IDatabaseChangeset;
-                            if (sset != null)
-                            {
-                                sset.Update(provider);
-                            }
+                            sset.Update(provider);
                         }
                         UpdateDatabaseVersion(changeset.Version);
                     }
@@ -100,7 +90,7 @@ namespace SQLite.WinRT
         {
             provider.CreateTable(typeof(DataVersion));
             var version = provider.GetTable<DataVersion>().FirstOrDefault();
-            return version != null ? version.Value : 0;
+            return version?.Value ?? 0;
         }
 
         private IEnumerable<IBaseDatabaseChangeset> GetDatabaseChangesets()
