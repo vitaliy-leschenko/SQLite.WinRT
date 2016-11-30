@@ -105,7 +105,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.scale-240.png" />
@@ -128,6 +127,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
@@ -135,12 +137,12 @@
     <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <Import Project="..\..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets" Condition="Exists('..\..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets')" />
+  <Import Project="..\..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets" Condition="Exists('..\..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

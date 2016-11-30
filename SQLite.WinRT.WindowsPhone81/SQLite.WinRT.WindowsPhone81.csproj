@@ -155,11 +155,11 @@
   <PropertyGroup>
     <SDKReferenceDirectoryRoot>$(SolutionDir)\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
   </PropertyGroup>
-  <Import Project="..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets" Condition="Exists('..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets')" />
+  <Import Project="..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets" Condition="Exists('..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLite.Core.WindowsPhone.2016.11.22.4\build\wpa81\SQLite.Core.WindowsPhone.targets'))" />
+    <Error Condition="!Exists('..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLite.Core.WindowsPhone.2016.11.30.1\build\wpa81\SQLite.Core.WindowsPhone.targets'))" />
   </Target>
 </Project>
